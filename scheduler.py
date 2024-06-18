@@ -1,5 +1,9 @@
+import datetime
 import json
 import random
+
+from no_consecutive_tasks import no_consecutive_tasks
+from no_same_task_consecutive_days import no_same_task_consecutive_days
 
 # load the task list
 with open('tasklist.json') as f:
@@ -9,7 +13,16 @@ with open('tasklist.json') as f:
 with open('days.json') as f:
     days = json.load(f)
 
-# define a scheduling rule
+def generate_dates(days, weeks):
+    """
+    Generates an array of dates based on the given days and number of weeks
+    """
+    dates = []
+    for i in range(weeks * 7):
+        date = datetime.date.today() + datetime.timedelta(days=i)
+        if date.strftime("%A") in days:
+            dates.append(date.strftime("%Y-%m-%d"))
+    return dates
 def no_same_task_same_time(person, schedule):
     """
     Checks if a person is on the same task at the same time as another person
@@ -24,83 +37,46 @@ def no_same_task_same_time(person, schedule):
     return True
 
 # define a scheduling rule
-def no_consecutive_tasks(person, schedule):
-    """
-    Checks if a person is on two consecutive tasks
-    """
-    for day in schedule:
-        for i in range(len(day['tasks'])-1):
-            if day['tasks'][i]['assigned'][0]['name'] == person and \
-               day['tasks'][i+1]['assigned'][0]['name'] == person:
-                return False
-    return True
-
 # define a scheduling rule
-def no_same_task_consecutive_days(person, schedule):
-    """
-    Checks if a person is on the same task on consecutive days
-    """
-    for i in range(len(schedule)-1):
-        if schedule[i]['tasks'][0]['assigned'][0]['name'] == person and \
-           schedule[i+1]['tasks'][0]['assigned'][0]['name'] == person and \
-           schedule[i]['tasks'][0]['name'] == schedule[i+1]['tasks'][0]['name']:
-            return False
-    return True
-
 # define the scheduling rules
 scheduling_rules = [no_same_task_same_time, no_consecutive_tasks, no_same_task_consecutive_days]
 
-def check_schedule(schedule, rules):
-    """
-    Checks if a schedule meets all the scheduling rules
-    """
-    for day in schedule:
-        if day['date'] not in days:
-            return False
-        for task in day['tasks']:
-            person = task['assigned'][0]['name']
-            if not all(rule(person, schedule) for rule in rules):
-                return False
-    return True
 
 
 # generate a random schedule
-def generate_random_schedule(task_list, rules, dates):
+def generate_random_schedule(task_list, rules, dates, n=1):
     """
-    Generates a random schedule that meets all the scheduling rules
+    Generates a random schedule with the given task list, rules, and dates
     """
-    schedules = []
-    for _ in range(4):
-        schedule = []
-        for day in dates:
-            tasks = []
-            assigned_people = []
-            for task in task_list[dates.index(day)]['name']:
-                while True:
-                    person = random.choice(task['assigned'])
-                    if person['name'] not in assigned_people:
-                        assigned_people.append(person['name'])
-                        break
-                task['assigned'] = [person]
-                while not all(rule(person['name'], schedule) for rule in rules):
-                    person = random.choice(task['assigned'])
-                    task['assigned'] = [person]
-                tasks.append(task)
-            schedule.append({'date': day, 'tasks': tasks})
-        schedules.append(schedule)
-    # remove schedules that don't meet all rules
-    schedules = [schedule for schedule in schedules if check_schedule(schedule, scheduling_rules)]
+    schedule = []
+    for i in range(n*7):
+        day = {
+            "date": dates[(i + 7) % len(dates)],
+            "tasks": []
+        }
+        for task in task_list:
+            people = task['assigned']
+            person = random.choice(people)
+            while not all(rule(person['name'], schedule) for rule in rules):
+                person = random.choice(people)
+            day['tasks'].append({
+                "name": task['name'],
+                "assigned": [person]
+            })
+        schedule.append(day)
+    return schedule
 
-    # print the schedules
-    for schedule in schedules:
-        for day in schedule:
-            print(day['date'])
-            for task in day['tasks']:
-                print(task['name'] + ': ' + task['assigned'][0]['name'])
-        print('')
+def print_schedule(schedule):
+    for day in schedule:
+        print(day['date'])
+        for task in day['tasks']:
+            print(f"  {task['name']}: {task['assigned'][0]['name']}")
+
+
 
 # execute the code
-dates = [f'2019-01-{i+1}' for i in range(7, 28)]
-generate_random_schedule(task_list, scheduling_rules, dates)
+dates = generate_dates(days, 4)
+schedule = generate_random_schedule(task_list, scheduling_rules, dates)
+print_schedule(schedule)
 
 
