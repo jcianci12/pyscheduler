@@ -1,0 +1,44 @@
+{
+    "rules": [
+      {
+        "name": "no_overlapping_tasks",
+        "description": "Jon should not be on two tasks at the same time",
+        "constraints": [
+          {
+            "type": "exclusion",
+            "fields": ["person", "task"],
+            "values": [
+              {
+                "person": "Jon",
+                "task": "task1"
+              },
+              {
+                "person": "Jon",
+                "task": "task2"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "no_successive_tasks",
+        "description": "Jon should not be on two tasks in succession",
+        "constraints": [
+          {
+            "type": "exclusion",
+            "fields": ["person", "task"],
+            "values": [
+              {
+                "person": "Jon",
+                "task": "task1"
+              },
+              {
+                "person": "Jon",
+                "task": "task2"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
