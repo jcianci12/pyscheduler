@@ -1,70 +1,193 @@
 [
     {
-        "name": "Security 1",
+        "role": "Security 1",
         "assigned": [
             {
-                "name": "Person 1"
+                "name": "JC"
             },
             {
-                "name": "Person 2"
-            }
-        ]
-    },
-    {
-        "name": "Security 2",
-        "assigned": [
-            {
-                "name": "Person 3"
+                "name": "RL"
             },
             {
-                "name": "Person 4"
-            }
-        ]
-    },
-    {
-        "name": "Microphone Left",
-        "assigned": [
-            {
-                "name": "Person 5"
-            }
-        ]
-    },
-    {
-        "name": "Microphone Right",
-        "assigned": [
-            {
-                "name": "Person 6"
-            }
-        ]
-    },
-    {
-        "name": "Mixer",
-        "assigned": [
-            {
-                "name": "Person 7"
+                "name": "BC"
             },
             {
-                "name": "Person 8"
-            }
-        ]
-    },
-    {
-        "name": "Media",
-        "assigned": [
-            {
-                "name": "Person 9"
-            }
-        ]
-    },
-    {
-        "name": "Hall Attendent",
-        "assigned": [
-            {
-                "name": "Person 10"
+                "name": "HS"
             },
             {
-                "name": "Person 11"
+                "name": "DB"
+            }            ,
+            {
+                "name": "Roy"
+            },
+            {"name":"JH"},
+            {"name":"BJ"},
+            {"name":"JB"},
+            {"name":"RH"},
+            {"name":"JF"},
+            {"name":"TH"}
+
+        ]
+    },
+    {
+        "role": "Security 2",
+        "assigned": [
+            {
+                "name": "JC"
+            },
+            {
+                "name": "RL"
+            },
+            {
+                "name": "BC"
+            },
+            {
+                "name": "HS"
+            },
+            {
+                "name": "DB"
+            }            ,
+            {
+                "name": "Roy"
+            },
+            {"name":"JH"},
+            {"name":"BJ"},
+            {"name":"JB"},
+            {"name":"RH"}
+        ]
+    },
+    {
+        "role": "Microphone Left",
+        "assigned": [
+            {
+                "name": "JC"
+            },
+            {
+                "name": "RL"
+            },
+            {
+                "name": "BC"
+            },
+            {
+                "name": "HS"
+            },
+            {
+                "name": "DB"
+            }            ,
+            {
+                "name": "Roy"
+            },
+            {"name":"JH"},
+            {"name":"BJ"},
+            {"name":"JB"},
+            {"name":"RH"}
+        ]
+    },
+    {
+        "role": "Microphone Right",
+        "assigned": [
+            {
+                "name": "JC"
+            },
+            {
+                "name": "RL"
+            },
+            {
+                "name": "BC"
+            },
+            {
+                "name": "HS"
+            },
+            {
+                "name": "DB"
+            }            ,
+            {
+                "name": "Roy"
+            },
+            {"name":"JH"},
+            {"name":"BJ"},
+            {"name":"JB"},
+            {"name":"RH"}
+        ]
+    },
+    {
+        "role": "Mixer",
+        "assigned": [
+            {
+                "name": "JC"
+            },
+            {
+                "name": "RL"
+            },
+            {
+                "name": "BC"
+            },
+            {
+                "name": "HS"
+            },
+            {
+                "name": "DB"
+            }            ,
+            {
+                "name": "Roy"
+            },
+            {"name":"JH"},
+            {"name":"BJ"}
+
+        ]
+    },
+    {
+        "role": "Media",
+        "assigned": [
+            {
+                "name": "JC"
+            },
+            {
+                "name": "RL"
+            },
+            {
+                "name": "BC"
+            },
+            {
+                "name": "HS"
+            },
+            {
+                "name": "DB"
+            }            ,
+            {
+                "name": "Roy"
+            }
+        ]
+    },
+    {
+        "role": "Hall Attendent",
+        "assigned": [
+            {
+                "name": "JC"
+            },
+            {
+                "name": "RL"
+            },
+            {
+                "name": "BC"
+            },
+            {
+                "name": "HS"
+            },
+            {
+                "name": "DB"
+            },
+            {
+                "name": "MC"
+
+            },
+            {
+                "name": "NH"
+
             }
         ]
     }
 ]
+
+
+
