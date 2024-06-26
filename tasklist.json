@@ -21,14 +21,15 @@
             {"name": "QK"},
             {"name":"MC"},
             {"name":"CR"},
-            {"name":"JH"}
+            {"name":"JH"},
+            {"name":"HM"}
 
 
 
         ]
     },
     {
-        "role": "Media",
+        "role": "Video Operator",
         "assigned": [
             {"name": "BC"},
             {"name": "DB"},
@@ -64,7 +65,9 @@
             {"name":"MC"},
             {"name":"CR"},
             {"name":"KM"},
-            {"name":"JH"}
+            {"name":"JH"},
+            {"name":"HM"}
+
 
         ]
     },
@@ -91,7 +94,9 @@
             {"name":"MC"},
             {"name":"CR"},
             {"name":"KM"},
-            {"name":"JH"}
+            {"name":"JH"},
+            {"name":"HM"}
+
 
         ]
     },
@@ -118,7 +123,9 @@
             {"name":"CR"},
             {"name":"KM"},
             {"name":"JH"},
-            {"name":"RH"}
+            {"name":"RH"},
+            {"name":"HM"}
+
 
 
         ]
@@ -146,7 +153,9 @@
             {"name":"MC"},
             {"name":"CR"},
             {"name":"JH"},
-            {"name":"RH"}
+            {"name":"RH"},
+            {"name":"HM"}
+
 
         ]
     },
@@ -172,7 +181,9 @@
             {"name": "QK"},
             {"name":"MC"},
             {"name":"CR"},
-            {"name":"RH"}
+            {"name":"RH"},
+            {"name":"HM"}
+
 
         ]
     }

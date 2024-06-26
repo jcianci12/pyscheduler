@@ -2,8 +2,6 @@ import datetime
 import json
 import random
 
-from no_consecutive_tasks import no_consecutive_tasks
-from no_same_task_consecutive_days import no_same_task_consecutive_schedules
 from bookingrules import filter_people_who_are_booked_this_schedule, filter_people_who_were_booked_last_schedule
 
 # load the task list
@@ -22,7 +20,7 @@ def generate_dates(days, weeks):
     for i in range(weeks * 7):
         date = datetime.date.today() + datetime.timedelta(days=i)
         if date.strftime("%A") in days:
-            dates.append(date.strftime("%Y-%m-%d"))
+            dates.append(date)
     return dates
 # define the scheduling rules
 scheduling_rules = [filter_people_who_are_booked_this_schedule]
@@ -79,7 +77,7 @@ put all tasks for a date on a single row.
     csvobject.append(headerrow)
     
     for schedule in schedules:
-        row = [schedule['date']]
+        row = [ convert_to_friendly_date(  schedule['date'])]
         for task in schedule['tasks']:
             # row.append(task['role'])
             for person in task['assigned']:
@@ -90,7 +88,23 @@ put all tasks for a date on a single row.
         for row in csvobject:
             f.write(','.join(row) + '\n')
                 
-
+def convert_to_friendly_date(date):
+    day = date.strftime("%a")
+    day_num = date.strftime("%d")
+    month = date.strftime("%b")
+    year = date.strftime("%Y")
+    
+    day_of_month = int(day_num)
+    if day_of_month % 10 == 1 and day_of_month != 11:
+        day_num += "st"
+    elif day_of_month % 10 == 2 and day_of_month != 12:
+        day_num += "nd"
+    elif day_of_month % 10 == 3 and day_of_month != 13:
+        day_num += "rd"
+    else:
+        day_num += "th"
+    
+    return f"{day} {day_num} of {month} {year}"
 
 
 
