@@ -4,7 +4,7 @@ import random
 
 from no_consecutive_tasks import no_consecutive_tasks
 from no_same_task_consecutive_days import no_same_task_consecutive_schedules
-from no_same_task_same_time import filter_people_who_are_booked_this_schedule, filter_people_who_were_booked_last_schedule
+from bookingrules import filter_people_who_are_booked_this_schedule, filter_people_who_were_booked_last_schedule
 
 # load the task list
 with open('tasklist.json') as f:
