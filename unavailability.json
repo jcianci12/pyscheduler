@@ -1,2 +1,6 @@
 
-[{"name":"TH","unavailable date range":{"start":"2024-07-01","end":"2024-07-15"}}]
+[
+    {"name":"TH","unavailable date range":{"start":"2024-07-01","end":"2024-07-15"}},
+{"name":"JB","unavailable date range":{"start":"2024-06-26","end":"2024-07-1"}},
+{"name":"RL","unavailable date range":{"start":"2024-06-26","end":"2024-06-30"}}
+]

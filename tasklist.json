@@ -1,6 +1,6 @@
 [
     {
-        "role": "Hall Attendent",
+        "role": "Auditorium Attendant",
         "assigned": [
             {"name": "BC"},
             {"name": "BJ"},
@@ -11,7 +11,6 @@
             {"name": "JC"},
             {"name": "JB"},
             {"name": "RL"},
-            {"name": "Roy"},
             {"name": "SE"},
             {"name": "SZ"},
             {"name": "TM"},
@@ -21,25 +20,8 @@
             {"name": "QK"},
             {"name":"MC"},
             {"name":"CR"},
-            {"name":"JH"},
-            {"name":"HM"}
-
-
-
-        ]
-    },
-    {
-        "role": "Video Operator",
-        "assigned": [
-            {"name": "BC"},
-            {"name": "DB"},
-            {"name": "HS"},
-            {"name": "JC"},
-            {"name": "JB"},
-            {"name": "RL"},
-            {"name": "Roy"},
-            {"name": "SE"},
-            {"name": "LB"}
+            {"name":"HM"},
+            {"name":"NH"}
         ]
     },
     {
@@ -67,8 +49,6 @@
             {"name":"KM"},
             {"name":"JH"},
             {"name":"HM"}
-
-
         ]
     },
     {
@@ -96,38 +76,34 @@
             {"name":"KM"},
             {"name":"JH"},
             {"name":"HM"}
-
-
         ]
     },
     {
-        "role": "Mixer",
+        "role": "Audio Operator",
         "assigned": [
             {"name": "BC"},
-            {"name": "BJ"},
             {"name": "DB"},
-            {"name": "GJ"},
             {"name": "HS"},
-            {"name": "IL"},
             {"name": "JC"},
             {"name": "JB"},
             {"name": "RL"},
             {"name": "Roy"},
             {"name": "SE"},
-            {"name": "TM"},
-            {"name": "LB"},
-            {"name": "JG"},
-            {"name": "TH"},
-            {"name": "QK"},
-            {"name":"MC"},
-            {"name":"CR"},
-            {"name":"KM"},
-            {"name":"JH"},
-            {"name":"RH"},
-            {"name":"HM"}
-
-
-
+            {"name": "LB"}
+        ]
+    },
+    {
+        "role": "Video Operator",
+        "assigned": [
+            {"name": "BC"},
+            {"name": "DB"},
+            {"name": "HS"},
+            {"name": "JC"},
+            {"name": "JB"},
+            {"name": "RL"},
+            {"name": "Roy"},
+            {"name": "SE"},
+            {"name": "LB"}
         ]
     },
     {
@@ -154,9 +130,8 @@
             {"name":"CR"},
             {"name":"JH"},
             {"name":"RH"},
-            {"name":"HM"}
-
-
+            {"name":"HM"},
+            {"name":"NH"}
         ]
     },
     {
@@ -182,12 +157,12 @@
             {"name":"MC"},
             {"name":"CR"},
             {"name":"RH"},
-            {"name":"HM"}
-
-
+            {"name":"HM"},
+            {"name":"NH"}
         ]
     }
 ]
+
 
 
 
