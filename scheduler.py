@@ -41,8 +41,9 @@ def generate_random_schedule(task_list, rules, dates, n=1):
             people = task['assigned']
 
             index = min(i, len(schedules) - 1)
-            # peoplethatarenotalreadybookedthisschedule = no_schedule_double_booking(people, schedules, index)
-            peoplethatarenotalreadybookedpreviousschedule = return_people_who_are_not_booked_on_previous_schedule(people, schedules, index)
+
+            peoplethatarenotalreadybookedthisschedule = no_schedule_double_booking(people, schedules, index)
+            peoplethatarenotalreadybookedpreviousschedule = return_people_who_are_not_booked_on_previous_schedule(peoplethatarenotalreadybookedthisschedule, schedules, index)
             # names2 = set(item['name'] for item in peoplethatarenotalreadybookedpreviousschedule)
             # intersection = [item for item in peoplethatarenotalreadybookedthisschedule if item['name'] in names2]
             person = random.choice(peoplethatarenotalreadybookedpreviousschedule)
@@ -57,19 +58,40 @@ def generate_random_schedule(task_list, rules, dates, n=1):
 
 
 def print_schedule(schedule):
-    # Calculate the maximum task name length
-    max_task_len = max(len(task['role']) for day in schedule for task in day['tasks'])
-
-    # Print table header
-    print(f"{'Date':12} {'Task':{max_task_len}} {'Assigned':12}")
-    print('-' * (20 + max_task_len + 12))
-
-    # Print each day's tasks
-    for day in schedule:
-        print(f"{day['date']:12}")
-        for task in day['tasks']:
-            print(f"{' ' * 12}{task['role'].ljust(max_task_len)} {task['assigned'][0]['name']:12}")
+    """
+    Prints the schedule
+    """
+    for schedule in schedule:
+        print(f"Date: {schedule['date']}")
+        for task in schedule['tasks']:
+            print(f"  {task['role']}: {', '.join([person['name'] for person in task['assigned']])}")
         print()
+
+def save_csv(schedules):
+    """
+    saves a new schedule in csv format. 
+put all tasks for a date on a single row.
+    """
+    csvobject = []
+    headerrow = [""]
+    for task in schedules[0]['tasks']:
+        headerrow.append(task['role'])            
+    csvobject.append(headerrow)
+    
+    for schedule in schedules:
+        row = [schedule['date']]
+        for task in schedule['tasks']:
+            # row.append(task['role'])
+            for person in task['assigned']:
+                row.append(person['name'])
+        csvobject.append(row)
+
+    with open('schedule.csv', 'w') as f:
+        for row in csvobject:
+            f.write(','.join(row) + '\n')
+                
+
+
 
 
 
@@ -77,5 +99,6 @@ def print_schedule(schedule):
 dates = generate_dates(days, 4)
 schedule = generate_random_schedule(task_list, scheduling_rules, dates)
 print_schedule(schedule)
+save_csv(schedule)
 
 

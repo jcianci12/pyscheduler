@@ -42,4 +42,6 @@ def return_list_of_people_who_are_booked_on_previous_schedule(people, schedules,
 
     # print(people_copy)
     return people_copy
+def people_that_can_do_the_task(tasklist,task):
+    return [person['name'] for person in tasklist if person['role'] in task['assigned']]
 

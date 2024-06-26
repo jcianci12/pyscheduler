@@ -1,193 +1,183 @@
 [
     {
-        "role": "Security 1",
+        "role": "Hall Attendent",
         "assigned": [
-            {
-                "name": "JC"
-            },
-            {
-                "name": "RL"
-            },
-            {
-                "name": "BC"
-            },
-            {
-                "name": "HS"
-            },
-            {
-                "name": "DB"
-            }            ,
-            {
-                "name": "Roy"
-            },
-            {"name":"JH"},
-            {"name":"BJ"},
-            {"name":"JB"},
-            {"name":"RH"},
-            {"name":"JF"},
-            {"name":"TH"}
+            {"name": "BC"},
+            {"name": "BJ"},
+            {"name": "DB"},
+            {"name": "GJ"},
+            {"name": "HS"},
+            {"name": "IL"},
+            {"name": "JC"},
+            {"name": "JB"},
+            {"name": "RL"},
+            {"name": "Roy"},
+            {"name": "SE"},
+            {"name": "SZ"},
+            {"name": "TM"},
+            {"name": "LB"},
+            {"name": "JG"},
+            {"name": "TH"},
+            {"name": "QK"},
+            {"name":"MC"},
+            {"name":"CR"},
+            {"name":"JH"}
 
-        ]
-    },
-    {
-        "role": "Security 2",
-        "assigned": [
-            {
-                "name": "JC"
-            },
-            {
-                "name": "RL"
-            },
-            {
-                "name": "BC"
-            },
-            {
-                "name": "HS"
-            },
-            {
-                "name": "DB"
-            }            ,
-            {
-                "name": "Roy"
-            },
-            {"name":"JH"},
-            {"name":"BJ"},
-            {"name":"JB"},
-            {"name":"RH"}
-        ]
-    },
-    {
-        "role": "Microphone Left",
-        "assigned": [
-            {
-                "name": "JC"
-            },
-            {
-                "name": "RL"
-            },
-            {
-                "name": "BC"
-            },
-            {
-                "name": "HS"
-            },
-            {
-                "name": "DB"
-            }            ,
-            {
-                "name": "Roy"
-            },
-            {"name":"JH"},
-            {"name":"BJ"},
-            {"name":"JB"},
-            {"name":"RH"}
-        ]
-    },
-    {
-        "role": "Microphone Right",
-        "assigned": [
-            {
-                "name": "JC"
-            },
-            {
-                "name": "RL"
-            },
-            {
-                "name": "BC"
-            },
-            {
-                "name": "HS"
-            },
-            {
-                "name": "DB"
-            }            ,
-            {
-                "name": "Roy"
-            },
-            {"name":"JH"},
-            {"name":"BJ"},
-            {"name":"JB"},
-            {"name":"RH"}
-        ]
-    },
-    {
-        "role": "Mixer",
-        "assigned": [
-            {
-                "name": "JC"
-            },
-            {
-                "name": "RL"
-            },
-            {
-                "name": "BC"
-            },
-            {
-                "name": "HS"
-            },
-            {
-                "name": "DB"
-            }            ,
-            {
-                "name": "Roy"
-            },
-            {"name":"JH"},
-            {"name":"BJ"}
+
 
         ]
     },
     {
         "role": "Media",
         "assigned": [
-            {
-                "name": "JC"
-            },
-            {
-                "name": "RL"
-            },
-            {
-                "name": "BC"
-            },
-            {
-                "name": "HS"
-            },
-            {
-                "name": "DB"
-            }            ,
-            {
-                "name": "Roy"
-            }
+            {"name": "BC"},
+            {"name": "DB"},
+            {"name": "HS"},
+            {"name": "JC"},
+            {"name": "JB"},
+            {"name": "RL"},
+            {"name": "Roy"},
+            {"name": "SE"},
+            {"name": "LB"}
         ]
     },
     {
-        "role": "Hall Attendent",
+        "role": "Microphone Left",
         "assigned": [
-            {
-                "name": "JC"
-            },
-            {
-                "name": "RL"
-            },
-            {
-                "name": "BC"
-            },
-            {
-                "name": "HS"
-            },
-            {
-                "name": "DB"
-            },
-            {
-                "name": "MC"
+            {"name": "BC"},
+            {"name": "BJ"},
+            {"name": "DB"},
+            {"name": "GJ"},
+            {"name": "HS"},
+            {"name": "IL"},
+            {"name": "JC"},
+            {"name": "JB"},
+            {"name": "RL"},
+            {"name": "Roy"},
+            {"name": "SE"},
+            {"name": "SZ"},
+            {"name": "TM"},
+            {"name": "LB"},
+            {"name": "JG"},
+            {"name": "TH"},
+            {"name": "QK"},
+            {"name":"MC"},
+            {"name":"CR"},
+            {"name":"KM"},
+            {"name":"JH"}
 
-            },
-            {
-                "name": "NH"
+        ]
+    },
+    {
+        "role": "Microphone Right",
+        "assigned": [
+            {"name": "BC"},
+            {"name": "BJ"},
+            {"name": "DB"},
+            {"name": "GJ"},
+            {"name": "HS"},
+            {"name": "IL"},
+            {"name": "JC"},
+            {"name": "JB"},
+            {"name": "RL"},
+            {"name": "Roy"},
+            {"name": "SE"},
+            {"name": "SZ"},
+            {"name": "TM"},
+            {"name": "LB"},
+            {"name": "JG"},
+            {"name": "TH"},
+            {"name": "QK"},
+            {"name":"MC"},
+            {"name":"CR"},
+            {"name":"KM"},
+            {"name":"JH"}
 
-            }
+        ]
+    },
+    {
+        "role": "Mixer",
+        "assigned": [
+            {"name": "BC"},
+            {"name": "BJ"},
+            {"name": "DB"},
+            {"name": "GJ"},
+            {"name": "HS"},
+            {"name": "IL"},
+            {"name": "JC"},
+            {"name": "JB"},
+            {"name": "RL"},
+            {"name": "Roy"},
+            {"name": "SE"},
+            {"name": "TM"},
+            {"name": "LB"},
+            {"name": "JG"},
+            {"name": "TH"},
+            {"name": "QK"},
+            {"name":"MC"},
+            {"name":"CR"},
+            {"name":"KM"},
+            {"name":"JH"},
+            {"name":"RH"}
+
+
+        ]
+    },
+    {
+        "role": "Security 1",
+        "assigned": [
+            {"name": "BC"},
+            {"name": "BJ"},
+            {"name": "DB"},
+            {"name": "GJ"},
+            {"name": "HS"},
+            {"name": "IL"},
+            {"name": "JC"},
+            {"name": "JB"},
+            {"name": "RL"},
+            {"name": "Roy"},
+            {"name": "SE"},
+            {"name": "SZ"},
+            {"name": "TM"},
+            {"name": "LB"},
+            {"name": "JG"},
+            {"name": "TH"},
+            {"name": "QK"},
+            {"name":"MC"},
+            {"name":"CR"},
+            {"name":"JH"},
+            {"name":"RH"}
+
+        ]
+    },
+    {
+        "role": "Security 2",
+        "assigned": [
+            {"name": "BC"},
+            {"name": "BJ"},
+            {"name": "DB"},
+            {"name": "GJ"},
+            {"name": "HS"},
+            {"name": "IL"},
+            {"name": "JC"},
+            {"name": "JB"},
+            {"name": "RL"},
+            {"name": "Roy"},
+            {"name": "SE"},
+            {"name": "SZ"},
+            {"name": "TM"},
+            {"name": "LB"},
+            {"name": "JG"},
+            {"name": "TH"},
+            {"name": "QK"},
+            {"name":"MC"},
+            {"name":"CR"},
+            {"name":"RH"}
+
         ]
     }
 ]
+
 
 
 
