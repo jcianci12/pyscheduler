@@ -1,4 +1,4 @@
-def no_schedule_double_booking(people, schedules, index):
+def filter_people_who_are_booked_this_schedule(people, schedules, index):
     """
     Remove people on the schedule from the list of people
     """
@@ -15,7 +15,7 @@ def no_schedule_double_booking(people, schedules, index):
 
     return people_copy
 
-def return_people_who_are_not_booked_on_previous_schedule(people, schedules, index):
+def filter_people_who_were_booked_last_schedule(people, schedules, index):
     """
     Return people who are not booked in the previous schedule
     """
@@ -42,6 +42,3 @@ def return_list_of_people_who_are_booked_on_previous_schedule(people, schedules,
 
     # print(people_copy)
     return people_copy
-def people_that_can_do_the_task(tasklist,task):
-    return [person['name'] for person in tasklist if person['role'] in task['assigned']]
-

@@ -4,7 +4,7 @@ import random
 
 from no_consecutive_tasks import no_consecutive_tasks
 from no_same_task_consecutive_days import no_same_task_consecutive_schedules
-from no_same_task_same_time import no_schedule_double_booking, return_people_who_are_not_booked_on_previous_schedule
+from no_same_task_same_time import filter_people_who_are_booked_this_schedule, filter_people_who_were_booked_last_schedule
 
 # load the task list
 with open('tasklist.json') as f:
@@ -25,7 +25,7 @@ def generate_dates(days, weeks):
             dates.append(date.strftime("%Y-%m-%d"))
     return dates
 # define the scheduling rules
-scheduling_rules = [no_schedule_double_booking]
+scheduling_rules = [filter_people_who_are_booked_this_schedule]
 
 
 def generate_random_schedule(task_list, rules, dates, n=1):
@@ -42,8 +42,8 @@ def generate_random_schedule(task_list, rules, dates, n=1):
 
             index = min(i, len(schedules) - 1)
 
-            peoplethatarenotalreadybookedthisschedule = no_schedule_double_booking(people, schedules, index)
-            peoplethatarenotalreadybookedpreviousschedule = return_people_who_are_not_booked_on_previous_schedule(peoplethatarenotalreadybookedthisschedule, schedules, index)
+            peoplethatarenotalreadybookedthisschedule = filter_people_who_are_booked_this_schedule(people, schedules, index)
+            peoplethatarenotalreadybookedpreviousschedule = filter_people_who_were_booked_last_schedule(peoplethatarenotalreadybookedthisschedule, schedules, index)
             # names2 = set(item['name'] for item in peoplethatarenotalreadybookedpreviousschedule)
             # intersection = [item for item in peoplethatarenotalreadybookedthisschedule if item['name'] in names2]
             person = random.choice(peoplethatarenotalreadybookedpreviousschedule)
