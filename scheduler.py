@@ -34,25 +34,25 @@ def generate_random_schedule(task_list, rules, dates, n=1):
     """
     schedules = [{"date": date, "tasks": []} for date in dates]
 
-    for i, schedule in enumerate(schedules):
+    for i in range(len(dates)):
 
         for task in task_list:
             # Get a list of the people that can do the task
-            people = task['assigned']
+            people = task['assigned'][:]  # Make a copy of the list
 
-            index = min(i, len(schedules) - 1)
+            # Get people who aren't already booked for this schedule
+            peoplethatarenotalreadybookedthisdate = filter_people_who_are_booked_this_schedule(people, schedules, i)
+            peoplethatarenotbookedlastschedule= filter_people_who_were_booked_last_schedule(peoplethatarenotalreadybookedthisdate, schedules, i)
 
-            peoplethatarenotalreadybookedthisschedule = filter_people_who_are_booked_this_schedule(people, schedules, index)
-            peoplethatarenotalreadybookedpreviousschedule = filter_people_who_were_booked_last_schedule(peoplethatarenotalreadybookedthisschedule, schedules, index)
-            # names2 = set(item['name'] for item in peoplethatarenotalreadybookedpreviousschedule)
-            # intersection = [item for item in peoplethatarenotalreadybookedthisschedule if item['name'] in names2]
-            person = random.choice(peoplethatarenotalreadybookedpreviousschedule)
-
-
-            schedule['tasks'].append({
-                "role": task['role'],
-                "assigned": [person]
-            })
+            # Choose a person from the list
+            if peoplethatarenotbookedlastschedule:
+                person = random.choice(peoplethatarenotbookedlastschedule)
+                schedules[i]['tasks'].append({
+                    "role": task['role'],
+                    "assigned": [person]
+                })
+                # Remove the person from the list of people who can do this task
+                people.remove(person)
 
     return schedules
 

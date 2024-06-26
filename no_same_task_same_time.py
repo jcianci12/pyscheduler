@@ -26,9 +26,9 @@ def filter_people_who_were_booked_last_schedule(people, schedules, index):
         if person not in peopleonpreviousschedule:
             intersection.append(person)
 
-    # print(f"Removed {len(people_copy)-len(intersection)} people from the list, index {index}")
-    # print(intersection)
     return intersection
+
+
 
 def return_list_of_people_who_are_booked_on_previous_schedule(people, schedules, index):
     """
