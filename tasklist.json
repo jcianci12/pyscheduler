@@ -48,7 +48,9 @@
             {"name":"CR"},
             {"name":"KM"},
             {"name":"JH"},
-            {"name":"HM"}
+            {"name":"HM"},
+            {"name":"CN"},
+            {"name":"JN"}
         ]
     },
     {
@@ -75,7 +77,10 @@
             {"name":"CR"},
             {"name":"KM"},
             {"name":"JH"},
-            {"name":"HM"}
+            {"name":"HM"},
+            {"name":"CN"},
+            {"name":"JN"},
+            {"name":"HK"}
         ]
     },
     {
