@@ -50,7 +50,7 @@ def generate_schedule(task_list,  dates, n=1):
     return schedules
 
 # execute the code
-dates = generate_dates(days, 4)
+dates = generate_dates(days, 8)
 schedule = generate_schedule(task_list,  dates)
 print_schedule(schedule)
 save_csv(schedule)
