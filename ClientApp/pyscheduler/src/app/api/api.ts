@@ -87,14 +87,14 @@ export class Client {
 
     /**
      * Create a new person
-     * @param body (optional) The person to create.
+     * @param person (optional) 
      * @return The created person
      */
-    peoplePOST(body: Body | null | undefined): Observable<Anonymous> {
+    peoplePOST(person: Person2 | null | undefined): Observable<Person> {
         let url_ = this.baseUrl + "/people";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = JSON.stringify(person);
 
         let options_ : any = {
             body: content_,
@@ -113,26 +113,26 @@ export class Client {
                 try {
                     return this.processPeoplePOST(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<Anonymous>;
+                    return _observableThrow(e) as any as Observable<Person>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<Anonymous>;
+                return _observableThrow(response_) as any as Observable<Person>;
         }));
     }
 
-    protected processPeoplePOST(response: HttpResponseBase): Observable<Anonymous> {
+    protected processPeoplePOST(response: HttpResponseBase): Observable<Person> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 201) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Anonymous.fromJS(resultData200);
-            return _observableOf(result200);
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = Person.fromJS(resultData201);
+            return _observableOf(result201);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -143,23 +143,20 @@ export class Client {
     }
 
     /**
-     * Delete a person by ID
-     * @param person_id (optional) The ID of the person.
+     * Delete a person
      * @return Person deleted
      */
-    peopleDELETE(person_id: number | null | undefined): Observable<Anonymous2> {
+    peopleDELETE(person_id: number): Observable<void> {
         let url_ = this.baseUrl + "/people/{person_id}";
-        if (person_id !== null && person_id !== undefined)
+        if (person_id === undefined || person_id === null)
+            throw new Error("The parameter 'person_id' must be defined.");
         url_ = url_.replace("{person_id}", encodeURIComponent("" + person_id));
-        else
-            url_ = url_.replace("/{person_id}", "");
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "application/json"
             })
         };
 
@@ -170,26 +167,23 @@ export class Client {
                 try {
                     return this.processPeopleDELETE(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<Anonymous2>;
+                    return _observableThrow(e) as any as Observable<void>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<Anonymous2>;
+                return _observableThrow(response_) as any as Observable<void>;
         }));
     }
 
-    protected processPeopleDELETE(response: HttpResponseBase): Observable<Anonymous2> {
+    protected processPeopleDELETE(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Anonymous2.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -201,15 +195,13 @@ export class Client {
 
     /**
      * Get a person by ID
-     * @param person_id (optional) The ID of the person.
      * @return The person
      */
-    peopleGET(person_id: number | null | undefined): Observable<Anonymous3> {
+    peopleGET(person_id: number): Observable<Person> {
         let url_ = this.baseUrl + "/people/{person_id}";
-        if (person_id !== null && person_id !== undefined)
+        if (person_id === undefined || person_id === null)
+            throw new Error("The parameter 'person_id' must be defined.");
         url_ = url_.replace("{person_id}", encodeURIComponent("" + person_id));
-        else
-            url_ = url_.replace("/{person_id}", "");
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -227,14 +219,14 @@ export class Client {
                 try {
                     return this.processPeopleGET(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<Anonymous3>;
+                    return _observableThrow(e) as any as Observable<Person>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<Anonymous3>;
+                return _observableThrow(response_) as any as Observable<Person>;
         }));
     }
 
-    protected processPeopleGET(response: HttpResponseBase): Observable<Anonymous3> {
+    protected processPeopleGET(response: HttpResponseBase): Observable<Person> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -245,15 +237,8 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Anonymous3.fromJS(resultData200);
+            result200 = Person.fromJS(resultData200);
             return _observableOf(result200);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = Anonymous4.fromJS(resultData404);
-            return throwException("Person not found", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -264,20 +249,18 @@ export class Client {
     }
 
     /**
-     * Update a person by ID
-     * @param person_id (optional) The ID of the person.
-     * @param body (optional) The updated person.
+     * Update a person
+     * @param person (optional) 
      * @return The updated person
      */
-    peoplePUT(person_id: number | null | undefined, body: Body2 | null | undefined): Observable<Anonymous5> {
+    peoplePUT(person_id: number, person: Person3 | null | undefined): Observable<Person> {
         let url_ = this.baseUrl + "/people/{person_id}";
-        if (person_id !== null && person_id !== undefined)
+        if (person_id === undefined || person_id === null)
+            throw new Error("The parameter 'person_id' must be defined.");
         url_ = url_.replace("{person_id}", encodeURIComponent("" + person_id));
-        else
-            url_ = url_.replace("/{person_id}", "");
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = JSON.stringify(person);
 
         let options_ : any = {
             body: content_,
@@ -296,14 +279,14 @@ export class Client {
                 try {
                     return this.processPeoplePUT(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<Anonymous5>;
+                    return _observableThrow(e) as any as Observable<Person>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<Anonymous5>;
+                return _observableThrow(response_) as any as Observable<Person>;
         }));
     }
 
-    protected processPeoplePUT(response: HttpResponseBase): Observable<Anonymous5> {
+    protected processPeoplePUT(response: HttpResponseBase): Observable<Person> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -314,15 +297,8 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Anonymous5.fromJS(resultData200);
+            result200 = Person.fromJS(resultData200);
             return _observableOf(result200);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = Anonymous6.fromJS(resultData404);
-            return throwException("Person not found", status, _responseText, _headers, result404);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -377,11 +353,11 @@ export interface IPerson {
     last_name?: string | undefined;
 }
 
-export class Body implements IBody {
-    first_name!: string;
-    last_name!: string;
+export class Person2 implements IPerson2 {
+    first_name?: string | undefined;
+    last_name?: string | undefined;
 
-    constructor(data?: IBody) {
+    constructor(data?: IPerson2) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -397,9 +373,9 @@ export class Body implements IBody {
         }
     }
 
-    static fromJS(data: any): Body {
+    static fromJS(data: any): Person2 {
         data = typeof data === 'object' ? data : {};
-        let result = new Body();
+        let result = new Person2();
         result.init(data);
         return result;
     }
@@ -412,16 +388,16 @@ export class Body implements IBody {
     }
 }
 
-export interface IBody {
-    first_name: string;
-    last_name: string;
+export interface IPerson2 {
+    first_name?: string | undefined;
+    last_name?: string | undefined;
 }
 
-export class Body2 implements IBody2 {
-    first_name!: string;
-    last_name!: string;
+export class Person3 implements IPerson3 {
+    first_name?: string | undefined;
+    last_name?: string | undefined;
 
-    constructor(data?: IBody2) {
+    constructor(data?: IPerson3) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -437,9 +413,9 @@ export class Body2 implements IBody2 {
         }
     }
 
-    static fromJS(data: any): Body2 {
+    static fromJS(data: any): Person3 {
         data = typeof data === 'object' ? data : {};
-        let result = new Body2();
+        let result = new Person3();
         result.init(data);
         return result;
     }
@@ -452,249 +428,9 @@ export class Body2 implements IBody2 {
     }
 }
 
-export interface IBody2 {
-    first_name: string;
-    last_name: string;
-}
-
-export class Anonymous implements IAnonymous {
+export interface IPerson3 {
     first_name?: string | undefined;
-    id?: number | undefined;
     last_name?: string | undefined;
-
-    constructor(data?: IAnonymous) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.first_name = _data["first_name"];
-            this.id = _data["id"];
-            this.last_name = _data["last_name"];
-        }
-    }
-
-    static fromJS(data: any): Anonymous {
-        data = typeof data === 'object' ? data : {};
-        let result = new Anonymous();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["first_name"] = this.first_name;
-        data["id"] = this.id;
-        data["last_name"] = this.last_name;
-        return data;
-    }
-}
-
-export interface IAnonymous {
-    first_name?: string | undefined;
-    id?: number | undefined;
-    last_name?: string | undefined;
-}
-
-export class Anonymous2 implements IAnonymous2 {
-    message?: string | undefined;
-
-    constructor(data?: IAnonymous2) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.message = _data["message"];
-        }
-    }
-
-    static fromJS(data: any): Anonymous2 {
-        data = typeof data === 'object' ? data : {};
-        let result = new Anonymous2();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["message"] = this.message;
-        return data;
-    }
-}
-
-export interface IAnonymous2 {
-    message?: string | undefined;
-}
-
-export class Anonymous3 implements IAnonymous3 {
-    first_name?: string | undefined;
-    id?: number | undefined;
-    last_name?: string | undefined;
-
-    constructor(data?: IAnonymous3) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.first_name = _data["first_name"];
-            this.id = _data["id"];
-            this.last_name = _data["last_name"];
-        }
-    }
-
-    static fromJS(data: any): Anonymous3 {
-        data = typeof data === 'object' ? data : {};
-        let result = new Anonymous3();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["first_name"] = this.first_name;
-        data["id"] = this.id;
-        data["last_name"] = this.last_name;
-        return data;
-    }
-}
-
-export interface IAnonymous3 {
-    first_name?: string | undefined;
-    id?: number | undefined;
-    last_name?: string | undefined;
-}
-
-export class Anonymous4 implements IAnonymous4 {
-    error?: string | undefined;
-
-    constructor(data?: IAnonymous4) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.error = _data["error"];
-        }
-    }
-
-    static fromJS(data: any): Anonymous4 {
-        data = typeof data === 'object' ? data : {};
-        let result = new Anonymous4();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["error"] = this.error;
-        return data;
-    }
-}
-
-export interface IAnonymous4 {
-    error?: string | undefined;
-}
-
-export class Anonymous5 implements IAnonymous5 {
-    first_name?: string | undefined;
-    id?: number | undefined;
-    last_name?: string | undefined;
-
-    constructor(data?: IAnonymous5) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.first_name = _data["first_name"];
-            this.id = _data["id"];
-            this.last_name = _data["last_name"];
-        }
-    }
-
-    static fromJS(data: any): Anonymous5 {
-        data = typeof data === 'object' ? data : {};
-        let result = new Anonymous5();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["first_name"] = this.first_name;
-        data["id"] = this.id;
-        data["last_name"] = this.last_name;
-        return data;
-    }
-}
-
-export interface IAnonymous5 {
-    first_name?: string | undefined;
-    id?: number | undefined;
-    last_name?: string | undefined;
-}
-
-export class Anonymous6 implements IAnonymous6 {
-    error?: string | undefined;
-
-    constructor(data?: IAnonymous6) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.error = _data["error"];
-        }
-    }
-
-    static fromJS(data: any): Anonymous6 {
-        data = typeof data === 'object' ? data : {};
-        let result = new Anonymous6();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["error"] = this.error;
-        return data;
-    }
-}
-
-export interface IAnonymous6 {
-    error?: string | undefined;
 }
 
 export class ApiException extends Error {
@@ -722,7 +458,10 @@ export class ApiException extends Error {
 }
 
 function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): Observable<any> {
-    return _observableThrow(new ApiException(message, status, response, headers, result));
+    if (result !== null && result !== undefined)
+        return _observableThrow(result);
+    else
+        return _observableThrow(new ApiException(message, status, response, headers, null));
 }
 
 function blobToText(blob: any): Observable<string> {
