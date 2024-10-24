@@ -2,173 +2,583 @@
     {
         "role": "Auditorium Attendant",
         "assigned": [
-            {"name": "BC"},
-            {"name": "BJ"},
-            {"name": "DB"},
-            {"name": "GJ"},
-            {"name": "HS"},
-            {"name": "IL"},
-            {"name": "JC"},
-            {"name": "JB"},
-            {"name": "RL"},
-            {"name": "SE"},
-            {"name": "SZ"},
-            {"name": "TM"},
-            {"name": "LB"},
-            {"name": "JG"},
-            {"name": "TH"},
-            {"name": "QK"},
-            {"name":"MC"},
-            {"name":"CR"},
-            {"name":"HM"},
-            {"name":"NH"}
+           
+            {
+                "name": "Paul Christian"
+            },
+            {
+                "name": "Brendon Smith"
+            },
+           
+            {
+                "name": "Stephen Kallio"
+            },
+            {
+                "name": "Ben Coxcen"
+            },
+            {
+                "name": "Brian Jenkinson"
+            },
+            {
+                "name": "David Boorer"
+            },
+            {
+                "name": "Graham Jorgensen"
+            },
+            {
+                "name": "Helmut Sternsdorf"
+            },
+            {
+                "name": "Ian Lesleighter"
+            },
+            {
+                "name": "Jon Cianci"
+            },
+            {
+                "name": "Jonathan Bourletzikas"
+            },
+            {
+                "name": "Ryan Longshaw"
+            },
+            {
+                "name": "Simon Ellis"
+            },
+            {
+                "name": "Sieto Zeeman"
+            },
+            {
+                "name": "Thomas Masters"
+            },
+            {
+                "name": "Lindsay Blondeau"
+            },
+           
+            {
+                "name": "Tibor Horvath"
+            },
+            {
+                "name": "Quinton Kemp"
+            },
+            {
+                "name": "Michael Cianci"
+            },
+            {
+                "name": "Chris Rivers"
+            },
+            
+            {
+                "name": "Norm Horner"
+            }
         ]
     },
     {
         "role": "Microphone Left",
         "assigned": [
-            {"name": "BC"},
-            {"name": "BJ"},
-            {"name": "DB"},
-            {"name": "GJ"},
-            {"name": "HS"},
-            {"name": "IL"},
-            {"name": "JC"},
-            {"name": "JB"},
-            {"name": "RL"},
-            {"name": "Roy"},
-            {"name": "SE"},
-            {"name": "SZ"},
-            {"name": "TM"},
-            {"name": "LB"},
-            {"name": "JG"},
-            {"name": "TH"},
-            {"name": "QK"},
-            {"name":"MC"},
-            {"name":"CR"},
-            {"name":"KM"},
-            {"name":"JH"},
-            {"name":"HM"},
-            {"name":"CN"},
-            {"name":"JN"}
+            {
+                "name": "Tim Shuback"
+            },
+            {
+                "name": "Jon Fuller"
+            },
+            {
+                "name": "Sabastian Ellis"
+            },
+            {
+                "name": "Paul Christian"
+            },
+            {
+                "name": "Brendon Smith"
+            },
+            {
+                "name": "Stephen Kallio"
+            },
+            {
+                "name": "Ben Coxcen"
+            },
+            {
+                "name": "Brian Jenkinson"
+            },
+            {
+                "name": "David Boorer"
+            },
+            {
+                "name": "Graham Jorgensen"
+            },
+            {
+                "name": "Helmut Sternsdorf"
+            },
+            {
+                "name": "Ian Lesleighter"
+            },
+            {
+                "name": "Jon Cianci"
+            },
+            {
+                "name": "Jonathan Bourletzikas"
+            },
+            {
+                "name": "Ryan Longshaw"
+            },
+            {
+                "name": "Henry Longshaw"
+            },
+            {
+                "name": "Jack Longshaw"
+            },
+            {
+                "name": "Roy"
+            },
+            {
+                "name": "Simon Ellis"
+            },
+            {
+                "name": "Sieto Zeeman"
+            },
+            {
+                "name": "Thomas Masters"
+            },
+            {
+                "name": "Lindsay Blondeau"
+            },
+            {
+                "name": "Janusz Grezelak"
+            },
+            {
+                "name": "Tibor Horvath"
+            },
+            {
+                "name": "Quinton Kemp"
+            },
+            {
+                "name": "Harry Kemp"
+            },
+            {
+                "name": "Michael Cianci"
+            },
+            {
+                "name": "Chris Rivers"
+            },
+            {
+                "name": "Christian Rivers"
+            },
+            {
+                "name": "Joshua Hazael"
+            },
+            {
+                "name": "Chris Newman"
+            },
+            {
+                "name": "Judah Newman"
+            },
+            {
+                "name": "Daniel Dewald"
+            },
+            {
+                "name": "Parker Cianci"
+            },
+            {
+                "name": "Richard Harbeck"
+            }
         ]
     },
     {
         "role": "Microphone Right",
         "assigned": [
-            {"name": "BC"},
-            {"name": "BJ"},
-            {"name": "DB"},
-            {"name": "GJ"},
-            {"name": "HS"},
-            {"name": "IL"},
-            {"name": "JC"},
-            {"name": "JB"},
-            {"name": "RL"},
-            {"name": "Roy"},
-            {"name": "SE"},
-            {"name": "SZ"},
-            {"name": "TM"},
-            {"name": "LB"},
-            {"name": "JG"},
-            {"name": "TH"},
-            {"name": "QK"},
-            {"name":"MC"},
-            {"name":"CR"},
-            {"name":"KM"},
-            {"name":"JH"},
-            {"name":"HM"},
-            {"name":"CN"},
-            {"name":"JN"},
-            {"name":"HK"}
+            {
+                "name": "Tim Shuback"
+            },
+            {
+                "name": "Jon Fuller"
+            },
+            {
+                "name": "Sabastian Ellis"
+            },
+            {
+                "name": "Paul Christian"
+            },
+            {
+                "name": "Brendon Smith"
+            },
+            {
+                "name": "Stephen Kallio"
+            },
+            {
+                "name": "Ben Coxcen"
+            },
+            {
+                "name": "Brian Jenkinson"
+            },
+            {
+                "name": "David Boorer"
+            },
+            {
+                "name": "Graham Jorgensen"
+            },
+            {
+                "name": "Helmut Sternsdorf"
+            },
+            {
+                "name": "Ian Lesleighter"
+            },
+            {
+                "name": "Jon Cianci"
+            },
+            {
+                "name": "Jonathan Bourletzikas"
+            },
+            {
+                "name": "Ryan Longshaw"
+            },
+            {
+                "name": "Henry Longshaw"
+            },
+            {
+                "name": "Jack Longshaw"
+            },
+            {
+                "name": "Roy"
+            },
+            {
+                "name": "Simon Ellis"
+            },
+            {
+                "name": "Sieto Zeeman"
+            },
+            {
+                "name": "Thomas Masters"
+            },
+            {
+                "name": "Lindsay Blondeau"
+            },
+            {
+                "name": "Janusz Grezelak"
+            },
+            {
+                "name": "Tibor Horvath"
+            },
+            {
+                "name": "Quinton Kemp"
+            },
+            {
+                "name": "Harry Kemp"
+            },
+            {
+                "name": "Michael Cianci"
+            },
+            {
+                "name": "Chris Rivers"
+            },
+            {
+                "name": "Christian Rivers"
+            },
+            {
+                "name": "Joshua Hazael"
+            },
+            {
+                "name": "Chris Newman"
+            },
+            {
+                "name": "Judah Newman"
+            },
+            {
+                "name": "Daniel Dewald"
+            },
+            {
+                "name": "Parker Cianci"
+            },
+            {
+                "name": "Richard Harbeck"
+            }
         ]
     },
     {
         "role": "Audio Operator",
         "assigned": [
-            {"name": "BC"},
-            {"name": "DB"},
-            {"name": "HS"},
-            {"name": "JC"},
-            {"name": "JB"},
-            {"name": "RL"},
-            {"name": "Roy"},
-            {"name": "SE"},
-            {"name": "LB"}
+            {
+                "name": "Tim Shuback"
+            },
+            {
+                "name": "Jon Fuller"
+            },
+            {
+                "name": "Sabastian Ellis"
+            },
+            {
+                "name": "Paul Christian"
+            },
+            {
+                "name": "Brendon Smith"
+            },
+            {
+                "name": "Ben Coxcen"
+            },
+            {
+                "name": "David Boorer"
+            },
+            {
+                "name": "Helmut Sternsdorf"
+            },
+            {
+                "name": "Jon Cianci"
+            },
+            {
+                "name": "Jonathan Bourletzikas"
+            },
+            {
+                "name": "Ryan Longshaw"
+            },
+            {
+                "name": "Henry Longshaw"
+            },
+            {
+                "name": "Jack Longshaw"
+            },
+            {
+                "name": "Quinton Kemp"
+            },
+            {
+                "name": "Harry Kemp"
+            },
+            {
+                "name": "Roy"
+            },
+            {
+                "name": "Simon Ellis"
+            },
+            {
+                "name": "Lindsay Blondeau"
+            },
+            {
+                "name": "Parker Cianci"
+            },
+            {
+                "name": "Richard Harbeck"
+            }
         ]
     },
     {
         "role": "Video Operator",
         "assigned": [
-            {"name": "BC"},
-            {"name": "DB"},
-            {"name": "HS"},
-            {"name": "JC"},
-            {"name": "JB"},
-            {"name": "RL"},
-            {"name": "Roy"},
-            {"name": "SE"},
-            {"name": "LB"}
+            {
+                "name": "Sabastian Ellis"
+            },
+            {
+                "name": "Brendon Smith"
+            },
+            {
+                "name": "Ben Coxcen"
+            },
+            {
+                "name": "David Boorer"
+            },
+            {
+                "name": "Helmut Sternsdorf"
+            },
+            {
+                "name": "Jon Cianci"
+            },
+            {
+                "name": "Jonathan Bourletzikas"
+            },
+            {
+                "name": "Ryan Longshaw"
+            },
+            {
+                "name": "Henry Longshaw"
+            },
+            {
+                "name": "Harry Kemp"
+            },
+            {
+                "name": "Roy"
+            },
+            {
+                "name": "Simon Ellis"
+            },
+            {
+                "name": "Lindsay Blondeau"
+            }
         ]
     },
     {
         "role": "Security 1",
         "assigned": [
-            {"name": "BC"},
-            {"name": "BJ"},
-            {"name": "DB"},
-            {"name": "GJ"},
-            {"name": "HS"},
-            {"name": "IL"},
-            {"name": "JC"},
-            {"name": "JB"},
-            {"name": "RL"},
-            {"name": "Roy"},
-            {"name": "SE"},
-            {"name": "SZ"},
-            {"name": "TM"},
-            {"name": "LB"},
-            {"name": "JG"},
-            {"name": "TH"},
-            {"name": "QK"},
-            {"name":"MC"},
-            {"name":"CR"},
-            {"name":"JH"},
-            {"name":"RH"},
-            {"name":"HM"},
-            {"name":"NH"}
+            {
+                "name": "Tim Shuback"
+            },
+            {
+                "name": "Jon Fuller"
+            },
+            {
+                "name": "Paul Christian"
+            },
+            {
+                "name": "Brendon Smith"
+            },
+            {
+                "name": "Stephen Kallio"
+            },
+            {
+                "name": "Ben Coxcen"
+            },
+            {
+                "name": "Brian Jenkinson"
+            },
+            {
+                "name": "David Boorer"
+            },
+            {
+                "name": "Graham Jorgensen"
+            },
+            {
+                "name": "Helmut Sternsdorf"
+            },
+            {
+                "name": "Ian Lesleighter"
+            },
+            {
+                "name": "Jon Cianci"
+            },
+            {
+                "name": "Jonathan Bourletzikas"
+            },
+            {
+                "name": "Ryan Longshaw"
+            },
+            {
+                "name": "Roy"
+            },
+            {
+                "name": "Simon Ellis"
+            },
+            {
+                "name": "Sieto Zeeman"
+            },
+            {
+                "name": "Thomas Masters"
+            },
+            {
+                "name": "Lindsay Blondeau"
+            },
+            {
+                "name": "Janusz Grezelak"
+            },
+            {
+                "name": "Tibor Horvath"
+            },
+            {
+                "name": "Quinton Kemp"
+            },
+            {
+                "name": "Harry Kemp"
+            },
+            {
+                "name": "Michael Cianci"
+            },
+            {
+                "name": "Chris Rivers"
+            },
+            {
+                "name": "Christian Rivers"
+            },
+            {
+                "name": "Joshua Hazael"
+            },
+            {
+                "name": "Richard Harbeck"
+            },
+            {
+                "name": "Norm Horner"
+            }
         ]
     },
     {
         "role": "Security 2",
         "assigned": [
-            {"name": "BC"},
-            {"name": "BJ"},
-            {"name": "DB"},
-            {"name": "GJ"},
-            {"name": "HS"},
-            {"name": "IL"},
-            {"name": "JC"},
-            {"name": "JB"},
-            {"name": "RL"},
-            {"name": "Roy"},
-            {"name": "SE"},
-            {"name": "SZ"},
-            {"name": "TM"},
-            {"name": "LB"},
-            {"name": "JG"},
-            {"name": "TH"},
-            {"name": "QK"},
-            {"name":"MC"},
-            {"name":"CR"},
-            {"name":"RH"},
-            {"name":"HM"},
-            {"name":"NH"}
+            {
+                "name": "Tim Shuback"
+            },
+            {
+                "name": "Jon Fuller"
+            },
+            {
+                "name": "Paul Christian"
+            },
+            {
+                "name": "Brendon Smith"
+            },
+            {
+                "name": "Stephen Kallio"
+            },
+            {
+                "name": "Ben Coxcen"
+            },
+            {
+                "name": "Brian Jenkinson"
+            },
+            {
+                "name": "David Boorer"
+            },
+            {
+                "name": "Graham Jorgensen"
+            },
+            {
+                "name": "Helmut Sternsdorf"
+            },
+            {
+                "name": "Ian Lesleighter"
+            },
+            {
+                "name": "Jon Cianci"
+            },
+            {
+                "name": "Jonathan Bourletzikas"
+            },
+            {
+                "name": "Ryan Longshaw"
+            },
+            {
+                "name": "Roy"
+            },
+            {
+                "name": "Simon Ellis"
+            },
+            {
+                "name": "Sieto Zeeman"
+            },
+            {
+                "name": "Thomas Masters"
+            },
+            {
+                "name": "Lindsay Blondeau"
+            },
+            {
+                "name": "Janusz Grezelak"
+            },
+            {
+                "name": "Tibor Horvath"
+            },
+            {
+                "name": "Quinton Kemp"
+            },
+            {
+                "name": "Harry Kemp"
+            },
+            {
+                "name": "Michael Cianci"
+            },
+            {
+                "name": "Chris Rivers"
+            },
+            {
+                "name": "Christian Rivers"
+            },
+            {
+                "name": "Richard Harbeck"
+            },
+            {
+                "name": "Norm Horner"
+            }
         ]
     }
 ]
-
-
-
-
-

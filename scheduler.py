@@ -6,7 +6,6 @@ from filter_people_who_are_not_available import filter_people_who_are_not_availa
 from generate_dates import generate_dates
 from print_schedule import print_schedule
 from save_csv import save_csv
-
 # load the task list
 with open('tasklist.json') as f:
     task_list = json.load(f)
@@ -48,11 +47,14 @@ def generate_schedule(task_list,  dates, n=1):
                 people.remove(person)
 
     return schedules
-
-# execute the code
-dates = generate_dates(days, 8)
-schedule = generate_schedule(task_list,  dates)
-print_schedule(schedule)
-save_csv(schedule)
+def returnSchedule():
+    dates = generate_dates(days, 8)
+    schedule = generate_schedule(task_list,  dates)
+    return schedule
+# # execute the code
+# dates = generate_dates(days, 8)
+# schedule = generate_schedule(task_list,  dates)
+# print_schedule(schedule)
+# save_csv(schedule)
 
 
