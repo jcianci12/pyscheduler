@@ -29,6 +29,7 @@ export class PeopleComponent implements OnInit {
   }
 
   async updatePerson(person: Person) {
+    console.log(person)
     await this.client.peoplePUT(person.id as number, person).toPromise();
     this.people = await this.client.peopleAll().toPromise();
   }

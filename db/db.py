@@ -51,7 +51,7 @@ class SchedulerDB:
         with conn:
             cur = conn.cursor()
             cur.execute('''
-                SELECT first_name, last_name
+                SELECT first_name, last_name,id
                 FROM people
             ''')
             return cur.fetchall()

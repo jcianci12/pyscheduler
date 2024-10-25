@@ -2,16 +2,17 @@
   <thead>
     <tr>
       <th>Id</th>
-      <th>Name</th>
-      <th>Age</th>
+      <th>First</th>
+      <th>Last</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let person of people">
       <td>{{ person.id }}</td>
-      <td>{{ person.first_name }}</td>
-      <td>{{ person.last_name }}</td>
+      <td><input type="disabled" [(ngModel)]="person.id"></td>
+      <td><input type="text" [(ngModel)]="person.first_name"></td>
+      <td><input type="text" [(ngModel)]="person.last_name"></td>
       <td>
         <button class="btn btn-primary" (click)="updatePerson(person)">Update</button>
         <button class="btn btn-danger" (click)="deletePerson(person.id??0)">Delete</button>
@@ -20,6 +21,7 @@
   </tbody>
 </table>
 
+<h3>Create Person</h3>
 <form (ngSubmit)="createPerson(personForm.value)">
   <div class="form-group">
     <label for="first_name">First Name</label>
@@ -31,4 +33,5 @@
   </div>
   <button type="submit" class="btn btn-primary">Create</button>
 </form>
+
 
