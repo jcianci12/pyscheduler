@@ -430,33 +430,41 @@ def create_event():
 @cross_origin()
 @app.route('/assignments', methods=['GET'])
 def get_assignments():
-    """Get all assignments
+    """Get all assignments along with their events
     ---
     definitions:
-        Assignment:
+        EventWithAssignments:
             type: object
             properties:
                 id:
                     type: integer
-                event_id:
-                    type: integer
-                task_id:
-                    type: integer
-                person_id:
-                    type: integer
+                event_name:
+                    type: string
+                event_date:
+                    type: string
+                assignments:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                            personid:
+                                type: integer
+                            taskid:
+                                type: integer
     responses:
         200:
-            description: A list of all assignments
+            description: A list of all events with their assignments
             schema:
                 type: array
                 items:
-                    $ref: '#/definitions/Assignment'
+                    $ref: '#/definitions/EventWithAssignments'
     """
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
-        assignments = scheduler_db.get_all_assignments(conn)
-    return jsonify([{'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]} for assignment in assignments])
-
+        events_with_assignments = scheduler_db.get_events_with_assignments(conn)
+    return jsonify(events_with_assignments)
 @cross_origin()
 @app.route('/assignments/<int:assignment_id>', methods=['GET'])
 def get_assignment(assignment_id):

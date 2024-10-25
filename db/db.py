@@ -203,37 +203,54 @@ class SchedulerDB:
                 WHERE id = ?
             ''', (task_id,))
             conn.commit()
-    def get_events(self, conn):
-        """Get all events
+    def get_events_with_assignments(self, conn):
+        """Get all events with their assignments
         
         Returns:
-            list: A list of tuples where each tuple contains an event's id, name, and date.
+            list: A list of tuples where each tuple contains an event's id, name, date, and a list of assignments.
         """
         with conn:
             cur = conn.cursor()
             cur.execute('''
-                SELECT id, event_name, event_date
-                FROM Event
+                SELECT e.id, e.event_name, e.event_date, a.id AS assignment_id, a.personid, a.taskid
+                FROM Event e
+                LEFT JOIN Assignments a ON e.id = a.eventid
             ''')
-            return cur.fetchall()
-    def create_event(self, conn, event_name, event_date):
-        """Create a new event in the event table
-        
-        Args:
-            event_name (str): The name of the event.
-            event_date (date): The date of the event.
-        
-        Returns:
-            int: The ID of the newly created event.
-        """
-        with conn:
-            cur = conn.cursor()
-            cur.execute('''
-                INSERT INTO Event (event_name, event_date)
-                VALUES (?, ?)
-            ''', (event_name, event_date))
-            conn.commit()
-            return cur.lastrowid
+            events = {}
+            for row in cur.fetchall():
+                event_id, event_name, event_date, assignment_id, personid, taskid = row
+                if event_id not in events:
+                    events[event_id] = {
+                        'id': event_id,
+                        'event_name': event_name,
+                        'event_date': event_date,
+                        'assignments': []
+                    }
+                if assignment_id is not None:
+                    events[event_id]['assignments'].append({
+                        'id': assignment_id,
+                        'personid': personid,
+                        'taskid': taskid
+                    })
+            return list(events.values())
+        def create_event(self, conn, event_name, event_date):
+            """Create a new event in the event table
+            
+            Args:
+                event_name (str): The name of the event.
+                event_date (date): The date of the event.
+            
+            Returns:
+                int: The ID of the newly created event.
+            """
+            with conn:
+                cur = conn.cursor()
+                cur.execute('''
+                    INSERT INTO Event (event_name, event_date)
+                    VALUES (?, ?)
+                ''', (event_name, event_date))
+                conn.commit()
+                return cur.lastrowid
 
     def read_event(self, conn, event_id):
         with conn:
