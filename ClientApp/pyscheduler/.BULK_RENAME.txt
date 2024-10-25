@@ -25080,10 +25080,10 @@ c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\
 c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\app.component.ts
 c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\app.config.ts
 c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\app.routes.ts
-c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\assignment\schedules.component.css
-c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\assignment\schedules.component.html
-c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\assignment\schedules.component.spec.ts
-c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\assignment\schedules.component.ts
+c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\assignment\assignments.component.css
+c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\assignment\assignments.component.html
+c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\assignment\assignments.component.spec.ts
+c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\assignment\assignments.component.ts
 c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\environments\environment.development.ts
 c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\environments\environment.production.ts
 c:\Users\jcianci12.DESKTOP-2CKPSCV\Desktop\IT\pyscheduler\ClientApp\pyscheduler\src\app\environments\environment.ts

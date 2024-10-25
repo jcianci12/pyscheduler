@@ -4,6 +4,11 @@
       <th>Id</th>
       <th>Name</th>
       <th>Date</th>
+      <td *ngFor="let task of tasks">
+        
+        {{ task.task_name }}
+      
+     </td>
       <th></th>
     </tr>
   </thead>
@@ -12,10 +17,18 @@
       <td>{{ event.id }}</td>
       <td><input type="text" [(ngModel)]="event.id"></td>
       <td><input type="text" [(ngModel)]="event.event_name"></td>
-      <td><input type="text" [(ngModel)]="event.event_date"></td>
+      
+      <td>
+        <input type="date" [(ngModel)]="event.event_date">
+      </td>
+      <td *ngFor="let task of tasks">
+        <app-assignmentrow [eventid]="event.id" [taskid]="task.id" ></app-assignmentrow>
+        
+     </td>
       <td>
         <button class="btn btn-primary" (click)="updateEvent(event)">Update</button>
-        <button class="btn btn-danger" (click)="deleteEvent(event.id??0)">Delete</button>
+        <button class="btn btn-danger" (click)="deleteEvent(event.id ?? 0)">Delete</button>
+        <button class="btn btn-link" [routerLink]="['/assignments', event.id]" role="button">View Assignments</button>
       </td>
     </tr>
   </tbody>
@@ -33,7 +46,7 @@
   </div>
   <div class="form-group">
     <label for="date">Event Date</label>
-    <input type="text" class="form-control" id="date" name="date" [(ngModel)]="eventForm.value.event_date">
+    <input type="date" class="form-control" id="date" name="date" [(ngModel)]="eventForm.value.event_date">
   </div>
   <button type="submit" class="btn btn-primary">Create</button>
 </form>

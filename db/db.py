@@ -56,6 +56,7 @@ class SchedulerDB:
                     FOREIGN KEY (task_id) REFERENCES Task(id)
                 )
             ''')
+             
 
     def get_people(self, conn):
         with conn:
@@ -324,4 +325,18 @@ class SchedulerDB:
                 FROM Assignments
             ''')
             return cur.fetchall()
-
+    
+    def get_assignments_by_event_id(self, conn, id):
+        """Get all assignments with event id matching the id passed in
+        
+        Returns:
+            list: A list of tuples where each tuple contains an assignment's id, event id, task id, and person id.
+        """
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                SELECT id, eventid, taskid, personid
+                FROM Assignments
+                WHERE eventid = ?
+            ''', (id,))
+            return cur.fetchall()

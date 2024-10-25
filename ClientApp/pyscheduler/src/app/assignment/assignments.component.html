@@ -1,3 +1,7 @@
+
+<div *ngIf="  eventIdFromRoute&&events.length>0">
+    <h2>Assignments for Event {{ events[ eventIdFromRoute].event_name}} {{ events[ eventIdFromRoute].event_date}}</h2>
+</div>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -9,53 +13,53 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let schedule of schedules">
-      <td>{{ schedule.id }}</td>
+    <tr *ngFor="let assignment of assignments">
+      <td>{{ assignment.id }}</td>
       <td>
-        <select [(ngModel)]="schedule.event_id" name="event_id_{{schedule.id}}">
+        <select [(ngModel)]="assignment.event_id" name="event_id_{{assignment.id}}">
           <option *ngFor="let event of events" [value]="event.id">{{ event.event_name }}</option>
         </select>
       </td>
       <td>
-        <select [(ngModel)]="schedule.person_id" name="person_id_{{schedule.id}}">
+        <select [(ngModel)]="assignment.person_id" name="person_id_{{assignment.id}}">
           <option *ngFor="let person of persons" [value]="person.id">{{ person.first_name }} {{ person.last_name }}</option>
         </select>
       </td>
       <td>
-        <select [(ngModel)]="schedule.task_id" name="task_id_{{schedule.id}}">
+        <select [(ngModel)]="assignment.task_id" name="task_id_{{assignment.id}}">
           <option *ngFor="let task of tasks" [value]="task.id">{{ task.task_name }}</option>
         </select>
       </td>
       <td>
-        <button class="btn btn-primary" (click)="updateSchedule(schedule)">Update</button>
-        <button class="btn btn-danger" (click)="deleteSchedule(schedule.id ?? 0)">Delete</button>
+        <button class="btn btn-primary" (click)="updateAssigment(assignment)">Update</button>
+        <button class="btn btn-danger" (click)="deleteAssigment(assignment.id ?? 0)">Delete</button>
       </td>
     </tr>
   </tbody>
 </table>
 
-<h3>Create Schedule</h3>
-<form (ngSubmit)="createSchedule(scheduleForm.value)">
+<h3>Create Assignment</h3>
+<form (ngSubmit)="createAssignment(assignmentForm.value)">
   <div class="form-group">
     <label for="event_id">Event ID</label>
-    <select [ngModel]="scheduleForm.value.event_id" (ngModelChange)="scheduleForm.get('event_id')?.setValue($event)" name="event_id">
+    <select [ngModel]="assignmentForm.value.event_id" (ngModelChange)="assignmentForm.get('event_id')?.setValue($event)" name="event_id">
       <option *ngFor="let event of events" [value]="event.id">{{ event.event_name }}</option>
     </select>
   </div>
   <div class="form-group">
     <label for="person_id">Person ID</label>
-    <select [ngModel]="scheduleForm.value.person_id" (ngModelChange)="scheduleForm.get('person_id')?.setValue($event)" name="person_id">
+    <select [ngModel]="assignmentForm.value.person_id" (ngModelChange)="assignmentForm.get('person_id')?.setValue($event)" name="person_id">
       <option *ngFor="let person of persons" [value]="person.id">{{ person.first_name }} {{ person.last_name }}</option>
     </select>
   </div>
   <div class="form-group">
     <label for="task_id">Task ID</label>
-    <select [ngModel]="scheduleForm.value.task_id" (ngModelChange)="scheduleForm.get('task_id')?.setValue($event)" name="task_id">
+    <select [ngModel]="assignmentForm.value.task_id" (ngModelChange)="assignmentForm.get('task_id')?.setValue($event)" name="task_id">
       <option *ngFor="let task of tasks" [value]="task.id">{{ task.task_name }}</option>
     </select>
   </div>
 
-  {{scheduleForm.value | json}}
+  {{assignmentForm.value | json}}
   <button type="submit" class="btn btn-primary">Create</button>
 </form>
 

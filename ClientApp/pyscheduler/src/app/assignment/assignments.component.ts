@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Client, Assignment } from '../api/api';
 import { FormControl, FormGroup,Validators,FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-schedules',
@@ -12,21 +13,31 @@ import { CommonModule } from '@angular/common';
 })
 
 
-
-export class AssignmentsComponent {
+export class AssignmentsComponent implements OnInit{
 // schedule:Schedule=   event_id?: number | undefined;
 // id?: number | undefined;
 // person_id?: number | undefined;
 // task_id?: number | undefined;
-  schedules: Assignment[] = [];
+  assignments: Assignment[] = [];
   persons: any[] = [];
   tasks: any[] = [];
   events: any[] = [];
-
+  event:Event|null=null;
+  currentAssignment!:Assignment|null;
+  eventIdFromRoute:number|null = null;
   ngOnInit(): void {
-    this.client.assignmentsAll().subscribe(schedules => {
-      this.schedules = schedules;
-    });
+    const routeParams = this.route.snapshot.paramMap;
+    this.eventIdFromRoute = Number(routeParams.get('id'));
+    if (this.eventIdFromRoute) {
+
+      this.client.get_assignments_by_event(this.eventIdFromRoute).subscribe(assignments => {
+        this.assignments = assignments;
+      });
+    } else {
+      this.client.assignmentsAll().subscribe(assignments => {
+        this.assignments = assignments;
+      });
+    }
 
     this.client.getpeople().subscribe(persons => {
       this.persons = persons;
@@ -38,32 +49,36 @@ export class AssignmentsComponent {
 
     this.client.eventsAll().subscribe(events => {
       this.events = events;
+      if(this.eventIdFromRoute){
+              this.event = this.events[this.eventIdFromRoute];
+
+      }
     });
   }
-  scheduleForm: FormGroup= new FormGroup({
+  assignmentForm: FormGroup= new FormGroup({
     id: new FormControl(''),
     event_id: new FormControl('', Validators.required),
     person_id: new FormControl('', Validators.required),
     task_id: new FormControl('', Validators.required)
   });
-  constructor(private client: Client) { }
+  constructor(private client: Client, private route: ActivatedRoute) { }
 
   
 
 
-  createSchedule(schedule: Assignment): void {
+  createAssignment(schedule: Assignment): void {
     this.client.assignmentsPOST(schedule).subscribe(() => {
       this.ngOnInit();
     });
   }
 
-  deleteSchedule(schedule_id: number): void {
+  deleteAssigment(schedule_id: number): void {
     this.client.assignmentsDELETE(schedule_id).subscribe(() => {
       this.ngOnInit();
     });
   }
 
-  updateSchedule(schedule: Assignment): void {
+  updateAssigment(schedule: Assignment): void {
     this.client.assignmentsPUT(schedule.id!, schedule).subscribe(() => {
       this.ngOnInit();
     });
@@ -71,3 +86,4 @@ export class AssignmentsComponent {
 
 
 }
+

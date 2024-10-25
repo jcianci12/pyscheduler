@@ -1,0 +1,5 @@
+<select (change)="onPersonSelect($event )" [(ngModel)]="selectedpersonid">
+  <option *ngFor="let person of people" [value]="person.id">{{ person.first_name }} {{ person.last_name }}</option>
+</select>
+
+

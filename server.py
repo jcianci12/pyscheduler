@@ -214,7 +214,7 @@ def get_task(task_id):
     with scheduler_db.connect() as conn:
         task = scheduler_db.read_task(conn, task_id)
         if task:
-            return jsonify({'task_name': task[0], 'id': task[2]})
+            return jsonify({'task_name': task[0], 'id': task[1]})
         else:
             return jsonify({'error': 'Task not found'}), 404
 
@@ -343,7 +343,8 @@ def get_event(event_id):
     with scheduler_db.connect() as conn:
         event = scheduler_db.read_event(conn, event_id)
         if event:
-            return jsonify({'event_name': event[1], 'event_date': event[2], 'id': event[0]})
+            tasks = scheduler_db.get_tasks_by_event_id(conn, event_id)
+            return jsonify({'event_name': event[1], 'event_date': event[2], 'id': event[0], 'tasks': [{'id': task[0], 'task_name': task[1]} for task in tasks]})
         else:
             return jsonify({'error': 'Event not found'}), 404
 
@@ -475,9 +476,31 @@ def get_assignment(assignment_id):
     """
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
-        assignment = scheduler_db.get_assignment(conn, assignment_id)
+        assignment = scheduler_db.read_assignment(conn, assignment_id)
     return jsonify({'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]})
-
+@cross_origin()
+@app.route('/get_assignments_by_event/<int:event_id>', methods=['GET'])
+def get_assignments_by_event(event_id):
+    """Get all assignments by event ID
+    ---
+    parameters:
+        - name: event_id
+          in: path
+          schema:
+            type: integer
+          required: true
+    responses:
+        200:
+            description: A list of assignments for the specified event
+            schema:
+                type: array
+                items:
+                    $ref: '#/definitions/Assignment'
+    """
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        assignments = scheduler_db.get_assignments_by_event_id(conn, event_id)
+    return jsonify([{'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]} for assignment in assignments])
 
 @cross_origin()
 @app.route('/assignments', methods=['POST'])

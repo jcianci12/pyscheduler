@@ -9,7 +9,11 @@ export const routes: Routes = [
     { path: 'tasks', component: TasksComponent },
     { path: 'events', component: EventsComponent },
     { path: 'assignments', component: AssignmentsComponent }
-
+    ,
+    {
+        path: 'assignments/:id',
+        component: AssignmentsComponent
+    }
 
 ];
 
