@@ -46,6 +46,15 @@ class SchedulerDB:
                     FOREIGN KEY (eventid) REFERENCES Event(id)
                 )
             ''')
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS PersonTask (
+                    person_id INTEGER NOT NULL,
+                    task_id INTEGER NOT NULL,
+                    PRIMARY KEY (person_id, task_id),
+                    FOREIGN KEY (person_id) REFERENCES Person (id),
+                    FOREIGN KEY (task_id) REFERENCES Task(id)
+                )
+            ''')
 
     def get_people(self, conn):
         with conn:
@@ -162,7 +171,19 @@ class SchedulerDB:
                 WHERE id = ?
             ''', (task_id,))
             conn.commit()
-    
+    def get_events(self, conn):
+        """Get all events
+        
+        Returns:
+            list: A list of tuples where each tuple contains an event's id, name, and date.
+        """
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                SELECT id, event_name, event_date
+                FROM Event
+            ''')
+            return cur.fetchall()
     def create_event(self, conn, event_name, event_date):
         """Create a new event in the event table
         

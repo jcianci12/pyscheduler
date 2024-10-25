@@ -1,0 +1,40 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Date</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let event of events">
+      <td>{{ event.id }}</td>
+      <td><input type="text" [(ngModel)]="event.id"></td>
+      <td><input type="text" [(ngModel)]="event.event_name"></td>
+      <td><input type="text" [(ngModel)]="event.event_date"></td>
+      <td>
+        <button class="btn btn-primary" (click)="updateEvent(event)">Update</button>
+        <button class="btn btn-danger" (click)="deleteEvent(event.id??0)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Create Event</h3>
+<form (ngSubmit)="createEvent(eventForm.value)">
+  <div class="form-group">
+    <label for="name">ID</label>
+    <input disabled="disabled" type="text" class="form-control" id="name" name="name" [(ngModel)]="eventForm.value.id">
+  </div>
+  <div class="form-group">
+    <label for="description">Event Name</label>
+    <input type="text" class="form-control" id="description" name="description" [(ngModel)]="eventForm.value.event_name">
+  </div>
+  <div class="form-group">
+    <label for="date">Event Date</label>
+    <input type="text" class="form-control" id="date" name="date" [(ngModel)]="eventForm.value.event_date">
+  </div>
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
