@@ -1,1 +1,36 @@
-<p>tasks works!</p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+     
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let task of tasks">
+      <td>{{ task.id }}</td>
+      <td><input type="text" [(ngModel)]="task.id"></td>
+      <td><input type="text" [(ngModel)]="task.task_name"></td>
+      <td>
+        <button class="btn btn-primary" (click)="updateTask(task)">Update</button>
+        <button class="btn btn-danger" (click)="deleteTask(task.id??0)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Create Task</h3>
+<form (ngSubmit)="createTask(taskForm.value)">
+  <div class="form-group">
+    <label for="name">ID</label>
+    <input disabled="disabled" type="text" class="form-control" id="name" name="name" [(ngModel)]="taskForm.value.id">
+  </div>
+  <div class="form-group">
+    <label for="description">Task Name</label>
+    <input type="text" class="form-control" id="description" name="description" [(ngModel)]="taskForm.value.task_name">
+  </div>
+  
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
+

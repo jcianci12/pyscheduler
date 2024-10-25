@@ -102,7 +102,20 @@ class SchedulerDB:
                 WHERE id = ?
             ''', (person_id,))
             conn.commit()
-
+    
+    def get_tasks(self, conn):
+        """Get all tasks
+        
+        Returns:
+            list: A list of tuples where each tuple contains a task's id and name.
+        """
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                SELECT id, task_name
+                FROM Task
+            ''')
+            return cur.fetchall()
     
     def create_task(self, conn, task_name):
         """Create a new task in the task table

@@ -169,7 +169,7 @@ def get_tasks():
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
         tasks = scheduler_db.get_tasks(conn)
-    return jsonify([{'id': task[2], 'task_name': task[0]} for task in tasks])
+    return jsonify([{'id': task[0], 'task_name': task[1]} for task in tasks])
 
 
 @cross_origin()
@@ -209,6 +209,13 @@ def update_task(task_id):
           schema:
             type: integer
           required: true
+        - name: task
+          in: body
+          schema:
+            type: object
+            properties:
+                task_name:
+                    type: string
     responses:
         200:
             description: The updated task
@@ -241,6 +248,162 @@ def delete_task(task_id):
     with scheduler_db.connect() as conn:
         scheduler_db.delete_task(conn, task_id)
         return '', 204
+@cross_origin()
+@app.route('/tasks', methods=['POST'])
+def create_task():
+    """Create a new task
+    ---
+    parameters:
+        - name: task
+          in: body
+          schema:
+            type: object
+            properties:
+                task_name:
+                    type: string
+    responses:
+        201:
+            description: The created task
+            schema:
+                $ref: '#/definitions/Task'
+    """
+    data = request.get_json()
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        task_id = scheduler_db.create_task(conn, data['task_name'])
+        return jsonify({'task_name': data['task_name'], 'id': task_id}), 201
+
+@cross_origin()
+@app.route('/events', methods=['GET'])
+def get_events():
+    """Get all events
+    ---
+    definitions:
+        Event:
+            type: object
+            properties:
+                id:
+                    type: integer
+                event_name:
+                    type: string
+                event_date:
+                    type: string
+    responses:
+        200:
+            description: A list of all events
+            schema:
+                type: array
+                items:
+                    $ref: '#/definitions/Event'
+    """
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        events = scheduler_db.get_events(conn)
+    return jsonify([{'id': event[0], 'event_name': event[1], 'event_date': event[2]} for event in events])
+
+@cross_origin()
+@app.route('/events/<int:event_id>', methods=['GET'])
+def get_event(event_id):
+    """Get a single event
+    ---
+    parameters:
+        - name: event_id
+          in: path
+          schema:
+            type: integer
+          required: true
+    responses:
+        200:
+            description: The event
+            schema:
+                $ref: '#/definitions/Event'
+    """
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        event = scheduler_db.read_event(conn, event_id)
+        if event:
+            return jsonify({'event_name': event[1], 'event_date': event[2], 'id': event[0]})
+        else:
+            return jsonify({'error': 'Event not found'}), 404
+
+@cross_origin()
+@app.route('/events/<int:event_id>', methods=['PUT'])
+def update_event(event_id):
+    """Update an event
+    ---
+    parameters:
+        - name: event_id
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: event
+          in: body
+          schema:
+            type: object
+            properties:
+                event_name:
+                    type: string
+                event_date:
+                    type: string
+    responses:
+        200:
+            description: The updated event
+            schema:
+                $ref: '#/definitions/Event'
+    """
+    data = request.get_json()
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        scheduler_db.update_event(conn, event_id, data['event_name'], data['event_date'])
+        return jsonify({'event_name': data['event_name'], 'event_date': data['event_date'], 'id': event_id})
+
+@cross_origin()
+@app.route('/events/<int:event_id>', methods=['DELETE'])
+def delete_event(event_id):
+    """Delete an event
+    ---
+    parameters:
+        - name: event_id
+          in: path
+          schema:
+            type: integer
+          required: true
+    responses:
+        204:
+            description: Event deleted
+    """
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        scheduler_db.delete_event(conn, event_id)
+        return '', 204
+
+@cross_origin()
+@app.route('/events', methods=['POST'])
+def create_event():
+    """Create a new event
+    ---
+    parameters:
+        - name: event
+          in: body
+          schema:
+            type: object
+            properties:
+                event_name:
+                    type: string
+                event_date:
+                    type: string
+    responses:
+        201:
+            description: The created event
+            schema:
+                $ref: '#/definitions/Event'
+    """
+    data = request.get_json()
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        event_id = scheduler_db.create_event(conn, data['event_name'], data['event_date'])
+        return jsonify({'event_name': data['event_name'], 'event_date': data['event_date'], 'id': event_id}), 201
 
 
 if __name__ == '__main__':
