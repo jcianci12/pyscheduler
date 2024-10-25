@@ -9,6 +9,7 @@ class SchedulerDB:
     def connect(self):
         conn = sqlite3.connect(self.db_name)
         try:
+            self.create_table(conn)
             yield conn
         finally:
             conn.close()
@@ -36,7 +37,7 @@ class SchedulerDB:
                 )
             ''')
             conn.execute('''
-                CREATE TABLE IF NOT EXISTS Schedule (
+                CREATE TABLE IF NOT EXISTS Assignments (
                     id INTEGER PRIMARY KEY,
                     personid INTEGER,
                     taskid INTEGER,
@@ -60,10 +61,21 @@ class SchedulerDB:
         with conn:
             cur = conn.cursor()
             cur.execute('''
-                SELECT first_name, last_name,id
+                SELECT first_name, last_name, id
                 FROM people
             ''')
-            return cur.fetchall()
+            people = cur.fetchall()
+            people_tasks = []
+            for person in people:
+                cur.execute('''
+                    SELECT Task.id, Task.task_name
+                    FROM PersonTask
+                    INNER JOIN Task ON PersonTask.task_id = Task.id
+                    WHERE PersonTask.person_id = ?
+                ''', (person[2],))
+                tasks = cur.fetchall()
+                people_tasks.append({'first_name': person[0], 'last_name': person[1], 'id': person[2], 'tasks': [{'id': task[0], 'task_name': task[1]} for task in tasks] if tasks else []})
+            return people_tasks
     
     def create_person(self, conn, first_name, last_name):
         """Create a new person in the people table
@@ -91,9 +103,19 @@ class SchedulerDB:
                 SELECT * FROM people
                 WHERE id = ?
             ''', (person_id,))
-            return cur.fetchone()
+            person = cur.fetchone()
+            if person:
+                cur.execute('''
+                    SELECT task_name
+                    FROM Task
+                    INNER JOIN PersonTask ON Task.id = PersonTask.task_id
+                    WHERE PersonTask.person_id = ?
+                ''', (person_id,))
+                tasks = cur.fetchall()
+                return person, [task[0] for task in tasks]
+            return None
 
-    def update_person(self, conn, person_id, first_name, last_name):
+    def update_person(self, conn, person_id, first_name, last_name, tasks):
         with conn:
             cur = conn.cursor()
             cur.execute('''
@@ -101,6 +123,15 @@ class SchedulerDB:
                 SET first_name = ?, last_name = ?
                 WHERE id = ?
             ''', (first_name, last_name, person_id))
+            cur.execute('''
+                DELETE FROM PersonTask
+                WHERE person_id = ?
+            ''', (person_id,))
+            for task in tasks:
+                cur.execute('''
+                    INSERT INTO PersonTask (person_id, task_id)
+                    VALUES (?, ?)
+                ''', (person_id, task['id']))
             conn.commit()
 
     def delete_person(self, conn, person_id):
@@ -232,4 +263,65 @@ class SchedulerDB:
             conn.commit()
 
 
+    def create_assignment(self, conn, event_id, task_id, person_id):
+        """Create a new assignment in the assignments table
+        
+        Args:
+            event_id (int): The ID of the event.
+            task_id (int): The ID of the task.
+            person_id (int): The ID of the person.
+        
+        Returns:
+            int: The ID of the newly created assignment.
+        """
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                INSERT INTO Assignments (eventid, taskid, personid)
+                VALUES (?, ?, ?)
+            ''', (event_id, task_id, person_id))
+            conn.commit()
+            return cur.lastrowid
+
+    def read_assignment(self, conn, assignment_id):
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                SELECT * FROM Assignments
+                WHERE id = ?
+            ''', (assignment_id,))
+            return cur.fetchone()
+
+    def update_assignment(self, conn, assignment_id, event_id, task_id, person_id):
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                UPDATE Assignments
+                SET eventid = ?, taskid = ?, personid = ?
+                WHERE id = ?
+            ''', (event_id, task_id, person_id, assignment_id))
+            conn.commit()
+
+    def delete_assignment(self, conn, assignment_id):
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                DELETE FROM Assignments
+                WHERE id = ?
+            ''', (assignment_id,))
+            conn.commit()
+
+    def get_all_assignments(self, conn):
+        """Get all assignments
+        
+        Returns:
+            list: A list of tuples where each tuple contains an assignment's id, event id, task id, and person id.
+        """
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                SELECT id, eventid, taskid, personid
+                FROM Assignments
+            ''')
+            return cur.fetchall()
 

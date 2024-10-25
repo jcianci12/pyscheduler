@@ -4,18 +4,22 @@
       <th>Id</th>
       <th>First</th>
       <th>Last</th>
+      <th *ngFor="let task of tasks">{{ task.task_name }}</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let person of people">
       <td>{{ person.id }}</td>
-      <td><input type="disabled" [(ngModel)]="person.id"></td>
+      <td><input type="text" [(ngModel)]="person.id" disabled></td>
       <td><input type="text" [(ngModel)]="person.first_name"></td>
       <td><input type="text" [(ngModel)]="person.last_name"></td>
+      <td *ngFor="let task of tasks">
+        <input type="checkbox" [checked]="hasTask(person, task)" (change)="onTaskChange($event,person, task)">
+      </td>
       <td>
         <button class="btn btn-primary" (click)="updatePerson(person)">Update</button>
-        <button class="btn btn-danger" (click)="deletePerson(person.id??0)">Delete</button>
+        <button class="btn btn-danger" (click)="deletePerson(person.id ?? 0)">Delete</button>
       </td>
     </tr>
   </tbody>

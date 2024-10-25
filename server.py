@@ -12,10 +12,9 @@ app = Flask(__name__)
 Swagger(app)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-
 @cross_origin()
-@app.route('/people', methods=['GET'])
-def get_people():
+@app.route('/getpeople', methods=['GET'])
+def getpeople():
     """Get all people
     ---
     definitions:
@@ -28,6 +27,15 @@ def get_people():
                     type: string
                 last_name:
                     type: string
+                tasks:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                            task_name:
+                                type: string
     responses:
         200:
             description: A list of all people
@@ -36,13 +44,15 @@ def get_people():
                 items:
                     $ref: '#/definitions/Person'
     """
-
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
         people = scheduler_db.get_people(conn)
-    return jsonify([{'id': person[2], 'first_name': person[0], 'last_name': person[1]} for person in people])
-@app.route('/people/<int:person_id>', methods=['GET'])
-def get_person(person_id):
+    return jsonify(people)
+
+
+
+@app.route('/getperson/<int:person_id>', methods=['GET'])
+def getperson(person_id):
     """Get a person by ID
     ---
     parameters:
@@ -65,8 +75,8 @@ def get_person(person_id):
         else:
             return jsonify({'error': 'Person not found'}), 404
 @cross_origin()
-@app.route('/people', methods=['POST'])
-def create_person():
+@app.route('/createperson', methods=['POST'])
+def createperson():
     """Create a new person
     ---
     parameters:
@@ -79,6 +89,10 @@ def create_person():
                     type: string
                 last_name:
                     type: string
+                tasks:
+                    type: array
+                    items:
+                        type: integer
     responses:
         201:
             description: The created person
@@ -89,12 +103,15 @@ def create_person():
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
         person_id = scheduler_db.create_person(conn, data['first_name'], data['last_name'])
+        # Assuming there is a method to assign tasks to a person
+        for task_id in data.get('tasks', []):
+            scheduler_db.assign_task_to_person(conn, person_id, task_id)
         return jsonify({'first_name': data['first_name'], 'last_name': data['last_name'], 'id': person_id}), 201
 
 
 @cross_origin()
-@app.route('/people/<int:person_id>', methods=['PUT'])
-def update_person(person_id):
+@app.route('/updateperson/<int:person_id>', methods=['PUT'])
+def updateperson(person_id):
     """Update a person
     ---
     parameters:
@@ -112,6 +129,10 @@ def update_person(person_id):
                     type: string
                 last_name:
                     type: string
+                tasks:
+                    type: array
+                    items:
+                        type: integer
     responses:
         200:
             description: The updated person
@@ -121,13 +142,13 @@ def update_person(person_id):
     data = request.get_json()
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
-        scheduler_db.update_person(conn, person_id, data['first_name'], data['last_name'])
+        scheduler_db.update_person(conn, person_id, data['first_name'], data['last_name'], data.get('tasks', []))
         return jsonify({'first_name': data['first_name'], 'last_name': data['last_name'], 'id': person_id})
 
 
 @cross_origin()
-@app.route('/people/<int:person_id>', methods=['DELETE'])
-def delete_person(person_id):
+@app.route('/deleteperson/<int:person_id>', methods=['DELETE'])
+def deleteperson(person_id):
     """Delete a person
     ---
     parameters:
@@ -404,6 +425,139 @@ def create_event():
     with scheduler_db.connect() as conn:
         event_id = scheduler_db.create_event(conn, data['event_name'], data['event_date'])
         return jsonify({'event_name': data['event_name'], 'event_date': data['event_date'], 'id': event_id}), 201
+
+@cross_origin()
+@app.route('/assignments', methods=['GET'])
+def get_assignments():
+    """Get all assignments
+    ---
+    definitions:
+        Assignment:
+            type: object
+            properties:
+                id:
+                    type: integer
+                event_id:
+                    type: integer
+                task_id:
+                    type: integer
+                person_id:
+                    type: integer
+    responses:
+        200:
+            description: A list of all assignments
+            schema:
+                type: array
+                items:
+                    $ref: '#/definitions/Assignment'
+    """
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        assignments = scheduler_db.get_all_assignments(conn)
+    return jsonify([{'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]} for assignment in assignments])
+
+@cross_origin()
+@app.route('/assignments/<int:assignment_id>', methods=['GET'])
+def get_assignment(assignment_id):
+    """Get an assignment
+    ---
+    parameters:
+        - name: assignment_id
+          in: path
+          schema:
+            type: integer
+          required: true
+    responses:
+        200:
+            description: The assignment
+            schema:
+                $ref: '#/definitions/Assignment'
+    """
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        assignment = scheduler_db.get_assignment(conn, assignment_id)
+    return jsonify({'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]})
+
+
+@cross_origin()
+@app.route('/assignments', methods=['POST'])
+def create_assignment():
+    """Create a new assignment
+    ---
+    parameters:
+        - name: assignment
+          in: body
+          schema:
+            type: object
+            properties:
+                event_id:
+                    type: integer
+                task_id:
+                    type: integer
+                person_id:
+                    type: integer
+    responses:
+        201:
+            description: The created assignment
+            schema:
+                $ref: '#/definitions/Assignment'
+    """
+    data = request.get_json()
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        assignment_id = scheduler_db.create_assignment(conn, data['event_id'], data['task_id'], data['person_id'])
+        return jsonify({'id': assignment_id, 'event_id': data['event_id'], 'task_id': data['task_id'], 'person_id': data['person_id']}), 201
+@cross_origin()
+@app.route('/assignments/<int:assignment_id>', methods=['PUT'])
+def update_assignment(assignment_id):
+    """Update an assignment
+    ---
+    parameters:
+        - name: assignment_id
+          in: path
+          schema:
+            type: integer
+          required: true
+        - name: assignment
+          in: body
+          schema:
+            type: object
+            properties:
+                event_id:
+                    type: integer
+                task_id:
+                    type: integer
+                person_id:
+                    type: integer
+    responses:
+        204:
+            description: Assignment updated
+    """
+    data = request.get_json()
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        scheduler_db.update_assignment(conn, assignment_id, data['event_id'], data['task_id'], data['person_id'])
+        return '', 204
+
+@cross_origin()
+@app.route('/assignments/<int:assignment_id>', methods=['DELETE'])
+def delete_assignment(assignment_id):
+    """Delete an assignment
+    ---
+    parameters:
+        - name: assignment_id
+          in: path
+          schema:
+            type: integer
+          required: true
+    responses:
+        204:
+            description: Assignment deleted
+    """
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        scheduler_db.delete_assignment(conn, assignment_id)
+        return '', 204
 
 
 if __name__ == '__main__':
