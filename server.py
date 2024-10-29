@@ -319,8 +319,8 @@ def get_events():
     """
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
-        events = scheduler_db.get_events(conn)
-    return jsonify([{'id': event[0], 'event_name': event[1], 'event_date': event[2]} for event in events])
+        events = scheduler_db.get_events_with_assignments(conn)
+    return jsonify(events)
 
 @cross_origin()
 @app.route('/events/<int:event_id>', methods=['GET'])
@@ -426,10 +426,38 @@ def create_event():
     with scheduler_db.connect() as conn:
         event_id = scheduler_db.create_event(conn, data['event_name'], data['event_date'])
         return jsonify({'event_name': data['event_name'], 'event_date': data['event_date'], 'id': event_id}), 201
-
 @cross_origin()
 @app.route('/assignments', methods=['GET'])
-def get_assignments():
+def get_all_assignments():
+    """Get all assignments
+    ---
+    definitions:
+        Assignment:
+            type: object
+            properties:
+                id:
+                    type: integer
+                event_id:
+                    type: integer
+                task_id:
+                    type: integer
+                person_id:
+                    type: integer
+    responses:
+        200:
+            description: A list of all assignments
+            schema:
+                type: array
+                items:
+                    $ref: '#/definitions/Assignment'
+    """
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        assignments = scheduler_db.get_all_assignments(conn)
+    return jsonify([{'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]} for assignment in assignments])
+@cross_origin()
+@app.route('/eventswithassignments', methods=['GET'])
+def eventswithassignments():
     """Get all assignments along with their events
     ---
     definitions:
@@ -470,6 +498,18 @@ def get_assignments():
 def get_assignment(assignment_id):
     """Get an assignment
     ---
+    definitions:
+        Assignment:
+            type: object
+            properties:
+                id:
+                    type: integer
+                event_id:
+                    type: integer
+                task_id:
+                    type: integer
+                person_id:
+                    type: integer
     parameters:
         - name: assignment_id
           in: path
@@ -487,8 +527,8 @@ def get_assignment(assignment_id):
         assignment = scheduler_db.read_assignment(conn, assignment_id)
     return jsonify({'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]})
 @cross_origin()
-@app.route('/get_assignments_by_event/<int:event_id>', methods=['GET'])
-def get_assignments_by_event(event_id):
+@app.route('/test123/<int:event_id>', methods=['GET'])
+def test123(event_id):
     """Get all assignments by event ID
     ---
     parameters:
