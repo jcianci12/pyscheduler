@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Client, Event } from '../api/api';
+import { Client, Event, EventWithAssignments } from '../api/api';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -13,7 +13,7 @@ import { AssignmentrowComponent } from "../assignmentrow/assignmentrow.component
   styleUrl: './events.component.css'
 })
 export class EventsComponent implements OnInit {
-  events: Event[] | undefined;
+  events: EventWithAssignments[] | undefined;
   eventForm: FormGroup = new FormGroup({
     id: new FormControl(''),
     event_date: new FormControl('', Validators.required),
@@ -24,8 +24,7 @@ export class EventsComponent implements OnInit {
 
   constructor(private client: Client) { }
   async ngOnInit() {
-    this.events = await this.client.eventsAll().toPromise();
-    this.eventForm
+    this.events = await this.client.eventswithassignments().toPromise();
   }
 
   async ngAfterViewInit() {

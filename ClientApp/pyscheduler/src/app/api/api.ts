@@ -695,14 +695,11 @@ export class Client {
     }
 
     /**
-     * Get all assignments by event ID
-     * @return A list of assignments for the specified event
+     * Get all assignments along with their events
+     * @return A list of all events with their assignments
      */
-    get_assignments_by_event(event_id: number): Observable<Assignment[]> {
-        let url_ = this.baseUrl + "/get_assignments_by_event/{event_id}";
-        if (event_id === undefined || event_id === null)
-            throw new Error("The parameter 'event_id' must be defined.");
-        url_ = url_.replace("{event_id}", encodeURIComponent("" + event_id));
+    eventswithassignments(): Observable<EventWithAssignments[]> {
+        let url_ = this.baseUrl + "/eventswithassignments";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -714,20 +711,20 @@ export class Client {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet_assignments_by_event(response_);
+            return this.processEventswithassignments(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGet_assignments_by_event(response_ as any);
+                    return this.processEventswithassignments(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<Assignment[]>;
+                    return _observableThrow(e) as any as Observable<EventWithAssignments[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<Assignment[]>;
+                return _observableThrow(response_) as any as Observable<EventWithAssignments[]>;
         }));
     }
 
-    protected processGet_assignments_by_event(response: HttpResponseBase): Observable<Assignment[]> {
+    protected processEventswithassignments(response: HttpResponseBase): Observable<EventWithAssignments[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -741,7 +738,7 @@ export class Client {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(Assignment.fromJS(item));
+                    result200!.push(EventWithAssignments.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1153,6 +1150,68 @@ export class Client {
     }
 
     /**
+     * Get all assignments by event ID
+     * @return A list of assignments for the specified event
+     */
+    test123(event_id: number): Observable<Assignment[]> {
+        let url_ = this.baseUrl + "/test123/{event_id}";
+        if (event_id === undefined || event_id === null)
+            throw new Error("The parameter 'event_id' must be defined.");
+        url_ = url_.replace("{event_id}", encodeURIComponent("" + event_id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTest123(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTest123(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Assignment[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Assignment[]>;
+        }));
+    }
+
+    protected processTest123(response: HttpResponseBase): Observable<Assignment[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Assignment.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * Update a person
      * @param person (optional) 
      * @return The updated person
@@ -1300,6 +1359,62 @@ export class Event implements IEvent {
 }
 
 export interface IEvent {
+    event_date?: string | undefined;
+    event_name?: string | undefined;
+    id?: number | undefined;
+}
+
+export class EventWithAssignments implements IEventWithAssignments {
+    assignments?: Assignments[] | undefined;
+    event_date?: string | undefined;
+    event_name?: string | undefined;
+    id?: number | undefined;
+
+    constructor(data?: IEventWithAssignments) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["assignments"])) {
+                this.assignments = [] as any;
+                for (let item of _data["assignments"])
+                    this.assignments!.push(Assignments.fromJS(item));
+            }
+            this.event_date = _data["event_date"];
+            this.event_name = _data["event_name"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): EventWithAssignments {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventWithAssignments();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.assignments)) {
+            data["assignments"] = [];
+            for (let item of this.assignments)
+                data["assignments"].push(item.toJSON());
+        }
+        data["event_date"] = this.event_date;
+        data["event_name"] = this.event_name;
+        data["id"] = this.id;
+        return data;
+    }
+}
+
+export interface IEventWithAssignments {
+    assignments?: Assignments[] | undefined;
     event_date?: string | undefined;
     event_name?: string | undefined;
     id?: number | undefined;
@@ -1743,6 +1858,50 @@ export interface IPerson3 {
     first_name?: string | undefined;
     last_name?: string | undefined;
     tasks?: number[] | undefined;
+}
+
+export class Assignments implements IAssignments {
+    id?: number | undefined;
+    personid?: number | undefined;
+    taskid?: number | undefined;
+
+    constructor(data?: IAssignments) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.personid = _data["personid"];
+            this.taskid = _data["taskid"];
+        }
+    }
+
+    static fromJS(data: any): Assignments {
+        data = typeof data === 'object' ? data : {};
+        let result = new Assignments();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["personid"] = this.personid;
+        data["taskid"] = this.taskid;
+        return data;
+    }
+}
+
+export interface IAssignments {
+    id?: number | undefined;
+    personid?: number | undefined;
+    taskid?: number | undefined;
 }
 
 export class Tasks implements ITasks {

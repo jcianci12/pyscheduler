@@ -30,7 +30,7 @@ export class AssignmentsComponent implements OnInit{
     this.eventIdFromRoute = Number(routeParams.get('id'));
     if (this.eventIdFromRoute) {
 
-      this.client.get_assignments_by_event(this.eventIdFromRoute).subscribe(assignments => {
+      this.client.test123(this.eventIdFromRoute).subscribe(assignments => {
         this.assignments = assignments;
       });
     } else {
