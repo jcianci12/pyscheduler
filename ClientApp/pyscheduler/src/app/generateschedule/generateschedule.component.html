@@ -1,0 +1,52 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+
+    <div class="form-group">
+        <label>Starting from:</label>
+        <input type="datetime-local" class="form-control" formControlName="start">
+      </div>
+    <span>
+    <div class="form-group">
+    <label>Generate 
+
+        
+        <div class="form-group">
+            <input type="number" class="form-control" formControlName="num">
+            <select class="form-control" formControlName="intervalType">
+              <option value="seconds">Seconds</option>
+              <option value="minutes">Minutes</option>
+              <option value="hours">Hours</option>
+              <option value="days">Days</option>
+              <option value="weeks">Weeks</option>
+            </select>
+          </div>
+        of schedule</label>
+  </div>
+  </span>
+    
+  
+  
+  
+  <div class="form-group">
+    <label>Events:</label>
+    <div formArrayName="events">
+      <div *ngFor="let event of eventsArray.controls; let i = index" [formGroupName]="i">
+        <input type="text" class="form-control" formControlName="name">
+        Occurs every:
+        <input type="number" class="form-control" formControlName="interval">
+        <select class="form-control" formControlName="intervalType">
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+        </select>
+        <button type="button" class="btn btn-danger" (click)="removeEvent(i)">Remove</button>
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="addEvent()">Add Event</button>
+  </div>
+  
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{{form.value | json}}
+

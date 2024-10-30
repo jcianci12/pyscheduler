@@ -6,11 +6,12 @@ import { RouterModule } from '@angular/router';
 import { AssignmentrowComponent } from "../assignmentrow/assignmentrow.component";
 import { FilterassignmentsbytaskPipe } from '../pipes/filterassignmentsbytask.pipe';
 import { CreateassignmentplaceholdersPipe } from '../pipes/createassignmentplaceholders.pipe';
+import { GeneratescheduleComponent } from "../generateschedule/generateschedule.component";
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, AssignmentrowComponent,FilterassignmentsbytaskPipe,CreateassignmentplaceholdersPipe],
+  imports: [CommonModule, FormsModule, RouterModule, AssignmentrowComponent, FilterassignmentsbytaskPipe, CreateassignmentplaceholdersPipe, GeneratescheduleComponent],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })
