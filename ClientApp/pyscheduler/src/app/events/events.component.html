@@ -6,13 +6,14 @@
       <th>Desc</th>
       <th>Date</th>
 
-      <td *ngFor="let task of tasks">{{ task.task_name }}</td>
+      <th *ngFor="let task of tasks">{{ task.task_name }}</th>
 
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td></td>
     <tr *ngFor="let event of (events!|createassignmentplaceholders:tasks!)">
       <td>{{ event.id }}</td>
       <td><input type="text" [(ngModel)]="event.event_name"></td>
@@ -45,4 +46,3 @@
 </table>
 
 
-{{events|json}}

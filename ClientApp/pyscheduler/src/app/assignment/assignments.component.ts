@@ -68,6 +68,7 @@ export class AssignmentsComponent implements OnInit{
 
   createAssignment(schedule: Assignment): void {
     this.client.assignmentsPOST(schedule).subscribe(() => {
+      this.assignmentForm.reset();
       this.ngOnInit();
     });
   }

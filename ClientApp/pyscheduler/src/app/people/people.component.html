@@ -9,8 +9,18 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td><input type="text" [(ngModel)]="personForm.value.id" disabled></td>
+      <td><input type="text" class="form-control" id="first_name" name="first_name" [(ngModel)]="personForm.value.first_name"></td>
+      <td><input type="text" class="form-control" id="last_name" name="last_name" [(ngModel)]="personForm.value.last_name"></td>
+      <td *ngFor="let task of tasks">
+        <input type="checkbox" [checked]="false" (change)="onTaskChange($event, personForm.value, task)">
+      </td>
+      <td>
+        <button type="submit" class="btn btn-primary" (click)="createPerson(personForm.value)">Create</button>
+      </td>
+    </tr>
     <tr *ngFor="let person of people">
-      <td>{{ person.id }}</td>
       <td><input type="text" [(ngModel)]="person.id" disabled></td>
       <td><input type="text" [(ngModel)]="person.first_name"></td>
       <td><input type="text" [(ngModel)]="person.last_name"></td>
@@ -24,18 +34,4 @@
     </tr>
   </tbody>
 </table>
-
-<h3>Create Person</h3>
-<form (ngSubmit)="createPerson(personForm.value)">
-  <div class="form-group">
-    <label for="first_name">First Name</label>
-    <input type="text" class="form-control" id="first_name" name="first_name" [(ngModel)]="personForm.value.first_name">
-  </div>
-  <div class="form-group">
-    <label for="last_name">Last Name</label>
-    <input type="text" class="form-control" id="last_name" name="last_name" [(ngModel)]="personForm.value.last_name">
-  </div>
-  <button type="submit" class="btn btn-primary">Create</button>
-</form>
-
 

@@ -1,6 +1,7 @@
 
-<div *ngIf="  eventIdFromRoute&&events.length>0">
-    <h2>Assignments for Event {{ events[ eventIdFromRoute].event_name}} {{ events[ eventIdFromRoute].event_date}}</h2>
+
+<div *ngIf="eventIdFromRoute && events.length > 0">
+  <h2>Assignments for Event {{ events[eventIdFromRoute].event_name }} {{ events[eventIdFromRoute].event_date }}</h2>
 </div>
 <table class="table table-striped">
   <thead>
@@ -13,8 +14,29 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td><input type="text" [(ngModel)]="assignmentForm.value.id" disabled></td>
+      <td>
+        <select [(ngModel)]="assignmentForm.value.event_id" name="event_id">
+          <option *ngFor="let event of events" [value]="event.id">{{ event.event_name }}</option>
+        </select>
+      </td>
+      <td>
+        <select [(ngModel)]="assignmentForm.value.person_id" name="person_id">
+          <option *ngFor="let person of persons" [value]="person.id">{{ person.first_name }} {{ person.last_name }}</option>
+        </select>
+      </td>
+      <td>
+        <select [(ngModel)]="assignmentForm.value.task_id" name="task_id">
+          <option *ngFor="let task of tasks" [value]="task.id">{{ task.task_name }}</option>
+        </select>
+      </td>
+      <td>
+        <button type="submit" class="btn btn-primary" (click)="createAssignment(assignmentForm.value)">Create</button>
+      </td>
+    </tr>
     <tr *ngFor="let assignment of assignments">
-      <td>{{ assignment.id }}</td>
+      <td><input type="text" [(ngModel)]="assignment.event_id" disabled></td>
       <td>
         <select [(ngModel)]="assignment.event_id" name="event_id_{{assignment.id}}">
           <option *ngFor="let event of events" [value]="event.id">{{ event.event_name }}</option>
@@ -37,29 +59,4 @@
     </tr>
   </tbody>
 </table>
-
-<h3>Create Assignment</h3>
-<form (ngSubmit)="createAssignment(assignmentForm.value)">
-  <div class="form-group">
-    <label for="event_id">Event ID</label>
-    <select [ngModel]="assignmentForm.value.event_id" (ngModelChange)="assignmentForm.get('event_id')?.setValue($event)" name="event_id">
-      <option *ngFor="let event of events" [value]="event.id">{{ event.event_name }}</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="person_id">Person ID</label>
-    <select [ngModel]="assignmentForm.value.person_id" (ngModelChange)="assignmentForm.get('person_id')?.setValue($event)" name="person_id">
-      <option *ngFor="let person of persons" [value]="person.id">{{ person.first_name }} {{ person.last_name }}</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="task_id">Task ID</label>
-    <select [ngModel]="assignmentForm.value.task_id" (ngModelChange)="assignmentForm.get('task_id')?.setValue($event)" name="task_id">
-      <option *ngFor="let task of tasks" [value]="task.id">{{ task.task_name }}</option>
-    </select>
-  </div>
-
-  {{assignmentForm.value | json}}
-  <button type="submit" class="btn btn-primary">Create</button>
-</form>
 

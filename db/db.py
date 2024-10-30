@@ -79,12 +79,11 @@ class SchedulerDB:
                 people_tasks.append({'first_name': person[0], 'last_name': person[1], 'id': person[2], 'tasks': [{'id': task[0], 'task_name': task[1]} for task in tasks] if tasks else []})
             return people_tasks
     
-    def create_person(self, conn, first_name, last_name):
+    def create_person(self, conn, data):
         """Create a new person in the people table
         
         Args:
-            first_name (str): The first name of the person.
-            last_name (str): The last name of the person.
+            data (dict): A dictionary containing the first name, last name and tasks of the person.
         
         Returns:
             int: The ID of the newly created person.
@@ -94,9 +93,15 @@ class SchedulerDB:
             cur.execute('''
                 INSERT INTO people (first_name, last_name)
                 VALUES (?, ?)
-            ''', (first_name, last_name))
+            ''', (data['first_name'], data['last_name']))
+            person_id = cur.lastrowid
+            for task in data.get('tasks', []):
+                cur.execute('''
+                    INSERT INTO PersonTask (person_id, task_id)
+                    VALUES (?, ?)
+                ''', (person_id, task['id']))
             conn.commit()
-            return cur.lastrowid
+            return person_id
 
     def read_person(self, conn, person_id):
         with conn:

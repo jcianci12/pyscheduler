@@ -92,7 +92,10 @@ def createperson():
                 tasks:
                     type: array
                     items:
-                        type: integer
+                        type: object
+                        properties:
+                            id:
+                                type: integer
     responses:
         201:
             description: The created person
@@ -102,12 +105,8 @@ def createperson():
     data = request.get_json()
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
-        person_id = scheduler_db.create_person(conn, data['first_name'], data['last_name'])
-        # Assuming there is a method to assign tasks to a person
-        for task_id in data.get('tasks', []):
-            scheduler_db.assign_task_to_person(conn, person_id, task_id)
+        person_id = scheduler_db.create_person(conn, data)
         return jsonify({'first_name': data['first_name'], 'last_name': data['last_name'], 'id': person_id}), 201
-
 
 @cross_origin()
 @app.route('/updateperson/<int:person_id>', methods=['PUT'])
