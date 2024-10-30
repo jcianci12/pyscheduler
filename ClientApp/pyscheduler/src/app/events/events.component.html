@@ -58,14 +58,10 @@
   </tbody>
 </table>
 
-Repeat
-
-<label>Every</label><input type="number" [(ngModel)]="repeatValue">
-
-<select [(ngModel)]="repeatUnit">
+Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selectedEvents.length">
+<select [(ngModel)]="repeatUnit" [disabled]="!selectedEvents.length">
   <option value="hours">hours</option>
   <option value="days">days</option>
   <option value="weeks">weeks</option>
 </select>
-
-<button class="btn btn-primary" (click)="repeatEvents()">Generate</button>
+<button class="btn btn-primary" [disabled]="!selectedEvents.length" (click)="repeatEvents()">Generate</button>
