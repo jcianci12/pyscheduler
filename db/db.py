@@ -298,24 +298,21 @@ class SchedulerDB:
 
 
     def create_assignment(self, conn, event_id, task_id, person_id):
-        """Create a new assignment in the assignments table
-        
-        Args:
-            event_id (int): The ID of the event.
-            task_id (int): The ID of the task.
-            person_id (int): The ID of the person.
-        
-        Returns:
-            int: The ID of the newly created assignment.
-        """
         with conn:
             cur = conn.cursor()
             cur.execute('''
-                INSERT INTO Assignments (eventid, taskid, personid)
-                VALUES (?, ?, ?)
+                SELECT 1 FROM Assignments
+                WHERE eventid = ? AND taskid = ? AND personid = ?
             ''', (event_id, task_id, person_id))
-            conn.commit()
-            return cur.lastrowid
+            if cur.fetchone() is None:
+                cur.execute('''
+                    INSERT INTO Assignments (eventid, taskid, personid)
+                    VALUES (?, ?, ?)
+                ''', (event_id, task_id, person_id))
+                conn.commit()
+                return cur.lastrowid
+            else:
+                raise ValueError("Assignment already exists")
 
     def read_assignment(self, conn, assignment_id):
         with conn:

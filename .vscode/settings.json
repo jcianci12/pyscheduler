@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "${workspaceFolder:pyscheduler}/scheduler.db",
+            "name": "db"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
