@@ -44,7 +44,8 @@ class SchedulerDB:
                     eventid INTEGER,
                     FOREIGN KEY (personid) REFERENCES Person(id),
                     FOREIGN KEY (taskid) REFERENCES Task(id),
-                    FOREIGN KEY (eventid) REFERENCES Event(id)
+                    FOREIGN KEY (eventid) REFERENCES Event(id),
+                    UNIQUE (personid, taskid, eventid)
                 )
             ''')
             conn.execute('''

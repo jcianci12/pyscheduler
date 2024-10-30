@@ -4,7 +4,9 @@
     <tr>
       <th>Id</th>
       <th>Name</th>
+      <th>Desc</th>
       <th>Date</th>
+
       <td *ngFor="let task of tasks">
 
         {{ task.task_name }}
@@ -23,11 +25,30 @@
         <input type="date" [(ngModel)]="event.event_date">
       </td>
       <td *ngFor="let task of tasks">
-        <span *ngFor="let assignment of event.assignments">
-          <span *ngIf="assignment.taskid==task.id">
-            {{assignment.personid}}
-          </span>
+        {{event.assignments|json}}
+        <span *ngIf="event.assignments?.length==0; else haveAssignments">
+          <select name="personid" [ngModel]="event.assignments" (change)="onPersonSelect($event, task.id, event.id)">
+            <option value=""  selected></option>
+            <option *ngFor="let person of people" [value]="person.id">{{ person.first_name }} {{ person.last_name }}</option>
+          </select>
         </span>
+        <ng-template #haveAssignments>
+          <span *ngFor="let assignment of event.assignments">
+            <span *ngIf="assignment.taskid==task.id; else unassigned">
+              <select [(ngModel)]="assignment.personid" name="personid">
+                <option value=""  selected></option>
+
+                <option *ngFor="let person of people" [value]="person.id">{{ person.first_name }} {{ person.last_name }}</option>
+              </select>
+            </span>
+            <ng-template #unassigned>
+              <select name="personid" (change)="onPersonSelect($event, task.id, event.id)">
+                <option value=""  selected></option>
+                <option *ngFor="let person of people" [value]="person.id">{{ person.first_name }} {{ person.last_name }}</option>
+              </select>
+            </ng-template>
+          </span>
+        </ng-template>
       </td>
       <td>
 

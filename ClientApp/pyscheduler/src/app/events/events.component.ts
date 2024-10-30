@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Client, Event, EventWithAssignments } from '../api/api';
+import { Assignment, Client, Event, EventWithAssignments } from '../api/api';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -32,10 +32,24 @@ export class EventsComponent implements OnInit {
     this.people = await this.client.getpeople().toPromise();
 
   }
-  onPersonSelect(event: any,taskid?:number) {
+  onPersonSelect(selectedpersonevent?: any, taskid?: number, eventid?: number) {
+    let selectedpersonid = Number(selectedpersonevent.target.value);
+    //check if there is an assignment for the event
+    let event = this.events!.find(e => e.id == eventid);
+    let eventassignment = event?.assignments?.find(a => event?.id == taskid);
+    if (eventassignment) {
+      eventassignment.personid = selectedpersonid;
+    }
+    else {
+      eventassignment = new Assignment({ event_id: eventid, task_id: taskid, person_id: selectedpersonid });
+      event!.assignments?.push(eventassignment);
+    }
+    this.events![eventid!] = event!;
+
+     
   }
 
-  
+
   async createEvent(event: Event) {
     await this.client.eventsPOST(event).toPromise();
     this.events = await this.client.eventsAll().toPromise();
