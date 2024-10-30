@@ -368,6 +368,10 @@ def update_event(event_id):
                     type: string
                 event_date:
                     type: string
+                assignments:
+                    type: array
+                    items:
+                        $ref: '#/definitions/Assignment'
     responses:
         200:
             description: The updated event
@@ -377,9 +381,8 @@ def update_event(event_id):
     data = request.get_json()
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
-        scheduler_db.update_event(conn, event_id, data['event_name'], data['event_date'])
+        scheduler_db.update_event(conn, event_id, data['event_name'], data['event_date'], data['assignments'])
         return jsonify({'event_name': data['event_name'], 'event_date': data['event_date'], 'id': event_id})
-
 @cross_origin()
 @app.route('/events/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id):

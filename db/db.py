@@ -263,7 +263,7 @@ class SchedulerDB:
             ''', (event_id,))
             return cur.fetchone()
 
-    def update_event(self, conn, event_id, event_name, event_date):
+    def update_event(self, conn, event_id, event_name, event_date, assignments):
         with conn:
             cur = conn.cursor()
             cur.execute('''
@@ -271,6 +271,15 @@ class SchedulerDB:
                 SET event_name = ?, event_date = ?
                 WHERE id = ?
             ''', (event_name, event_date, event_id))
+            cur.execute('''
+                DELETE FROM Assignments
+                WHERE eventid = ?
+            ''', (event_id,))
+            for assignment in assignments:
+                cur.execute('''
+                    INSERT INTO Assignments (eventid, taskid, personid)
+                    VALUES (?, ?, ?)
+                ''', (event_id, assignment['task_id'], assignment['person_id']))
             conn.commit()
 
     def delete_event(self, conn, event_id):

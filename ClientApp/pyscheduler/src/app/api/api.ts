@@ -695,10 +695,10 @@ export class Client {
     }
 
     /**
-     * Get all assignments along with their events
+     * Get all events with their assignments
      * @return A list of all events with their assignments
      */
-    eventswithassignments(): Observable<EventWithAssignments[]> {
+    eventswithassignments(): Observable<Event[]> {
         let url_ = this.baseUrl + "/eventswithassignments";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -717,14 +717,14 @@ export class Client {
                 try {
                     return this.processEventswithassignments(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<EventWithAssignments[]>;
+                    return _observableThrow(e) as any as Observable<Event[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<EventWithAssignments[]>;
+                return _observableThrow(response_) as any as Observable<Event[]>;
         }));
     }
 
-    protected processEventswithassignments(response: HttpResponseBase): Observable<EventWithAssignments[]> {
+    protected processEventswithassignments(response: HttpResponseBase): Observable<Event[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -738,7 +738,7 @@ export class Client {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(EventWithAssignments.fromJS(item));
+                    result200!.push(Event.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1321,6 +1321,7 @@ export interface IAssignment {
 }
 
 export class Event implements IEvent {
+    assignments?: Assignment[] | undefined;
     event_date?: string | undefined;
     event_name?: string | undefined;
     id?: number | undefined;
@@ -1336,6 +1337,11 @@ export class Event implements IEvent {
 
     init(_data?: any) {
         if (_data) {
+            if (Array.isArray(_data["assignments"])) {
+                this.assignments = [] as any;
+                for (let item of _data["assignments"])
+                    this.assignments!.push(Assignment.fromJS(item));
+            }
             this.event_date = _data["event_date"];
             this.event_name = _data["event_name"];
             this.id = _data["id"];
@@ -1345,56 +1351,6 @@ export class Event implements IEvent {
     static fromJS(data: any): Event {
         data = typeof data === 'object' ? data : {};
         let result = new Event();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["event_date"] = this.event_date;
-        data["event_name"] = this.event_name;
-        data["id"] = this.id;
-        return data;
-    }
-}
-
-export interface IEvent {
-    event_date?: string | undefined;
-    event_name?: string | undefined;
-    id?: number | undefined;
-}
-
-export class EventWithAssignments implements IEventWithAssignments {
-    assignments?: Assignments[] | undefined;
-    event_date?: string | undefined;
-    event_name?: string | undefined;
-    id?: number | undefined;
-
-    constructor(data?: IEventWithAssignments) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["assignments"])) {
-                this.assignments = [] as any;
-                for (let item of _data["assignments"])
-                    this.assignments!.push(Assignments.fromJS(item));
-            }
-            this.event_date = _data["event_date"];
-            this.event_name = _data["event_name"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): EventWithAssignments {
-        data = typeof data === 'object' ? data : {};
-        let result = new EventWithAssignments();
         result.init(data);
         return result;
     }
@@ -1413,8 +1369,8 @@ export class EventWithAssignments implements IEventWithAssignments {
     }
 }
 
-export interface IEventWithAssignments {
-    assignments?: Assignments[] | undefined;
+export interface IEvent {
+    assignments?: Assignment[] | undefined;
     event_date?: string | undefined;
     event_name?: string | undefined;
     id?: number | undefined;
@@ -1697,6 +1653,7 @@ export interface IEvent2 {
 }
 
 export class Event3 implements IEvent3 {
+    assignments?: Assignment[] | undefined;
     event_date?: string | undefined;
     event_name?: string | undefined;
 
@@ -1711,6 +1668,11 @@ export class Event3 implements IEvent3 {
 
     init(_data?: any) {
         if (_data) {
+            if (Array.isArray(_data["assignments"])) {
+                this.assignments = [] as any;
+                for (let item of _data["assignments"])
+                    this.assignments!.push(Assignment.fromJS(item));
+            }
             this.event_date = _data["event_date"];
             this.event_name = _data["event_name"];
         }
@@ -1725,6 +1687,11 @@ export class Event3 implements IEvent3 {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.assignments)) {
+            data["assignments"] = [];
+            for (let item of this.assignments)
+                data["assignments"].push(item.toJSON());
+        }
         data["event_date"] = this.event_date;
         data["event_name"] = this.event_name;
         return data;
@@ -1732,6 +1699,7 @@ export class Event3 implements IEvent3 {
 }
 
 export interface IEvent3 {
+    assignments?: Assignment[] | undefined;
     event_date?: string | undefined;
     event_name?: string | undefined;
 }
@@ -1858,50 +1826,6 @@ export interface IPerson3 {
     first_name?: string | undefined;
     last_name?: string | undefined;
     tasks?: number[] | undefined;
-}
-
-export class Assignments implements IAssignments {
-    id?: number | undefined;
-    personid?: number | undefined;
-    taskid?: number | undefined;
-
-    constructor(data?: IAssignments) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.personid = _data["personid"];
-            this.taskid = _data["taskid"];
-        }
-    }
-
-    static fromJS(data: any): Assignments {
-        data = typeof data === 'object' ? data : {};
-        let result = new Assignments();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["personid"] = this.personid;
-        data["taskid"] = this.taskid;
-        return data;
-    }
-}
-
-export interface IAssignments {
-    id?: number | undefined;
-    personid?: number | undefined;
-    taskid?: number | undefined;
 }
 
 export class Tasks implements ITasks {
