@@ -230,28 +230,29 @@ class SchedulerDB:
                 if assignment_id is not None:
                     events[event_id]['assignments'].append({
                         'id': assignment_id,
-                        'personid': personid,
-                        'taskid': taskid
+                        'event_id': event_id,
+                        'task_id': taskid,
+                        'person_id': personid
                     })
             return list(events.values())
-        def create_event(self, conn, event_name, event_date):
-            """Create a new event in the event table
-            
-            Args:
-                event_name (str): The name of the event.
-                event_date (date): The date of the event.
-            
-            Returns:
-                int: The ID of the newly created event.
-            """
-            with conn:
-                cur = conn.cursor()
-                cur.execute('''
-                    INSERT INTO Event (event_name, event_date)
-                    VALUES (?, ?)
-                ''', (event_name, event_date))
-                conn.commit()
-                return cur.lastrowid
+    def create_event(self, conn, event_name, event_date):
+        """Create a new event in the event table
+        
+        Args:
+            event_name (str): The name of the event.
+            event_date (date): The date of the event.
+        
+        Returns:
+            int: The ID of the newly created event.
+        """
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                INSERT INTO Event (event_name, event_date)
+                VALUES (?, ?)
+            ''', (event_name, event_date))
+            conn.commit()
+            return cur.lastrowid
 
     def read_event(self, conn, event_id):
         with conn:

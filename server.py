@@ -457,11 +457,11 @@ def get_all_assignments():
     return jsonify([{'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]} for assignment in assignments])
 @cross_origin()
 @app.route('/eventswithassignments', methods=['GET'])
-def eventswithassignments():
-    """Get all assignments along with their events
+def get_events_with_assignments():
+    """Get all events with their assignments
     ---
     definitions:
-        EventWithAssignments:
+        Event:
             type: object
             properties:
                 id:
@@ -473,26 +473,30 @@ def eventswithassignments():
                 assignments:
                     type: array
                     items:
-                        type: object
-                        properties:
-                            id:
-                                type: integer
-                            personid:
-                                type: integer
-                            taskid:
-                                type: integer
+                        $ref: '#/definitions/Assignment'
+        Assignment:
+            type: object
+            properties:
+                id:
+                    type: integer
+                event_id:
+                    type: integer
+                task_id:
+                    type: integer
+                person_id:
+                    type: integer
     responses:
         200:
             description: A list of all events with their assignments
             schema:
                 type: array
                 items:
-                    $ref: '#/definitions/EventWithAssignments'
+                    $ref: '#/definitions/Event'
     """
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
-        events_with_assignments = scheduler_db.get_events_with_assignments(conn)
-    return jsonify(events_with_assignments)
+        events = scheduler_db.get_events_with_assignments(conn)
+    return jsonify(events)
 @cross_origin()
 @app.route('/assignments/<int:assignment_id>', methods=['GET'])
 def get_assignment(assignment_id):
