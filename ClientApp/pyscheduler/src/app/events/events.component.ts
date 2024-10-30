@@ -17,6 +17,9 @@ import { GeneratescheduleComponent } from "../generateschedule/generateschedule.
 })
 export class EventsComponent implements OnInit {
   events: Event[] | undefined;
+  selectedEvents: Event[] = [];
+  repeatValue = 1;
+  repeatUnit = 'days';
   eventForm: FormGroup = new FormGroup({
     id: new FormControl(''),
     event_date: new FormControl('', Validators.required),
@@ -28,21 +31,31 @@ export class EventsComponent implements OnInit {
   constructor(private client: Client,private cdr:ChangeDetectorRef) { }
  async ngOnInit() {
    this.tasks = await this.client.tasksAll().toPromise();
- this.events = await this.client.eventswithassignments().toPromise();
-   
-console.log(this.events)
+   this.events = await this.client.eventswithassignments().toPromise();
  }
 
   async ngAfterViewInit() {
     this.tasks = await this.client.tasksAll().toPromise();
     this.people = await this.client.getpeople().toPromise();
   }
- forceUpdate(event: Event) {
+  forceUpdate(event: Event) {
   
-this.events![event.id!] = event;
-this.cdr.detectChanges(); 
+    this.events![event.id!] = event;
+    this.cdr.detectChanges(); 
+  }
+selectAll: boolean = false;
+
+selectAllEvents() {
+  if (this.selectAll) {
+    this.selectedEvents = [...this.events!];
+  } else {
+    this.selectedEvents = [];
+  }
 }
-  
+
+repeatEvents(){
+
+}
 
 
   async createEvent(event: Event) {
@@ -51,7 +64,6 @@ this.cdr.detectChanges();
   }
 
   async updateEvent(event: Event) {
-    console.log(event)
     event.assignments = event.assignments?.filter(a => a.person_id != null);
     await this.client.eventsPUT(event.id as number, event).toPromise();
     this.events = await this.client.eventsAll().toPromise();
@@ -60,6 +72,18 @@ this.cdr.detectChanges();
   async deleteEvent(eventId: number) {
     await this.client.eventsDELETE(eventId).toPromise();
     this.events = (this.events ?? []).filter(p => p.id !== eventId);
+  }
+
+  selectEvent(event: Event) {
+    if (this.selectedEvents.includes(event)) {
+      this.selectedEvents = this.selectedEvents.filter(e => e.id !== event.id);
+    } else {
+      this.selectedEvents.push(event);
+    }
+  
+  }
+  isSelected(event: Event) {
+    return this.selectedEvents.filter(i=>i.id==event.id).length > 0;
   }
 }
 

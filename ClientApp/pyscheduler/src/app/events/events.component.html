@@ -1,6 +1,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
+      <th><input type="checkbox" [(ngModel)]="selectAll" (ngModelChange)="selectAllEvents()"></th>
       <th>Id</th>
       <th>Desc</th>
       <th>Date</th>
@@ -13,6 +14,8 @@
   <tbody>
     <tr>
       <td></td>
+
+      <td></td>
       <td><input type="text" [(ngModel)]="eventForm.value.event_name"></td>
       <td><input type="date" [(ngModel)]="eventForm.value.event_date"
           [value]="eventForm.value.event_date | date:'yyyy-MM-dd'"></td>
@@ -24,6 +27,7 @@
     </tr>
 
     <tr *ngFor="let event of (events!|createassignmentplaceholders:tasks!)">
+      <td><input type="checkbox" [checked]="isSelected(event)" (click)="selectEvent(event)"></td>
       <td><input type="text" disabled="" [(ngModel)]="event.id"></td>
       <td><input type="text" [(ngModel)]="event.event_name"></td>
 
@@ -53,4 +57,15 @@
     </tr>
   </tbody>
 </table>
-<app-generateschedule></app-generateschedule>
+
+Repeat
+
+<label>Every</label><input type="number" [(ngModel)]="repeatValue">
+
+<select [(ngModel)]="repeatUnit">
+  <option value="hours">hours</option>
+  <option value="days">days</option>
+  <option value="weeks">weeks</option>
+</select>
+
+<button class="btn btn-primary" (click)="repeatEvents()">Generate</button>
