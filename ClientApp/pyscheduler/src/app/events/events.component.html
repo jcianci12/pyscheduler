@@ -32,7 +32,7 @@
       <td><input type="text" [(ngModel)]="event.event_name"></td>
 
       <td>
-        <input type="date" [(ngModel)]="event.event_date">
+        <input type="date" [(ngModel)]="event.event_date"> {{event.event_date}}
       </td>
       <td *ngFor="let task of tasks">
 

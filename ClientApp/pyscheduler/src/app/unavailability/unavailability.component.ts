@@ -36,11 +36,7 @@ async createUnavailability(unavailability: Unavailability) {
   this.ngOnInit()
 }
 async updateUnavailability(unavailability: Unavailability) {
-  const startDate = this.unavailabilityForm.get('start_date')?.value;
-  const endDate = this.unavailabilityForm.get('end_date')?.value;
 
-  unavailability.start_date = startDate ? new Date(startDate) : undefined;
-  unavailability.end_date = endDate ? new Date(endDate) : undefined;
 
   console.log(unavailability);
   await this.client.unavailabilityPUT(unavailability.id ?? 0, unavailability).toPromise();

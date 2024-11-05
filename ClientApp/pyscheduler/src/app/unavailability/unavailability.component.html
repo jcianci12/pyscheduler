@@ -23,7 +23,7 @@
             <td><input type="date" class="form-control" id="start_date" name="start_date"
                     [(ngModel)]="unavailabilityForm.value.start_date" required></td>
             <td><input type="date" class="form-control" id="end_date" name="end_date"
-                    [(ngModel)]="unavailabilityForm.value.end_date" required></td>
+                    [(ngModel)]="unavailabilityForm.value.end_date " required></td>
             <td>
                 <button type="submit" class="btn btn-primary"
                     (click)="createUnavailability(unavailabilityForm.value)">Create</button>
@@ -40,10 +40,10 @@
                     </option>
                 </select>
             </td>
-            <td><input type="date" class="form-control" id="start_date" name="start_date"
-                [(ngModel)]="u.start_date" required>{{u.start_date}}</td> 
-        <td><input type="date" class="form-control" id="end_date" name="end_date"
-                [(ngModel)]="u.end_date" required></td>            <td>
+            <td><input type="date" class="form-control" 
+                [(ngModel)]="u.start_date" ></td> 
+        <td><input type="date" class="form-control" 
+                [(ngModel)]="u.end_date" {{u.end_date|json}} ></td>            <td>
                 <button class="btn btn-primary" (click)="updateUnavailability(u)">Update</button>
                 <button class="btn btn-danger" (click)="deleteUnavailability(u.person_id ?? 0)">Delete</button>
 

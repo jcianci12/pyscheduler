@@ -189,10 +189,11 @@ class SchedulerDB:
             ''', (person_id, start_date, end_date))
             conn.commit()
     
-    def update_unavailability(self, conn, person_id, start_date, end_date):
+    def update_unavailability(self, conn, unavailability_id, person_id, start_date, end_date):
         """Update unavailability
         
         Args:
+            unavailability_id (int): The unavailability's id.
             person_id (int): The person's id.
             start_date (datetime.datetime): The start date of the unavailability.
             end_date (datetime.datetime): The end date of the unavailability.
@@ -201,9 +202,9 @@ class SchedulerDB:
             cur = conn.cursor()
             cur.execute('''
                 UPDATE PersonUnavailability
-                SET start_date = ?, end_date = ?
-                WHERE person_id = ?
-            ''', (start_date, end_date, person_id))
+                SET person_id = ?, start_date = ?, end_date = ?
+                WHERE id = ?
+            ''', (person_id, start_date, end_date, unavailability_id))
             conn.commit()
     
     def delete_unavailability(self, conn, person_id):
