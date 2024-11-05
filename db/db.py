@@ -57,7 +57,16 @@ class SchedulerDB:
                     FOREIGN KEY (task_id) REFERENCES Task(id)
                 )
             ''')
-             
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS PersonUnavailability (
+                    id INTEGER PRIMARY KEY,
+                    person_id INTEGER NOT NULL,
+                    start_date DATE NOT NULL,
+                    end_date DATE NOT NULL,
+                    FOREIGN KEY (person_id) REFERENCES Person (id)
+                )
+            ''')
+
 
     def get_people(self, conn):
         with conn:
@@ -150,6 +159,66 @@ class SchedulerDB:
             ''', (person_id,))
             conn.commit()
     
+    def get_all_unavailability(self, conn):
+        """Get all unavailability
+        
+        Returns:
+            list: A list of tuples where each tuple contains a unavailability's id, person's id, start date, and end date.
+        """
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                SELECT id, person_id, start_date, end_date
+                FROM PersonUnavailability
+            ''')
+            return cur.fetchall()
+    
+    def create_unavailability(self, conn, person_id, start_date, end_date):
+        """Create unavailability
+        
+        Args:
+            person_id (int): The person's id.
+            start_date (datetime.datetime): The start date of the unavailability.
+            end_date (datetime.datetime): The end date of the unavailability.
+        """
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                INSERT INTO PersonUnavailability (person_id, start_date, end_date)
+                VALUES (?, ?, ?)
+            ''', (person_id, start_date, end_date))
+            conn.commit()
+    
+    def update_unavailability(self, conn, person_id, start_date, end_date):
+        """Update unavailability
+        
+        Args:
+            person_id (int): The person's id.
+            start_date (datetime.datetime): The start date of the unavailability.
+            end_date (datetime.datetime): The end date of the unavailability.
+        """
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                UPDATE PersonUnavailability
+                SET start_date = ?, end_date = ?
+                WHERE person_id = ?
+            ''', (start_date, end_date, person_id))
+            conn.commit()
+    
+    def delete_unavailability(self, conn, person_id):
+        """Delete unavailability
+        
+        Args:
+            person_id (int): The person's id.
+        """
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''
+                DELETE FROM PersonUnavailability
+                WHERE person_id = ?
+            ''', (person_id,))
+            conn.commit()
     def get_tasks(self, conn):
         """Get all tasks
         

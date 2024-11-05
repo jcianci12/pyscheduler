@@ -1,0 +1,54 @@
+<!-- please create a table that facilitates crud ops. I will past the unavailability object here along with the example table -->
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td></td>
+            <td>
+                <select [(ngModel)]="unavailabilityForm.value.person_id">
+                    <option *ngFor="let person of people" [value]="person.id">
+                        {{ person.first_name }} {{ person.last_name }}
+                    </option>
+                </select>
+            </td>
+            <td><input type="date" class="form-control" id="start_date" name="start_date"
+                    [(ngModel)]="unavailabilityForm.value.start_date" required></td>
+            <td><input type="date" class="form-control" id="end_date" name="end_date"
+                    [(ngModel)]="unavailabilityForm.value.end_date" required></td>
+            <td>
+                <button type="submit" class="btn btn-primary"
+                    (click)="createUnavailability(unavailabilityForm.value)">Create</button>
+            </td>
+        </tr>
+        
+        <tr *ngFor="let u of unavailability">
+            <td>
+                <input type="text" [(ngModel)]="u.person_id" disabled></td>
+            <td>
+                <select [(ngModel)]="u.person_id">
+                    <option *ngFor="let person of people" [value]="person.id">
+                        {{ person.first_name }} {{ person.last_name }}
+                    </option>
+                </select>
+            </td>
+            <td><input type="date" class="form-control" id="start_date" name="start_date"
+                [(ngModel)]="u.start_date" required>{{u.start_date}}</td> 
+        <td><input type="date" class="form-control" id="end_date" name="end_date"
+                [(ngModel)]="u.end_date" required></td>            <td>
+                <button class="btn btn-primary" (click)="updateUnavailability(u)">Update</button>
+                <button class="btn btn-danger" (click)="deleteUnavailability(u.person_id ?? 0)">Delete</button>
+
+                
+            </td>
+        </tr>
+    </tbody>
+</table>

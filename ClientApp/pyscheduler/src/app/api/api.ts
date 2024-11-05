@@ -1212,6 +1212,233 @@ export class Client {
     }
 
     /**
+     * Get all unavailability
+     * @return A list of all unavailability
+     */
+    unavailabilityAll(): Observable<Unavailability[]> {
+        let url_ = this.baseUrl + "/unavailability";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUnavailabilityAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUnavailabilityAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unavailability[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unavailability[]>;
+        }));
+    }
+
+    protected processUnavailabilityAll(response: HttpResponseBase): Observable<Unavailability[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Unavailability.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * Create new unavailability
+     * @param unavailability (optional) 
+     * @return The created unavailability
+     */
+    unavailabilityPOST(unavailability: Unavailability2 | null | undefined): Observable<Anonymous> {
+        let url_ = this.baseUrl + "/unavailability";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(unavailability);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUnavailabilityPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUnavailabilityPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Anonymous>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Anonymous>;
+        }));
+    }
+
+    protected processUnavailabilityPOST(response: HttpResponseBase): Observable<Anonymous> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = Anonymous.fromJS(resultData201);
+            return _observableOf(result201);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * Delete an unavailability
+     * @return Unavailability deleted
+     */
+    unavailabilityDELETE(unavailability_id: number): Observable<void> {
+        let url_ = this.baseUrl + "/unavailability/{unavailability_id}";
+        if (unavailability_id === undefined || unavailability_id === null)
+            throw new Error("The parameter 'unavailability_id' must be defined.");
+        url_ = url_.replace("{unavailability_id}", encodeURIComponent("" + unavailability_id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUnavailabilityDELETE(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUnavailabilityDELETE(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUnavailabilityDELETE(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * Update an unavailability
+     * @param unavailability (optional) 
+     * @return The updated unavailability
+     */
+    unavailabilityPUT(unavailability_id: number, unavailability: Unavailability3 | null | undefined): Observable<Anonymous2> {
+        let url_ = this.baseUrl + "/unavailability/{unavailability_id}";
+        if (unavailability_id === undefined || unavailability_id === null)
+            throw new Error("The parameter 'unavailability_id' must be defined.");
+        url_ = url_.replace("{unavailability_id}", encodeURIComponent("" + unavailability_id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(unavailability);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUnavailabilityPUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUnavailabilityPUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Anonymous2>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Anonymous2>;
+        }));
+    }
+
+    protected processUnavailabilityPUT(response: HttpResponseBase): Observable<Anonymous2> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Anonymous2.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * Update a person
      * @param person (optional) 
      * @return The updated person
@@ -1472,6 +1699,54 @@ export interface ITask {
     task_name?: string | undefined;
 }
 
+export class Unavailability implements IUnavailability {
+    end_date?: Date | undefined;
+    id?: number | undefined;
+    person_id?: number | undefined;
+    start_date?: Date | undefined;
+
+    constructor(data?: IUnavailability) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.end_date = _data["end_date"] ? new Date(_data["end_date"].toString()) : <any>undefined;
+            this.id = _data["id"];
+            this.person_id = _data["person_id"];
+            this.start_date = _data["start_date"] ? new Date(_data["start_date"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Unavailability {
+        data = typeof data === 'object' ? data : {};
+        let result = new Unavailability();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["end_date"] = this.end_date ? formatDate(this.end_date) : <any>undefined;
+        data["id"] = this.id;
+        data["person_id"] = this.person_id;
+        data["start_date"] = this.start_date ? formatDate(this.start_date) : <any>undefined;
+        return data;
+    }
+}
+
+export interface IUnavailability {
+    end_date?: Date | undefined;
+    id?: number | undefined;
+    person_id?: number | undefined;
+    start_date?: Date | undefined;
+}
+
 export class Assignment2 implements IAssignment2 {
     event_id?: number | undefined;
     person_id?: number | undefined;
@@ -1563,7 +1838,7 @@ export interface IAssignment3 {
 export class Person2 implements IPerson2 {
     first_name?: string | undefined;
     last_name?: string | undefined;
-    tasks?: number[] | undefined;
+    tasks?: tasks[] | undefined;
 
     constructor(data?: IPerson2) {
         if (data) {
@@ -1581,7 +1856,7 @@ export class Person2 implements IPerson2 {
             if (Array.isArray(_data["tasks"])) {
                 this.tasks = [] as any;
                 for (let item of _data["tasks"])
-                    this.tasks!.push(item);
+                    this.tasks!.push(tasks.fromJS(item));
             }
         }
     }
@@ -1600,7 +1875,7 @@ export class Person2 implements IPerson2 {
         if (Array.isArray(this.tasks)) {
             data["tasks"] = [];
             for (let item of this.tasks)
-                data["tasks"].push(item);
+                data["tasks"].push(item.toJSON());
         }
         return data;
     }
@@ -1609,7 +1884,7 @@ export class Person2 implements IPerson2 {
 export interface IPerson2 {
     first_name?: string | undefined;
     last_name?: string | undefined;
-    tasks?: number[] | undefined;
+    tasks?: tasks[] | undefined;
 }
 
 export class Event2 implements IEvent2 {
@@ -1776,6 +2051,94 @@ export interface ITask3 {
     task_name?: string | undefined;
 }
 
+export class Unavailability2 implements IUnavailability2 {
+    end_date?: Date | undefined;
+    person_id?: number | undefined;
+    start_date?: Date | undefined;
+
+    constructor(data?: IUnavailability2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.end_date = _data["end_date"] ? new Date(_data["end_date"].toString()) : <any>undefined;
+            this.person_id = _data["person_id"];
+            this.start_date = _data["start_date"] ? new Date(_data["start_date"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Unavailability2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Unavailability2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["end_date"] = this.end_date ? formatDate(this.end_date) : <any>undefined;
+        data["person_id"] = this.person_id;
+        data["start_date"] = this.start_date ? formatDate(this.start_date) : <any>undefined;
+        return data;
+    }
+}
+
+export interface IUnavailability2 {
+    end_date?: Date | undefined;
+    person_id?: number | undefined;
+    start_date?: Date | undefined;
+}
+
+export class Unavailability3 implements IUnavailability3 {
+    end_date?: Date | undefined;
+    person_id?: number | undefined;
+    start_date?: Date | undefined;
+
+    constructor(data?: IUnavailability3) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.end_date = _data["end_date"] ? new Date(_data["end_date"].toString()) : <any>undefined;
+            this.person_id = _data["person_id"];
+            this.start_date = _data["start_date"] ? new Date(_data["start_date"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Unavailability3 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Unavailability3();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["end_date"] = this.end_date ? formatDate(this.end_date) : <any>undefined;
+        data["person_id"] = this.person_id;
+        data["start_date"] = this.start_date ? formatDate(this.start_date) : <any>undefined;
+        return data;
+    }
+}
+
+export interface IUnavailability3 {
+    end_date?: Date | undefined;
+    person_id?: number | undefined;
+    start_date?: Date | undefined;
+}
+
 export class Person3 implements IPerson3 {
     first_name?: string | undefined;
     last_name?: string | undefined;
@@ -1828,6 +2191,102 @@ export interface IPerson3 {
     tasks?: number[] | undefined;
 }
 
+export class Anonymous implements IAnonymous {
+    end_date?: Date | undefined;
+    id?: number | undefined;
+    person_id?: number | undefined;
+    start_date?: Date | undefined;
+
+    constructor(data?: IAnonymous) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.end_date = _data["end_date"] ? new Date(_data["end_date"].toString()) : <any>undefined;
+            this.id = _data["id"];
+            this.person_id = _data["person_id"];
+            this.start_date = _data["start_date"] ? new Date(_data["start_date"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Anonymous {
+        data = typeof data === 'object' ? data : {};
+        let result = new Anonymous();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["end_date"] = this.end_date ? formatDate(this.end_date) : <any>undefined;
+        data["id"] = this.id;
+        data["person_id"] = this.person_id;
+        data["start_date"] = this.start_date ? formatDate(this.start_date) : <any>undefined;
+        return data;
+    }
+}
+
+export interface IAnonymous {
+    end_date?: Date | undefined;
+    id?: number | undefined;
+    person_id?: number | undefined;
+    start_date?: Date | undefined;
+}
+
+export class Anonymous2 implements IAnonymous2 {
+    end_date?: Date | undefined;
+    id?: number | undefined;
+    person_id?: number | undefined;
+    start_date?: Date | undefined;
+
+    constructor(data?: IAnonymous2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.end_date = _data["end_date"] ? new Date(_data["end_date"].toString()) : <any>undefined;
+            this.id = _data["id"];
+            this.person_id = _data["person_id"];
+            this.start_date = _data["start_date"] ? new Date(_data["start_date"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Anonymous2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Anonymous2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["end_date"] = this.end_date ? formatDate(this.end_date) : <any>undefined;
+        data["id"] = this.id;
+        data["person_id"] = this.person_id;
+        data["start_date"] = this.start_date ? formatDate(this.start_date) : <any>undefined;
+        return data;
+    }
+}
+
+export interface IAnonymous2 {
+    end_date?: Date | undefined;
+    id?: number | undefined;
+    person_id?: number | undefined;
+    start_date?: Date | undefined;
+}
+
 export class Tasks implements ITasks {
     id?: number | undefined;
     task_name?: string | undefined;
@@ -1866,6 +2325,48 @@ export class Tasks implements ITasks {
 export interface ITasks {
     id?: number | undefined;
     task_name?: string | undefined;
+}
+
+export class tasks implements Itasks {
+    id?: number | undefined;
+
+    constructor(data?: Itasks) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): tasks {
+        data = typeof data === 'object' ? data : {};
+        let result = new tasks();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        return data;
+    }
+}
+
+export interface Itasks {
+    id?: number | undefined;
+}
+
+function formatDate(d: Date) {
+    return d.getFullYear() + '-' + 
+        (d.getMonth() < 9 ? ('0' + (d.getMonth()+1)) : (d.getMonth()+1)) + '-' +
+        (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate());
 }
 
 export class ApiException extends Error {
