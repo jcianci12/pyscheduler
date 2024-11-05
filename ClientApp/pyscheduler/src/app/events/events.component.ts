@@ -18,8 +18,10 @@ import { GeneratescheduleComponent } from "../generateschedule/generateschedule.
 export class EventsComponent implements OnInit {
   events: Event[] | undefined;
   selectedEvents: Event[] = [];
+  draftEvents: Event[] = [];
   repeatValue = 1;
-  repeatUnit = 'days';
+  repeatUnit = '604800';
+  repeatCount = 5;
   eventForm: FormGroup = new FormGroup({
     id: new FormControl(''),
     event_date: new FormControl('', Validators.required),
@@ -28,35 +30,55 @@ export class EventsComponent implements OnInit {
   tasks: import("c:/Users/jcianci12.DESKTOP-2CKPSCV/Desktop/IT/pyscheduler/ClientApp/pyscheduler/src/app/api/api").Task[] | undefined;
   people: import("c:/Users/jcianci12.DESKTOP-2CKPSCV/Desktop/IT/pyscheduler/ClientApp/pyscheduler/src/app/api/api").Person[] | undefined;
 
-  constructor(private client: Client,private cdr:ChangeDetectorRef) { }
- async ngOnInit() {
-   this.tasks = await this.client.tasksAll().toPromise();
-   this.events = await this.client.eventswithassignments().toPromise();
- }
+  constructor(private client: Client, private cdr: ChangeDetectorRef) { }
+  async ngOnInit() {
+    this.tasks = await this.client.tasksAll().toPromise();
+    this.events = await this.client.eventswithassignments().toPromise();
+  }
 
   async ngAfterViewInit() {
     this.tasks = await this.client.tasksAll().toPromise();
     this.people = await this.client.getpeople().toPromise();
   }
   forceUpdate(event: Event) {
-  
+
     this.events![event.id!] = event;
-    this.cdr.detectChanges(); 
+    this.cdr.detectChanges();
   }
-selectAll: boolean = false;
+  selectAll: boolean = false;
 
-selectAllEvents() {
-  if (this.selectAll) {
-    this.selectedEvents = [...this.events!];
-  } else {
-    this.selectedEvents = [];
+  selectAllEvents() {
+    if (this.selectAll) {
+      this.selectedEvents = [...this.events!];
+    } else {
+      this.selectedEvents = [];
+    }
   }
+
+  async repeatEvents() {
+    const draftEvents: Event2[] = [];
+    for (let i = 1; i <= this.repeatCount; i++)
+      for (const event of this.selectedEvents) {
+
+        {
+          let millisecondstoadd = i * parseInt(this.repeatUnit) * 1000;
+          let eventdate = new Date(event.event_date!);
+          eventdate.setTime(eventdate.getTime() + millisecondstoadd);
+          //generate the date in yyyy-mm-dd
+
+          const newEvent = new Event2({ event_date: eventdate.toISOString().slice(0, 10), event_name: event.event_name });
+          draftEvents.push(newEvent);
+        }
+      }
+    this.draftEvents = draftEvents;
+  }
+async createEvents() {
+  for (const event of this.draftEvents) {
+    await this.client.eventsPOST(event).toPromise();
+  }
+  this.events = await this.client.eventsAll().toPromise();
+  this.draftEvents = [];
 }
-
-repeatEvents(){
-
-}
-
 
   async createEvent(event: Event) {
     await this.client.eventsPOST(event).toPromise();
@@ -80,10 +102,10 @@ repeatEvents(){
     } else {
       this.selectedEvents.push(event);
     }
-  
+
   }
   isSelected(event: Event) {
-    return this.selectedEvents.filter(i=>i.id==event.id).length > 0;
+    return this.selectedEvents.filter(i => i.id == event.id).length > 0;
   }
 }
 

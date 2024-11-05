@@ -60,8 +60,55 @@
 
 Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selectedEvents.length">
 <select [(ngModel)]="repeatUnit" [disabled]="!selectedEvents.length">
-  <option value="hours">hours</option>
-  <option value="days">days</option>
-  <option value="weeks">weeks</option>
+  <option value="3600">hours</option>
+  <option value="86400">days</option>
+  <option value="604800">weeks</option>
 </select>
+ <input type="number" [(ngModel)]="repeatCount" [disabled]="!selectedEvents.length"> times
 <button class="btn btn-primary" [disabled]="!selectedEvents.length" (click)="repeatEvents()">Generate</button>
+
+<br>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Desc</th>
+      <th>Date</th>
+
+      <th *ngFor="let task of tasks">{{ task.task_name }}</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    
+
+    <tr *ngFor="let event of (draftEvents!|createassignmentplaceholders:tasks!)">
+      <td><input type="text" [(ngModel)]="event.event_name"></td>
+
+      <td>
+        <input type="date" [(ngModel)]="event.event_date">
+      </td>
+      <td *ngFor="let task of tasks">
+
+
+        <span *ngFor="let assignment of event.assignments!|filterassignmentsbytask:task.id!">
+          <select [(ngModel)]="assignment.person_id" (ngModelChange)="forceUpdate(event)" name="personid">
+            <option value=""></option>
+
+
+            <option *ngFor="let person of people" [value]="person.id">{{ person.first_name }} {{ person.last_name }}
+            </option>
+          </select>
+
+        </span>
+      </td>
+
+      <td>
+        <button class="btn btn-primary" (click)="updateEvent(event)">Update</button>
+        <button class="btn btn-danger" (click)="deleteEvent(event.id ?? 0)">Delete</button>
+        <button class="btn btn-link" [routerLink]="['/assignments', event.id]" role="button">View Assignments</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<button (click)="createEvents()" [disabled]="!draftEvents.length">Create ({{draftEvents.length }})events</button>
