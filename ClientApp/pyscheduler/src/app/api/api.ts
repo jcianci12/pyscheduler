@@ -1700,10 +1700,10 @@ export interface ITask {
 }
 
 export class Unavailability implements IUnavailability {
-    end_date?: Date | undefined;
+    end_date?: string | undefined;
     id?: number | undefined;
     person_id?: number | undefined;
-    start_date?: Date | undefined;
+    start_date?: string | undefined;
 
     constructor(data?: IUnavailability) {
         if (data) {
@@ -1716,10 +1716,10 @@ export class Unavailability implements IUnavailability {
 
     init(_data?: any) {
         if (_data) {
-            this.end_date = _data["end_date"] ? new Date(_data["end_date"].toString()) : <any>undefined;
+            this.end_date = _data["end_date"];
             this.id = _data["id"];
             this.person_id = _data["person_id"];
-            this.start_date = _data["start_date"] ? new Date(_data["start_date"].toString()) : <any>undefined;
+            this.start_date = _data["start_date"];
         }
     }
 
@@ -1732,19 +1732,19 @@ export class Unavailability implements IUnavailability {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["end_date"] = this.end_date ? formatDate(this.end_date) : <any>undefined;
+        data["end_date"] = this.end_date;
         data["id"] = this.id;
         data["person_id"] = this.person_id;
-        data["start_date"] = this.start_date ? formatDate(this.start_date) : <any>undefined;
+        data["start_date"] = this.start_date;
         return data;
     }
 }
 
 export interface IUnavailability {
-    end_date?: Date | undefined;
+    end_date?: string | undefined;
     id?: number | undefined;
     person_id?: number | undefined;
-    start_date?: Date | undefined;
+    start_date?: string | undefined;
 }
 
 export class Assignment2 implements IAssignment2 {
@@ -2096,9 +2096,9 @@ export interface IUnavailability2 {
 }
 
 export class Unavailability3 implements IUnavailability3 {
-    end_date?: Date | undefined;
+    end_date?: string | undefined;
     person_id?: number | undefined;
-    start_date?: Date | undefined;
+    start_date?: string | undefined;
 
     constructor(data?: IUnavailability3) {
         if (data) {
@@ -2111,9 +2111,9 @@ export class Unavailability3 implements IUnavailability3 {
 
     init(_data?: any) {
         if (_data) {
-            this.end_date = _data["end_date"] ? new Date(_data["end_date"].toString()) : <any>undefined;
+            this.end_date = _data["end_date"];
             this.person_id = _data["person_id"];
-            this.start_date = _data["start_date"] ? new Date(_data["start_date"].toString()) : <any>undefined;
+            this.start_date = _data["start_date"];
         }
     }
 
@@ -2126,17 +2126,17 @@ export class Unavailability3 implements IUnavailability3 {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["end_date"] = this.end_date ? formatDate(this.end_date) : <any>undefined;
+        data["end_date"] = this.end_date;
         data["person_id"] = this.person_id;
-        data["start_date"] = this.start_date ? formatDate(this.start_date) : <any>undefined;
+        data["start_date"] = this.start_date;
         return data;
     }
 }
 
 export interface IUnavailability3 {
-    end_date?: Date | undefined;
+    end_date?: string | undefined;
     person_id?: number | undefined;
-    start_date?: Date | undefined;
+    start_date?: string | undefined;
 }
 
 export class Person3 implements IPerson3 {
@@ -2192,10 +2192,10 @@ export interface IPerson3 {
 }
 
 export class Anonymous implements IAnonymous {
-    end_date?: Date | undefined;
+    end_date?: string | undefined;
     id?: number | undefined;
     person_id?: number | undefined;
-    start_date?: Date | undefined;
+    start_date?: string | undefined;
 
     constructor(data?: IAnonymous) {
         if (data) {
@@ -2208,10 +2208,10 @@ export class Anonymous implements IAnonymous {
 
     init(_data?: any) {
         if (_data) {
-            this.end_date = _data["end_date"] ? new Date(_data["end_date"].toString()) : <any>undefined;
+            this.end_date = _data["end_date"];
             this.id = _data["id"];
             this.person_id = _data["person_id"];
-            this.start_date = _data["start_date"] ? new Date(_data["start_date"].toString()) : <any>undefined;
+            this.start_date = _data["start_date"];
         }
     }
 
@@ -2224,19 +2224,19 @@ export class Anonymous implements IAnonymous {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["end_date"] = this.end_date ? formatDate(this.end_date) : <any>undefined;
+        data["end_date"] = this.end_date;
         data["id"] = this.id;
         data["person_id"] = this.person_id;
-        data["start_date"] = this.start_date ? formatDate(this.start_date) : <any>undefined;
+        data["start_date"] = this.start_date;
         return data;
     }
 }
 
 export interface IAnonymous {
-    end_date?: Date | undefined;
+    end_date?: string | undefined;
     id?: number | undefined;
     person_id?: number | undefined;
-    start_date?: Date | undefined;
+    start_date?: string | undefined;
 }
 
 export class Anonymous2 implements IAnonymous2 {

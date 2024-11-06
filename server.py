@@ -164,6 +164,36 @@ def deleteperson(person_id):
     with scheduler_db.connect() as conn:
         scheduler_db.delete_person(conn, person_id)
         return '', 204
+    
+@cross_origin()
+@app.route('/unavailability', methods=['GET'])
+def get_unavailability():
+    """Get all unavailability
+    ---
+    definitions:
+        Unavailability:
+            type: object
+            properties:
+                id:
+                    type: integer
+                person_id:
+                    type: integer
+                start_date:
+                    type: string
+                end_date:
+                    type: string
+    responses:
+        200:
+            description: A list of all unavailability
+            schema:
+                type: array
+                items:
+                    $ref: '#/definitions/Unavailability'
+    """
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+        unavailability = scheduler_db.get_all_unavailability(conn)
+        return jsonify([{'id': unavail[0], 'person_id': unavail[1], 'start_date': unavail[2], 'end_date': unavail[3]} for unavail in unavailability])
 @cross_origin()
 @app.route('/unavailability', methods=['POST'])
 def create_unavailability():
@@ -195,10 +225,8 @@ def create_unavailability():
                         type: integer
                     start_date:
                         type: string
-                        format: date
                     end_date:
                         type: string
-                        format: date
     """
     data = request.get_json()
     scheduler_db = SchedulerDB('scheduler.db')
@@ -225,10 +253,8 @@ def update_unavailability(unavailability_id):
                     type: integer
                 start_date:
                     type: string
-                    format: date
                 end_date:
                     type: string
-                    format: date
     responses:
         200:
             description: The updated unavailability
@@ -250,7 +276,8 @@ def update_unavailability(unavailability_id):
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
         scheduler_db.update_unavailability(conn, unavailability_id, data['person_id'], data['start_date'], data['end_date'])
-        return jsonify({'id': unavailability_id, 'person_id': data['person_id'], 'start_date': data['start_date'], 'end_date': data['end_date']})
+        return jsonify({}), 201
+    # def create_unavailability(self, conn, person_id, start_date, end_date):
 
 
 @cross_origin()
@@ -273,37 +300,7 @@ def delete_unavailability(unavailability_id):
         scheduler_db.delete_unavailability(conn, unavailability_id)
         return '', 204
 
-@cross_origin()
-@app.route('/unavailability', methods=['GET'])
-def get_unavailability():
-    """Get all unavailability
-    ---
-    definitions:
-        Unavailability:
-            type: object
-            properties:
-                id:
-                    type: integer
-                person_id:
-                    type: integer
-                start_date:
-                    type: string
-                    format: date
-                end_date:
-                    type: string
-                    format: date
-    responses:
-        200:
-            description: A list of all unavailability
-            schema:
-                type: array
-                items:
-                    $ref: '#/definitions/Unavailability'
-    """
-    scheduler_db = SchedulerDB('scheduler.db')
-    with scheduler_db.connect() as conn:
-        unavailability = scheduler_db.get_all_unavailability(conn)
-        return jsonify([{'id': unavail[0], 'person_id': unavail[1], 'start_date': unavail[2], 'end_date': unavail[3]} for unavail in unavailability])
+
 @cross_origin()
 @app.route('/tasks', methods=['GET'])
 def get_tasks():

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Client, Person, Unavailability, Unavailability2 } from '../api/api';
-import { FormControl, FormGroup, FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,20 +16,16 @@ people: Person[]|undefined = [];
   constructor(private client:Client) { }
   unavailabilityForm: FormGroup = new FormGroup({
     person_id: new FormControl(''),
-    start_date: new FormControl<Date | null>(null),
-    end_date: new FormControl<Date | null>(null)
+    start_date: new FormControl('', Validators.required),
+    end_date: new FormControl('', Validators.required)
   });
   async ngOnInit() {
     this.unavailability = await this.client.unavailabilityAll().toPromise();
     console.log(this.unavailability)
     this.people = await this.client.getpeople().toPromise();
   }
-async createUnavailability(unavailability: Unavailability) {
-  const startDate = this.unavailabilityForm.get('start_date')?.value;
-  const endDate = this.unavailabilityForm.get('end_date')?.value;
-
-  unavailability.start_date = startDate ? new Date(startDate) : undefined;
-  unavailability.end_date = endDate ? new Date(endDate) : undefined;
+async createUnavailability(unavailability: Unavailability2) {
+  
 
   console.log(unavailability);
   this.client.unavailabilityPOST(unavailability).toPromise();

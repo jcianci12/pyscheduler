@@ -1,5 +1,5 @@
 <!-- please create a table that facilitates crud ops. I will past the unavailability object here along with the example table -->
-
+{{unavailability|json}}
 <table class="table table-striped">
     <thead>
         <tr>
@@ -43,7 +43,7 @@
             <td><input type="date" class="form-control" 
                 [(ngModel)]="u.start_date" ></td> 
         <td><input type="date" class="form-control" 
-                [(ngModel)]="u.end_date" {{u.end_date|json}} ></td>            <td>
+                [(ngModel)]="u.end_date" >{{u.end_date}}</td>            <td>
                 <button class="btn btn-primary" (click)="updateUnavailability(u)">Update</button>
                 <button class="btn btn-danger" (click)="deleteUnavailability(u.person_id ?? 0)">Delete</button>
 
