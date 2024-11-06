@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Client, Person, Unavailability, Unavailability2 } from '../api/api';
+import { Client, Person, Unavailability, Unavailability2, Unavailability3 } from '../api/api';
 import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -35,7 +35,7 @@ async updateUnavailability(unavailability: Unavailability) {
 
 
   console.log(unavailability);
-  await this.client.unavailabilityPUT(unavailability.id ?? 0, unavailability).toPromise();
+  await this.client.unavailabilityPUT(unavailability.id!, unavailability as Unavailability3).toPromise();
   this.ngOnInit()
 }
 async deleteUnavailability(unavailability_id: number) {

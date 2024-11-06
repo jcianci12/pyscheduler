@@ -1423,12 +1423,12 @@ export class Client {
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 201) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Anonymous2.fromJS(resultData200);
-            return _observableOf(result200);
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = Anonymous2.fromJS(resultData201);
+            return _observableOf(result201);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -2096,9 +2096,9 @@ export interface IUnavailability2 {
 }
 
 export class Unavailability3 implements IUnavailability3 {
-    end_date?: string | undefined;
+    end_date?: Date | undefined;
     person_id?: number | undefined;
-    start_date?: string | undefined;
+    start_date?: Date | undefined;
 
     constructor(data?: IUnavailability3) {
         if (data) {
@@ -2111,9 +2111,9 @@ export class Unavailability3 implements IUnavailability3 {
 
     init(_data?: any) {
         if (_data) {
-            this.end_date = _data["end_date"];
+            this.end_date = _data["end_date"] ? new Date(_data["end_date"].toString()) : <any>undefined;
             this.person_id = _data["person_id"];
-            this.start_date = _data["start_date"];
+            this.start_date = _data["start_date"] ? new Date(_data["start_date"].toString()) : <any>undefined;
         }
     }
 
@@ -2126,17 +2126,17 @@ export class Unavailability3 implements IUnavailability3 {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["end_date"] = this.end_date;
+        data["end_date"] = this.end_date ? formatDate(this.end_date) : <any>undefined;
         data["person_id"] = this.person_id;
-        data["start_date"] = this.start_date;
+        data["start_date"] = this.start_date ? formatDate(this.start_date) : <any>undefined;
         return data;
     }
 }
 
 export interface IUnavailability3 {
-    end_date?: string | undefined;
+    end_date?: Date | undefined;
     person_id?: number | undefined;
-    start_date?: string | undefined;
+    start_date?: Date | undefined;
 }
 
 export class Person3 implements IPerson3 {

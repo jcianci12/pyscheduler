@@ -253,10 +253,14 @@ def update_unavailability(unavailability_id):
                     type: integer
                 start_date:
                     type: string
+                    format: date
+
                 end_date:
                     type: string
+                    format: date
+
     responses:
-        200:
+        201:
             description: The updated unavailability
             schema:
                 type: object
@@ -276,7 +280,7 @@ def update_unavailability(unavailability_id):
     scheduler_db = SchedulerDB('scheduler.db')
     with scheduler_db.connect() as conn:
         scheduler_db.update_unavailability(conn, unavailability_id, data['person_id'], data['start_date'], data['end_date'])
-        return jsonify({}), 201
+        return jsonify({'id': unavailability_id, 'person_id': data['person_id'], 'start_date': data['start_date'], 'end_date': data['end_date']}), 201
     # def create_unavailability(self, conn, person_id, start_date, end_date):
 
 
