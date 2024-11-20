@@ -6,6 +6,7 @@ from filter_people_who_are_not_available import filter_people_who_are_not_availa
 from generate_dates import generate_dates
 from print_schedule import print_schedule
 from save_csv import save_csv
+from db.db import SchedulerDB
 # load the task list
 with open('tasklist.json') as f:
     task_list = json.load(f)
@@ -18,7 +19,7 @@ with open('days.json') as f:
 with open('unavailability.json') as f:
     unavailable_dates = json.load(f)
 
-def generate_schedule(task_list,  dates, n=1):
+def generate_schedule(task_list,  dates, n=1,people=None):
     """
     Generates a random schedule with the given task list, rules, and dates
     """
@@ -27,8 +28,7 @@ def generate_schedule(task_list,  dates, n=1):
     for i in range(len(dates)):
 
         for task in task_list:
-            # Get a list of the people that can do the task
-            people = task['assigned'][:]  # Make a copy of the list
+            
 
             people = filter_people_who_are_not_available(people, unavailable_dates, dates[i])
             # Get people who aren't already booked for this schedule
@@ -53,8 +53,11 @@ def returnSchedule():
     return schedule
 # # execute the code
 # dates = generate_dates(days, 8)
-# schedule = generate_schedule(task_list,  dates)
-# print_schedule(schedule)
+scheduler_db = SchedulerDB('scheduler.db')
+with scheduler_db.connect() as conn:
+        events = scheduler_db.get_people(conn)
+schedule = generate_schedule(task_list,  events)
+print_schedule(schedule)
 # save_csv(schedule)
 
 
