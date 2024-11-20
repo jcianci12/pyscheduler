@@ -1,3 +1,7 @@
+<p>To creat a new event, complete the details and click create.</p>
+<p>To create bulk events, first create one or more events, then select the events you wish to repeat, fill in 
+  the interval (days, weeks, etc) the number of times to repeat, and click Create Draft Events.
+</p>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -65,7 +69,7 @@ Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selected
   <option value="604800">weeks</option>
 </select>
  <input type="number" [(ngModel)]="repeatCount" [disabled]="!selectedEvents.length"> times
-<button class="btn btn-primary" [disabled]="!selectedEvents.length" (click)="repeatEvents()">Generate</button>
+<button class="btn btn-primary" [disabled]="!selectedEvents.length" (click)="repeatEvents()">Confirm</button>
 
 <br>
 <table class="table table-striped">
