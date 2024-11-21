@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Assignment, Client, Event, Event2, Task } from '../api/api';
+import { Assignment, Client, Event, Event2, Person, Task } from '../api/api';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -27,8 +27,8 @@ export class EventsComponent implements OnInit {
     event_date: new FormControl('', Validators.required),
     event_name: new FormControl('', Validators.required)
   });
-  tasks: import("c:/Users/jcianci12.DESKTOP-2CKPSCV/Desktop/IT/pyscheduler/ClientApp/pyscheduler/src/app/api/api").Task[] | undefined;
-  people: import("c:/Users/jcianci12.DESKTOP-2CKPSCV/Desktop/IT/pyscheduler/ClientApp/pyscheduler/src/app/api/api").Person[] | undefined;
+  tasks: Task[] | undefined;
+  people: Person[] | undefined;
 
   constructor(private client: Client, private cdr: ChangeDetectorRef) { }
   async ngOnInit() {
