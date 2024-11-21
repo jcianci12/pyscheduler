@@ -11,15 +11,17 @@ from db.db import SchedulerDB
 with open('tasklist.json') as f:
     task_list = json.load(f)
 
-# load the days to schedule
-with open('days.json') as f:
-    days = json.load(f)
+#load the data we need
+scheduler_db = SchedulerDB('scheduler.db')
+with scheduler_db.connect() as conn:
+        people = scheduler_db.get_people(conn)
+        unavailable_dates=scheduler_db.get_all_unavailability(conn)
+        days = scheduler_db.get_events_with_assignments(conn)
 
-# load unavailability dates
-with open('unavailability.json') as f:
-    unavailable_dates = json.load(f)
 
-def generate_schedule(task_list,  dates, n=1,people=None):
+
+
+def generate_schedule(task_list,  dates, n=1,people=people):
     """
     Generates a random schedule with the given task list, rules, and dates
     """
