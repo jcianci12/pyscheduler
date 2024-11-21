@@ -1,9 +1,7 @@
-import json
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from flasgger import Swagger
-from flask_restful import Api, Resource
 
 from db.db import SchedulerDB
 
@@ -778,5 +776,5 @@ def delete_assignment(assignment_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
 
