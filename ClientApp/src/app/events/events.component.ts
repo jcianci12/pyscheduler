@@ -91,19 +91,11 @@ export class EventsComponent implements OnInit {
     this.events = await this.client.eventsAll().toPromise();
   }
   async assignTasks(event: Event) {
-    let _events = this.events
-    this.events = []
     this.client.allocate(event).subscribe(e => {
-     
-
-      console.log(event)
-      const index = _events!.findIndex(e => e.id == event.id);
-      console.log(_events)
-        _events!.find(i=>i.id == event.id)!.assignments = e.assignments;
-
-      this.events = _events
+      this.events = [...this.events!]; // Create a new array reference
+      const index = this.events.findIndex(e => e.id == event.id);
+      this.events.find(i => i.id == event.id)!.assignments = e.assignments;
     });
-
   }
 
   async deleteEvent(eventId: number) {
