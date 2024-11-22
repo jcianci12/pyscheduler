@@ -1,15 +1,14 @@
 import json
 import random
 
-from bookingrules import filter_people_who_are_booked_this_schedule, filter_people_who_were_booked_last_schedule
-from filter_people_who_are_not_available import filter_people_who_are_not_available
+from bookingrules import filter_people_who_are_booked_this_schedule, remove_people_who_were_booked_last_schedule
+from filter_people_who_are_not_available import filter_people_who_are_not_available, filter_people_who_can_do_this_task
 from generate_dates import generate_dates
 from print_schedule import print_schedule
 from save_csv import save_csv
 from db.db import SchedulerDB
-# load the task list
-with open('tasklist.json') as f:
-    task_list = json.load(f)
+from typing import List, Dict
+
 
 #load the data we need
 scheduler_db = SchedulerDB('scheduler.db')
@@ -17,49 +16,49 @@ with scheduler_db.connect() as conn:
         people = scheduler_db.get_people(conn)
         unavailable_dates=scheduler_db.get_all_unavailability(conn)
         days = scheduler_db.get_events_with_assignments(conn)
+        events = scheduler_db.get_events_with_assignments(conn)
 
 
-
-
-def generate_schedule(task_list,  dates, n=1,people=people):
-    """
-    Generates a random schedule with the given task list, rules, and dates
-    """
-    schedules = [{"date": date, "tasks": []} for date in dates]
-
-    for i in range(len(dates)):
-
-        for task in task_list:
+def allocate_tasks_for_event(event):
+    
+#load the data we need
+    scheduler_db = SchedulerDB('scheduler.db')
+    with scheduler_db.connect() as conn:
+            #gets a list of people and the tasks they can do
+            people = scheduler_db.get_people(conn)
+            # gets the unavailable dates
+            unavailable_dates=scheduler_db.get_all_unavailability(conn)
             
-
-            people = filter_people_who_are_not_available(people, unavailable_dates, dates[i])
+   
+     #loop through the assignments in the event, and try to assign the 
+    # people to the tasks but only if the person is available and is allowed to do that task
+            people = filter_people_who_are_not_available(people, unavailable_dates,event['event_date'])
             # Get people who aren't already booked for this schedule
-            people = filter_people_who_are_booked_this_schedule(people, schedules, i)
-            # Get people that are not booked last schedule
-            people= filter_people_who_were_booked_last_schedule(people, schedules, i)
+            people = filter_people_who_are_booked_this_schedule(people, event)
+            lastevent = events[-1]
+            if(lastevent != None):
+                # Get people that are not booked last schedule
+                people= remove_people_who_were_booked_last_schedule(people, lastevent)
+                print(people)
 
-            # Choose a person from the list
-            if people:
-                person = random.choice(people)
-                schedules[i]['tasks'].append({
-                    "role": task['role'],
-                    "assigned": [person]
-                })
-                # Remove the person from the list of people who can do this task
-                people.remove(person)
+            for assignment in event['assignments']:
+                    
+                if people:
+                    
+                    #can the person do the task?
+                    allowedpeople = filter_people_who_can_do_this_task(people,assignment)
+                    person = random.choice(allowedpeople)
+                    assignment['person_id']=person['id']
+                    assignment['id']=assignment['event_id']
+                    
+                    # event['assignments'].append(person['id'])
+                    #assign the person to the task
+                    print(event)
+        
 
-    return schedules
-def returnSchedule():
-    dates = generate_dates(days, 8)
-    schedule = generate_schedule(task_list,  dates)
-    return schedule
-# # execute the code
-# dates = generate_dates(days, 8)
-scheduler_db = SchedulerDB('scheduler.db')
-with scheduler_db.connect() as conn:
-        events = scheduler_db.get_people(conn)
-schedule = generate_schedule(task_list,  events)
-print_schedule(schedule)
-# save_csv(schedule)
+    print(event)
+    return event
+
+
 
 

@@ -1,44 +1,34 @@
-def filter_people_who_are_booked_this_schedule(people, schedules, index):
+def filter_people_who_are_booked_this_schedule(people, event):
     """
-    Remove people on the schedule from the list of people
+   if a person is already in the schedule, remove them
     """
     people_copy = people.copy()  # Create a copy of the original people list
     original_people_count = len(people_copy)
-    
-    for task in schedules[index]['tasks']:
-        for person in task['assigned']:
-            if person in people_copy:
-                people_copy.remove(person)
+
+    #get list of people id that are in this event
+    for person in event['assignments']:
+        if person in people_copy:
+            people_copy.remove(person)
+   
 
     removed_people = original_people_count - len(people_copy)
-    print(f"Removed {removed_people} people from the list, index {index}")
+    print(f"Removed {removed_people} people from the list")
 
     return people_copy
 
-def filter_people_who_were_booked_last_schedule(people, schedules, index):
+def remove_people_who_were_booked_last_schedule(people, lastevent):
     """
     Return people who are not booked in the previous schedule
     """
     people_copy = people.copy()  # Create a copy of the original people list
-    peopleonpreviousschedule = return_list_of_people_who_are_booked_on_previous_schedule(people, schedules, index)
-    intersection = []
-    for person in people_copy:
-        if person not in peopleonpreviousschedule:
-            intersection.append(person)
+    if lastevent['assignments'] == []:
+        return people
+    else:
+        for person in lastevent['assignments']:
+            if person in people_copy:
+                people_copy.remove(person)
 
-    return intersection
-
-
-
-def return_list_of_people_who_are_booked_on_previous_schedule(people, schedules, index):
-    """
-    Return list of people who are booked in the previous schedule under any task
-    """
-    people_copy = []  # Create a copy of the original people list
-    #loop through the list of tasks in the previous schedule
-    for task in schedules[index-1]['tasks']:
-        for person in task['assigned']:
-            people_copy.append(person)
-
-    # print(people_copy)
     return people_copy
+
+
+

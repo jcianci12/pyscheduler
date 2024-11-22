@@ -4,6 +4,7 @@ from flask_cors import CORS, cross_origin
 from flasgger import Swagger
 
 from db.db import SchedulerDB
+from scheduler import allocate_tasks_for_event
 
 app = Flask(__name__)
 
@@ -459,31 +460,6 @@ def get_events():
         events = scheduler_db.get_events_with_assignments(conn)
     return jsonify(events)
 
-@cross_origin()
-@app.route('/events/<int:event_id>', methods=['GET'])
-def get_event(event_id):
-    """Get a single event
-    ---
-    parameters:
-        - name: event_id
-          in: path
-          schema:
-            type: integer
-          required: true
-    responses:
-        200:
-            description: The event
-            schema:
-                $ref: '#/definitions/Event'
-    """
-    scheduler_db = SchedulerDB('scheduler.db')
-    with scheduler_db.connect() as conn:
-        event = scheduler_db.read_event(conn, event_id)
-        if event:
-            tasks = scheduler_db.get_tasks_by_event_id(conn, event_id)
-            return jsonify({'event_name': event[1], 'event_date': event[2], 'id': event[0], 'tasks': [{'id': task[0], 'task_name': task[1]} for task in tasks]})
-        else:
-            return jsonify({'error': 'Event not found'}), 404
 
 @cross_origin()
 @app.route('/events/<int:event_id>', methods=['PUT'])
@@ -566,6 +542,34 @@ def create_event():
     with scheduler_db.connect() as conn:
         event_id = scheduler_db.create_event(conn, data['event_name'], data['event_date'])
         return jsonify({'event_name': data['event_name'], 'event_date': data['event_date'], 'id': event_id}), 201
+
+
+@cross_origin()
+@app.route('/allocate', methods=['POST'])
+def allocate():
+    """Allocate tasks for an event
+    ---
+    parameters:
+        - name: event
+          in: body
+          schema:
+            type: object
+            properties:
+                event_name:
+                    type: string
+                event_date:
+                    type: string
+    responses:
+        200:
+            description: The updated event
+            schema:
+                $ref: '#/definitions/Event'
+    """
+    event = request.get_json()
+    event = allocate_tasks_for_event(event)
+    return jsonify(event)
+    
+
 @cross_origin()
 @app.route('/assignments', methods=['GET'])
 def get_all_assignments():

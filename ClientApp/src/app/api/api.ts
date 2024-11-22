@@ -27,6 +27,63 @@ export class Client {
     }
 
     /**
+     * Allocate tasks for an event
+     * @param event (optional) 
+     * @return The updated event
+     */
+    allocate(event: Event2 | null | undefined): Observable<Event> {
+        let url_ = this.baseUrl + "/allocate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(event);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAllocate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAllocate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Event>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Event>;
+        }));
+    }
+
+    protected processAllocate(response: HttpResponseBase): Observable<Event> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Event.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * Get all assignments
      * @return A list of all assignments
      */
@@ -476,7 +533,7 @@ export class Client {
      * @param event (optional) 
      * @return The created event
      */
-    eventsPOST(event: Event2 | null | undefined): Observable<Event> {
+    eventsPOST(event: Event3 | null | undefined): Observable<Event> {
         let url_ = this.baseUrl + "/events";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -580,66 +637,11 @@ export class Client {
     }
 
     /**
-     * Get a single event
-     * @return The event
-     */
-    eventsGET(event_id: number): Observable<Event> {
-        let url_ = this.baseUrl + "/events/{event_id}";
-        if (event_id === undefined || event_id === null)
-            throw new Error("The parameter 'event_id' must be defined.");
-        url_ = url_.replace("{event_id}", encodeURIComponent("" + event_id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processEventsGET(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processEventsGET(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Event>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Event>;
-        }));
-    }
-
-    protected processEventsGET(response: HttpResponseBase): Observable<Event> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Event.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
      * Update an event
      * @param event (optional) 
      * @return The updated event
      */
-    eventsPUT(event_id: number, event: Event3 | null | undefined): Observable<Event> {
+    eventsPUT(event_id: number, event: Event4 | null | undefined): Observable<Event> {
         let url_ = this.baseUrl + "/events/{event_id}";
         if (event_id === undefined || event_id === null)
             throw new Error("The parameter 'event_id' must be defined.");
@@ -1747,6 +1749,46 @@ export interface IUnavailability {
     start_date?: string | undefined;
 }
 
+export class Event2 implements IEvent2 {
+    event_date?: string | undefined;
+    event_name?: string | undefined;
+
+    constructor(data?: IEvent2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.event_date = _data["event_date"];
+            this.event_name = _data["event_name"];
+        }
+    }
+
+    static fromJS(data: any): Event2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Event2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["event_date"] = this.event_date;
+        data["event_name"] = this.event_name;
+        return data;
+    }
+}
+
+export interface IEvent2 {
+    event_date?: string | undefined;
+    event_name?: string | undefined;
+}
+
 export class Assignment2 implements IAssignment2 {
     event_id?: number | undefined;
     person_id?: number | undefined;
@@ -1887,11 +1929,11 @@ export interface IPerson2 {
     tasks?: tasks[] | undefined;
 }
 
-export class Event2 implements IEvent2 {
+export class Event3 implements IEvent3 {
     event_date?: string | undefined;
     event_name?: string | undefined;
 
-    constructor(data?: IEvent2) {
+    constructor(data?: IEvent3) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1907,9 +1949,9 @@ export class Event2 implements IEvent2 {
         }
     }
 
-    static fromJS(data: any): Event2 {
+    static fromJS(data: any): Event3 {
         data = typeof data === 'object' ? data : {};
-        let result = new Event2();
+        let result = new Event3();
         result.init(data);
         return result;
     }
@@ -1922,17 +1964,17 @@ export class Event2 implements IEvent2 {
     }
 }
 
-export interface IEvent2 {
+export interface IEvent3 {
     event_date?: string | undefined;
     event_name?: string | undefined;
 }
 
-export class Event3 implements IEvent3 {
+export class Event4 implements IEvent4 {
     assignments?: Assignment[] | undefined;
     event_date?: string | undefined;
     event_name?: string | undefined;
 
-    constructor(data?: IEvent3) {
+    constructor(data?: IEvent4) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1953,9 +1995,9 @@ export class Event3 implements IEvent3 {
         }
     }
 
-    static fromJS(data: any): Event3 {
+    static fromJS(data: any): Event4 {
         data = typeof data === 'object' ? data : {};
-        let result = new Event3();
+        let result = new Event4();
         result.init(data);
         return result;
     }
@@ -1973,7 +2015,7 @@ export class Event3 implements IEvent3 {
     }
 }
 
-export interface IEvent3 {
+export interface IEvent4 {
     assignments?: Assignment[] | undefined;
     event_date?: string | undefined;
     event_name?: string | undefined;

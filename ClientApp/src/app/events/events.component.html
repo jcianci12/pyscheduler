@@ -57,10 +57,13 @@
         <button class="btn btn-primary" (click)="updateEvent(event)">Update</button>
         <button class="btn btn-danger" (click)="deleteEvent(event.id ?? 0)">Delete</button>
         <button class="btn btn-link" [routerLink]="['/assignments', event.id]" role="button">View Assignments</button>
+        <button class="btn btn-link" (click)="assignTasks(event)" role="button">Auto Assign</button>
+{{event|json}}
       </td>
     </tr>
   </tbody>
 </table>
+{{events|json}}
 
 Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selectedEvents.length">
 <select [(ngModel)]="repeatUnit" [disabled]="!selectedEvents.length">

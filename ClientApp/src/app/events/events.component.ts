@@ -34,15 +34,15 @@ export class EventsComponent implements OnInit {
   async ngOnInit() {
     this.tasks = await this.client.tasksAll().toPromise();
     this.events = await this.client.eventswithassignments().toPromise();
+    this.people = await this.client.getpeople().toPromise();
+
   }
 
-  async ngAfterViewInit() {
-    this.tasks = await this.client.tasksAll().toPromise();
-    this.people = await this.client.getpeople().toPromise();
-  }
+  
   forceUpdate(event: Event) {
 
     this.events![event.id!] = event;
+    
     this.cdr.detectChanges();
   }
   selectAll: boolean = false;
@@ -72,13 +72,13 @@ export class EventsComponent implements OnInit {
       }
     this.draftEvents = draftEvents;
   }
-async createEvents() {
-  for (const event of this.draftEvents) {
-    await this.client.eventsPOST(event).toPromise();
+  async createEvents() {
+    for (const event of this.draftEvents) {
+      await this.client.eventsPOST(event).toPromise();
+    }
+    this.events = await this.client.eventsAll().toPromise();
+    this.draftEvents = [];
   }
-  this.events = await this.client.eventsAll().toPromise();
-  this.draftEvents = [];
-}
 
   async createEvent(event: Event) {
     await this.client.eventsPOST(event).toPromise();
@@ -89,6 +89,21 @@ async createEvents() {
     event.assignments = event.assignments?.filter(a => a.person_id != null);
     await this.client.eventsPUT(event.id as number, event).toPromise();
     this.events = await this.client.eventsAll().toPromise();
+  }
+  async assignTasks(event: Event) {
+    let _events = this.events
+    this.events = []
+    this.client.allocate(event).subscribe(e => {
+     
+
+      console.log(event)
+      const index = _events!.findIndex(e => e.id == event.id);
+      console.log(_events)
+        _events!.find(i=>i.id == event.id)!.assignments = e.assignments;
+
+      this.events = _events
+    });
+
   }
 
   async deleteEvent(eventId: number) {
