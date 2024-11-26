@@ -9,7 +9,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
+    <tr  >
       <td><input type="text" [(ngModel)]="personForm.value.id" disabled></td>
       <td><input type="text" class="form-control" id="first_name" name="first_name" [(ngModel)]="personForm.value.first_name"></td>
       <td><input type="text" class="form-control" id="last_name" name="last_name" [(ngModel)]="personForm.value.last_name"></td>
@@ -20,10 +20,10 @@
         <button type="submit" class="btn btn-primary" (click)="createPerson(personForm.value)">Create</button>
       </td>
     </tr>
-    <tr *ngFor="let person of people">
-      <td><input type="text" [(ngModel)]="person.id" disabled></td>
-      <td><input type="text" [(ngModel)]="person.first_name"></td>
-      <td><input type="text" [(ngModel)]="person.last_name"></td>
+    <tr *ngFor="let person of people" >
+      <td [ngClass]="{'duplicate': person| duplicateperson: people!}"><input type="text" [(ngModel)]="person.id" disabled></td>
+      <td><input type="text" [(ngModel)]="person.first_name" ></td>
+      <td><input type="text" [(ngModel)]="person.last_name" ></td>
       <td *ngFor="let task of tasks">
         <input type="checkbox" [checked]="hasTask(person, task)" (change)="onTaskChange($event,person, task)">
       </td>
@@ -35,3 +35,4 @@
   </tbody>
 </table>
 
+<button update-all (click)="updateAllPeople()">Update All People</button>

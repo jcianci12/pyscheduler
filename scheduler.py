@@ -51,7 +51,7 @@ def allocate_tasks_for_event(event):
                     assignment['person_id']=person['id']
                     assignment['id']=assignment['event_id']
                     
-                    # event['assignments'].append(person['id'])
+                   # event['assignments'].append(person['id'])
                     #assign the person to the task
                     print(event)
         
