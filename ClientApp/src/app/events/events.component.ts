@@ -107,6 +107,7 @@ export class EventsComponent implements OnInit {
   }
   async clearEvent(eventId: number) {
     this.events!.find(i => i.id == eventId)!.assignments = [];
+    this.events = [...this.events!]
   }
 
   selectEvent(event: Event) {

@@ -37,18 +37,20 @@ def allocate_tasks_for_event(event):
         # get the index of the current event
         
 
-        people= remove_people_who_were_booked_last_schedule(people, event,events)
+        # people= remove_people_who_were_booked_last_schedule(people, event,events)
 
 
         for assignment in event['assignments']:
 
             # Get people who can do this task
             people = filter_people_who_can_do_this_task(people, assignment)
-            people = filter_people_who_are_booked_this_schedule(people, event)
             # Get a random person from the list of people who can do this task
+            people = filter_people_who_are_booked_this_schedule(people, event)
+
             if people == []:
                 assignment['person_id'] = None
             else:
+
                 person = random.choice(people)
             # Assign the person to the task
                 assignment['person_id'] = person['id']
