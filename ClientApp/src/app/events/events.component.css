@@ -1,3 +1,11 @@
 table {
     table-layout: auto;
+    
   }
+  select {
+    width:100px
+  }
+  input {
+    width: 100px
+  }
+ 

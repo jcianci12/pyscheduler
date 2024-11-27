@@ -2,33 +2,28 @@ def filter_people_who_are_booked_this_schedule(people, event):
     """
    if a person is already in the schedule, remove them
     """
-    people_copy = people.copy()  # Create a copy of the original people list
-    original_people_count = len(people_copy)
+    peopleinthisevent = []
+    for assignment in event['assignments']:
+        if 'person_id' in assignment:
+            peopleinthisevent.append(assignment['person_id'])
+    newpeople = [person for person in people if person['id'] not in peopleinthisevent]
 
-    #get list of people id that are in this event
-    for person in event['assignments']:
-        if person in people_copy:
-            people_copy.remove(person)
-   
+    return newpeople
 
-    removed_people = original_people_count - len(people_copy)
-    print(f"Removed {removed_people} people from the list")
 
-    return people_copy
-
-def remove_people_who_were_booked_last_schedule(people, lastevent):
+def remove_people_who_were_booked_last_schedule(people, event, events):
     """
     Return people who are not booked in the previous schedule
     """
-    people_copy = people.copy()  # Create a copy of the original people list
-    if lastevent['assignments'] == []:
-        return people
-    else:
-        for person in lastevent['assignments']:
-            if person in people_copy:
-                people_copy.remove(person)
-
-    return people_copy
+    for index, item in enumerate(events):
+        if item['id'] == event['id']:
+            previousevent = events[index - 1]
+            if previousevent is not None:
+                people_booked_last_schedule = [person['person_id'] for person in previousevent['assignments'] if 'person_id' in person]
+                filtered_people = [person for person in people if person['id'] not in people_booked_last_schedule]
+                return filtered_people
+            else:
+                return people
 
 
 

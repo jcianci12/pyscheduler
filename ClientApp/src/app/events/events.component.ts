@@ -105,6 +105,9 @@ export class EventsComponent implements OnInit {
     await this.client.eventsDELETE(eventId).toPromise();
     this.events = (this.events ?? []).filter(p => p.id !== eventId);
   }
+  async clearEvent(eventId: number) {
+    this.events!.find(i => i.id == eventId)!.assignments = [];
+  }
 
   selectEvent(event: Event) {
     if (this.selectedEvents.includes(event)) {
