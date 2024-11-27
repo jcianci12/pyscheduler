@@ -43,13 +43,8 @@
 
 
         <span *ngFor="let assignment of event.assignments!|filterassignmentsbytask:task.id!">
-          <select [(ngModel)]="assignment.person_id" (ngModelChange)="forceUpdate(event)" name="personid">
-            <option value=""></option>
-
-
-            <option *ngFor="let person of people" [value]="person.id">{{ person.first_name }} {{ person.last_name }}
-            </option>
-          </select>
+          
+          <div *ngTemplateOutlet="myRepeatedTemplate; context: { data: { event: event, people: people, task: task, assignment: assignment} }"></div>
 
         </span>
       </td>
@@ -100,13 +95,8 @@ Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selected
 
 
         <span *ngFor="let assignment of event.assignments!|filterassignmentsbytask:task.id!">
-          <select [(ngModel)]="assignment.person_id" (ngModelChange)="forceUpdate(event)" name="personid">
-            <option value=""></option>
+          <div *ngTemplateOutlet="myRepeatedTemplate; context: { data: { event: event, people: people, task: task, assignment: assignment} }"></div>
 
-
-            <option *ngFor="let person of people" [value]="person.id">{{ person.first_name }} {{ person.last_name }}
-            </option>
-          </select>
 
         </span>
       </td>
@@ -120,3 +110,17 @@ Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selected
   </tbody>
 </table>
 <button (click)="createEvents()" [disabled]="!draftEvents.length">Create ({{draftEvents.length }})events</button>
+
+<!-- my-main-component.component.html -->
+<ng-template #myRepeatedTemplate let-data="data">
+  <!-- your HTML code here -->
+ <select [(ngModel)]="data.assignment.person_id" (ngModelChange)="forceUpdate(data.event)" name="personid">
+  <option value=""></option>
+
+
+  <option *ngFor="let person of data.people!|filterpeoplebytasks:data.task" [value]="person.id">{{ person.first_name }} {{ person.last_name }}
+  </option>
+</select>
+</ng-template>
+
+
