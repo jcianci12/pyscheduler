@@ -2,12 +2,8 @@ def filter_people_who_are_booked_this_schedule(people, event):
     """
    if a person is already in the schedule, remove them
     """
-    peopleinthisevent = []
-    for assignment in event['assignments']:
-        if 'person_id' in assignment:
-            peopleinthisevent.append(assignment['person_id'])
-    newpeople = [person for person in people if person['id'] not in peopleinthisevent]
-
+    assignment_ids = [assignment.get('person_id') for assignment in event['assignments'] if 'person_id' in assignment]
+    newpeople = [person for person in people if person['id'] not in assignment_ids]
     return newpeople
 
 

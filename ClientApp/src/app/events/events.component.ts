@@ -8,13 +8,16 @@ import { FilterassignmentsbytaskPipe } from '../pipes/filterassignmentsbytask.pi
 import { CreateassignmentplaceholdersPipe } from '../pipes/createassignmentplaceholders.pipe';
 import { GeneratescheduleComponent } from "../generateschedule/generateschedule.component";
 import { FilterpeoplebytasksPipe } from '../pipes/filterpeoplebytasks.pipe';
+import { PersonbookedpreviousweekPipe } from '../pipes/personbookedpreviousweek.pipe';
 
 @Component({
   selector: 'app-events',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, FilterassignmentsbytaskPipe,
     FilterpeoplebytasksPipe,
-    CreateassignmentplaceholdersPipe],
+    CreateassignmentplaceholdersPipe,
+    PersonbookedpreviousweekPipe
+  ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })

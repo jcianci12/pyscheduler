@@ -16,7 +16,10 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
+    <!-- This is the create section -->
+
+    <tr >
+      
       <td></td>
 
       <td></td>
@@ -30,7 +33,7 @@
       </td>
     </tr>
 
-    <tr *ngFor="let event of (events!|createassignmentplaceholders:tasks!)">
+    <tr  *ngFor="let event of (events!|createassignmentplaceholders:tasks!);let i = index">
       <td><input type="checkbox" [checked]="isSelected(event)" (click)="selectEvent(event)"></td>
       <td><input type="text" disabled="" [(ngModel)]="event.id"></td>
       <td><input type="text" [(ngModel)]="event.event_name"></td>
@@ -39,11 +42,10 @@
         <input type="date" [(ngModel)]="event.event_date"> 
 
       </td>
-      <td *ngFor="let task of tasks">
+      <td *ngFor="let task of tasks" >
 
 
-        <span *ngFor="let assignment of event.assignments!|filterassignmentsbytask:task.id!">
-          
+        <span *ngFor="let assignment of event.assignments!|filterassignmentsbytask:task.id!" [ngClass]="{'error': assignment|personbookedpreviousweek:events![i-1]}">
           <div *ngTemplateOutlet="myRepeatedTemplate; context: { data: { event: event, people: people, task: task, assignment: assignment} }"></div>
 
         </span>

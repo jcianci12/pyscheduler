@@ -37,7 +37,7 @@ def allocate_tasks_for_event(event):
         # get the index of the current event
         
 
-        # people= remove_people_who_were_booked_last_schedule(people, event,events)
+        people= remove_people_who_were_booked_last_schedule(people, event,events)
 
 
         for assignment in event['assignments']:
@@ -55,9 +55,6 @@ def allocate_tasks_for_event(event):
             # Assign the person to the task
                 assignment['person_id'] = person['id']
                 
-            
-                
-
     return event
 
 
