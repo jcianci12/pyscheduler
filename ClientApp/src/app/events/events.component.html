@@ -57,7 +57,7 @@
         <button class="btn btn-danger" (click)="clearEvent(event.id ?? 0)">Clear</button>
 
         <button class="btn btn-link" [routerLink]="['/assignments', event.id]" role="button">View Assignments</button>
-        <button class="btn btn-link" (click)="assignTasks(event)" role="button">Auto Assign</button>
+        <button class="btn btn-link" (click)="autoassign(event,events!,i,people!,tasks!)" role="button">Auto Assign</button>
 <!-- {{event|json}} -->
       </td>
     </tr>
