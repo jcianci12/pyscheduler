@@ -34,8 +34,8 @@
     </tr>
 
     <tr  *ngFor="let event of (events!|createassignmentplaceholders:tasks!);let i = index">
-      <td><input type="checkbox" [checked]="isSelected(event)" (click)="selectEvent(event)"></td>
-      <td><input type="text" disabled="" [(ngModel)]="event.id"></td>
+      <td style="column-width: 20px;"><input type="checkbox" [checked]="isSelected(event)" (click)="selectEvent(event)"></td>
+      <td><input  type="text" disabled="" [(ngModel)]="event.id"></td>
       <td><input type="text" [(ngModel)]="event.event_name"></td>
 
       <td>
@@ -52,12 +52,11 @@
       </td>
 
       <td>
-        <button class="btn btn-primary" (click)="updateEvent(event)">Update</button>
-        <button class="btn btn-danger" (click)="deleteEvent(event.id ?? 0)">Delete</button>
-        <button class="btn btn-danger" (click)="clearEvent(event.id ?? 0)">Clear</button>
-
-        <button class="btn btn-link" [routerLink]="['/assignments', event.id]" role="button">View Assignments</button>
-        <button class="btn btn-link" (click)="autoassign(event,events!,i,people!,tasks!)" role="button">Auto Assign</button>
+        <button class="btn btn-primary" (click)="updateEvent(event)" title="Save Event">💾</button>
+<button class="btn btn-danger" (click)="deleteEvent(event.id ?? 0)" title="Delete Event">🗑️</button>
+<button class="btn btn-danger" (click)="clearEvent(event.id ?? 0)" title="Clear Assignments">🧹</button>
+<button class="btn btn-link" [routerLink]="['/assignments', event.id]" role="button" title="View Assignments">📄</button>
+<button class="btn btn-link" (click)="autoassign(event, events!, i, people!, tasks!)" role="button" title="Auto Assign Tasks">🤖</button>
 <!-- {{event|json}} -->
       </td>
     </tr>
