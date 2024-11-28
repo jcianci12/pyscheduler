@@ -129,6 +129,7 @@ export class EventsComponent implements OnInit {
 
 
   autoassign(event: Event, events: Event[], index: number, suitablePeople: Person[], tasks: Task[]) {
+    
     suitablePeople = this.removePeopleBookedLastEvent(events, index, suitablePeople);
   
     // Order the assignments so that the assignment with the fewest people that can do it comes first.
@@ -137,17 +138,18 @@ export class EventsComponent implements OnInit {
       let bcount = suitablePeople.filter(i => i.tasks?.some(t => t.id == b.task_id)).length;
       return acount - bcount;
     });
-  
     for (const assignment of event.assignments!) {
+
       if (assignment.person_id == null) {
-        suitablePeople = this.removePeopleThatCantDoTheTask(suitablePeople, assignment.task_id!);
   
         // Remove people who are already assigned to a task in the current event
         // suitablePeople = suitablePeople.filter(i => !event.assignments!.some(a => a.person_id == i.id));
   
         if (suitablePeople.length > 0) {
-          const randomIndex = Math.floor(Math.random() * suitablePeople.length);
-          const selectedPerson = suitablePeople[randomIndex];
+          let availablepeople = this.removePeopleThatCantDoTheTask(suitablePeople, assignment.task_id!);
+
+          const randomIndex = Math.floor(Math.random() * availablepeople.length);
+          const selectedPerson = availablepeople[randomIndex];
   
           console.log(selectedPerson);
           assignment.person_id = selectedPerson.id;
