@@ -1,6 +1,8 @@
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 from flasgger import Swagger
 
 from db.db import SchedulerDB
@@ -11,7 +13,9 @@ app = Flask(__name__)
 Swagger(app)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['SECRET_KEY']='c0nfigur4tion'
 @cross_origin()
+@jwt_required
 @app.route('/getpeople', methods=['GET'])
 def getpeople():
     """Get all people

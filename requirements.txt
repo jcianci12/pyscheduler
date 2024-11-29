@@ -23,3 +23,6 @@ setuptools==69.0.3
 six==1.16.0
 smmap==5.0.1
 Werkzeug==3.0.6
+Flask-JWT-Extended
+authlib
+requests
