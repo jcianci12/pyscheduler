@@ -35,7 +35,7 @@ export class PeopleComponent implements OnInit {
   async updatePerson(person: Person) {
     console.log(person);
     await this.client.updateperson(person.id as number, person as Person3 ).toPromise();
-    this.people = await this.client.getpeople().toPromise();
+    // this.people = await this.client.getpeople().toPromise();
   }
   async updateAllPeople() {
     for (const person of this.people ?? []) {

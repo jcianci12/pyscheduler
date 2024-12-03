@@ -1,5 +1,5 @@
 <p>To creat a new event, complete the details and click create.</p>
-<p>To create bulk events, first create one or more events, then select the events you wish to repeat, fill in 
+<p>To create bulk events, first create one or more events, then select the events you wish to repeat, fill in
   the interval (days, weeks, etc) the number of times to repeat, and click Create Draft Events.
 </p>
 <table class="table table-striped">
@@ -19,7 +19,7 @@
     <!-- This is the create section -->
 
     <tr >
-      
+
       <td></td>
 
       <td></td>
@@ -39,13 +39,13 @@
       <td><input type="text" [(ngModel)]="event.event_name"></td>
 
       <td>
-        <input type="date" [(ngModel)]="event.event_date"> 
+        <input type="date" [(ngModel)]="event.event_date">
 
       </td>
       <td *ngFor="let task of tasks" >
 
 
-        <span *ngFor="let assignment of event.assignments!|filterassignmentsbytask:task.id!" [ngClass]="{'error': assignment|personbookedpreviousweek:events![i-1]}">
+        <span *ngFor="let assignment of event.assignments!|filterassignmentsbytask:task.id!" [ngClass]="{'error': (assignment|personbookedpreviousweek:events![i-1]) || (assignment|personbookedthisevent:events![i])}">
           <div *ngTemplateOutlet="myRepeatedTemplate; context: { data: { event: event, people: people, task: task, assignment: assignment} }"></div>
 
         </span>
@@ -86,7 +86,7 @@ Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selected
     </tr>
   </thead>
   <tbody>
-    
+
 
     <tr *ngFor="let event of (draftEvents!|createassignmentplaceholders:tasks!)">
       <td><input type="text" [(ngModel)]="event.event_name"></td>

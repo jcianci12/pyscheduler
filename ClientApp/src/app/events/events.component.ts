@@ -11,6 +11,7 @@ import { FilterpeoplebytasksPipe } from '../pipes/filterpeoplebytasks.pipe';
 import { PersonbookedpreviousweekPipe } from '../pipes/personbookedpreviousweek.pipe';
 import { PeopleComponent } from '../people/people.component';
 import { last } from 'rxjs';
+import { PersonbookedthiseventPipe } from '../pipes/personbookedthisevent.pipe';
 
 @Component({
   selector: 'app-events',
@@ -18,7 +19,7 @@ import { last } from 'rxjs';
   imports: [CommonModule, FormsModule, RouterModule, FilterassignmentsbytaskPipe,
     FilterpeoplebytasksPipe,
     CreateassignmentplaceholdersPipe,
-    PersonbookedpreviousweekPipe
+    PersonbookedpreviousweekPipe,PersonbookedthiseventPipe
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
@@ -128,33 +129,35 @@ export class EventsComponent implements OnInit {
   }
 
 
-  autoassign(event: Event, events: Event[], index: number, suitablePeople: Person[], tasks: Task[]) {
-    
-    suitablePeople = this.removePeopleBookedLastEvent(events, index, suitablePeople);
-  
+  autoassign(thisevent: Event, pastevents: Event[], index: number, suitablePeople: Person[], tasks: Task[]) {
+    //start with the people that can do the task
+    suitablePeople = this.removePeopleBookedLastEvent(pastevents, index, suitablePeople);
+
     // Order the assignments so that the assignment with the fewest people that can do it comes first.
-    event.assignments = event.assignments?.sort((a, b) => {
+    thisevent.assignments = thisevent.assignments?.sort((a, b) => {
       let acount = suitablePeople.filter(i => i.tasks?.some(t => t.id == a.task_id)).length;
       let bcount = suitablePeople.filter(i => i.tasks?.some(t => t.id == b.task_id)).length;
       return acount - bcount;
     });
-    for (const assignment of event.assignments!) {
+    //loop through the assignments
+    for (const assignment of thisevent.assignments!) {
 
+//if no one is booked the person id will be null
       if (assignment.person_id == null) {
-  
+
         // Remove people who are already assigned to a task in the current event
         // suitablePeople = suitablePeople.filter(i => !event.assignments!.some(a => a.person_id == i.id));
-  
+
         if (suitablePeople.length > 0) {
           let availablepeople = this.removePeopleThatCantDoTheTask(suitablePeople, assignment.task_id!);
 
           const randomIndex = Math.floor(Math.random() * availablepeople.length);
           const selectedPerson = availablepeople[randomIndex];
-  
+
           console.log(selectedPerson);
           assignment.person_id = selectedPerson.id;
-  
-          // Remove the selected person from suitablePeople
+
+          // We have assigned the person, we can now remove them from the pool of people.
           suitablePeople = suitablePeople.filter(i => i.id != selectedPerson.id);
         }
       }
@@ -179,15 +182,15 @@ export class EventsComponent implements OnInit {
   }
   removePeopleBookedThisEvent(assignments: Assignment[], people: Person[]): Person[] {
     people = people.filter(i => assignments.some(a => {
-    
+
       if(a!=null && a.person_id == i.id) {
         return false
-      } 
+      }
       else{return true}
 
     }
 
-      
+
     ))
     return people
   }

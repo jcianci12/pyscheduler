@@ -74,6 +74,7 @@ class SchedulerDB:
             cur.execute('''
                 SELECT first_name, last_name, id
                 FROM people
+                ORDER BY last_name
             ''')
             people = cur.fetchall()
             people_tasks = []
@@ -291,6 +292,7 @@ class SchedulerDB:
                 SELECT e.id, e.event_name, e.event_date, a.id AS assignment_id, a.personid, a.taskid
                 FROM Event e
                 LEFT JOIN Assignments a ON e.id = a.eventid
+                        order by e.event_date
             ''')
             events = {}
             for row in cur.fetchall():
