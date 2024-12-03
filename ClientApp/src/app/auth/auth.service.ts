@@ -21,6 +21,8 @@ export class AuthService {
         else{
           this.oauthService.loadUserProfile().then((userProfile) => {
             console.log(userProfile);
+            console.log('Access token expiry:', this.oauthService.getAccessTokenExpiration());
+            console.log(this.isAuthenticated())
           });
         }
       });

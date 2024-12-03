@@ -5,22 +5,25 @@ import { EventsComponent } from './events/events.component';
 import { AssignmentsComponent } from './assignment/assignments.component';
 import { UnavailabilityComponent } from './unavailability/unavailability.component';
 import { HomeComponent } from './home/home.component';
+import { AuthGuard } from './auth/auth.guard';
+import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: 'home', component: HomeComponent },
+    // { path: '', redirectTo: 'home', pathMatch: 'full' },
+    // { path: 'home', component: HomeComponent },
+    { path: 'login', component: LoginComponent },
 
-    { path: 'people', component: PeopleComponent },
-    { path: 'tasks', component: TasksComponent },
-    { path: 'events', component: EventsComponent },
-    { path: 'assignments', component: AssignmentsComponent },
+    { path: 'people', component: PeopleComponent,canActivate:[AuthGuard] },
+    { path: 'tasks', component: TasksComponent,canActivate:[AuthGuard] },
+    { path: 'events', component: EventsComponent ,canActivate:[AuthGuard]},
+    { path: 'assignments', component: AssignmentsComponent,canActivate:[AuthGuard] },
     
     
     {
         path: 'assignments/:id',
-        component: AssignmentsComponent
+        component: AssignmentsComponent,canActivate:[AuthGuard]
     },
-    { path: 'unavailability', component: UnavailabilityComponent }
+    { path: 'unavailability', component: UnavailabilityComponent,canActivate:[AuthGuard] }
 
 
 ];
