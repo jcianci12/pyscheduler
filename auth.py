@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, url_for, redirect
 from authlib.integrations.flask_client import OAuth
-from authlib.jose import jwt
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Set a secret key for Flask session
@@ -20,19 +19,5 @@ authentik = oauth.register(
 )
 
 
-@app.route('/')
-def login():
-    redirect_uri = url_for('authorize', _external=True)
-    return authentik.authorize_redirect(redirect_uri)
-
-@app.route('/authorize')
-def authorize():
-    token = authentik.authorize_access_token()
-    user_info = authentik.get('https://authentik.tekonline.com.au/application/o/userinfo/', token=token)
-    # decoded_token = jwt.decode(user_info, options={"verify_signature": False})
-    return jsonify(user_info.text)
-
-if __name__ == '__main__':
-    app.run()
 
 

@@ -1,21 +1,53 @@
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from flask_jwt_extended import jwt_required, get_jwt_identity
-
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from flasgger import Swagger
 
 from db.db import SchedulerDB
 from scheduler import allocate_tasks_for_event
+from flask import Flask, jsonify, url_for
+
+from authlib.integrations.flask_client import OAuth
+
+
 
 app = Flask(__name__)
-
+app.secret_key = 'your_secret_key'  # Set a secret key for Flask session
 Swagger(app)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SECRET_KEY']='c0nfigur4tion'
+oauth = OAuth(app)
+
+authentik = oauth.register(
+    'authentik',
+    client_id='yJwnySrODx2x1uNDKzszWiTV3ivrLPBdvvDkz1sN',
+    client_secret='7hY48mDD1MCqW6irlkdvY61Vq1DiOPIVKCcpPxkAKn3un2JXyY6N2Knm0SHGOA2uzdo7zJQpz1ax3R6kxH6NWQyHJz6rKXodBJ2lqk9sQk6Y6pjaPkH1xFpoKrC3SeMd',
+    access_token_url='https://authentik.tekonline.com.au/application/o/token/',
+    authorize_url='https://authentik.tekonline.com.au/application/o/authorize/',
+    api_base_url='https://authentik.tekonline.com.au/application',
+    jwks_uri='https://authentik.tekonline.com.au/application/o/pyscheduler/jwks/',
+    client_kwargs={'scope': 'openid read:users write:users email'},
+    authorize_params={'response_type': 'code'}
+)
+
+
+@app.route('/login')
+def login():
+    redirect_uri = url_for('authorize', _external=True)
+    return authentik.authorize_redirect(redirect_uri)
+
+@app.route('/authorize')
+def authorize():
+    token = authentik.authorize_access_token()
+    user_info = authentik.get('https://authentik.tekonline.com.au/application/o/userinfo/', token=token)
+    # decoded_token = jwt.decode(user_info, options={"verify_signature": False})
+    return jsonify(user_info.text)
+
+
+
 @cross_origin()
-@jwt_required
 @app.route('/getpeople', methods=['GET'])
 def getpeople():
     """Get all people
@@ -781,6 +813,8 @@ def delete_assignment(assignment_id):
     with scheduler_db.connect() as conn:
         scheduler_db.delete_assignment(conn, assignment_id)
         return '', 204
+
+
 
 
 if __name__ == '__main__':
