@@ -4,48 +4,45 @@ import { authConfig } from './auth.config';
 
 @Injectable({
   providedIn: 'root',
-
 })
 export class AuthService {
   constructor(private oauthService: OAuthService) {
     this.configure();
   }
 
-  public configure() {
+  private configure() {
     this.oauthService.configure(authConfig);
     this.oauthService.loadDiscoveryDocumentAndTryLogin().then((_) => {
-      this.oauthService.tryLoginImplicitFlow().then((_) => { 
-        if(!this.oauthService.hasValidAccessToken()) {
-          this.oauthService.initLoginFlow();
-        }
-        else{
-          this.oauthService.loadUserProfile().then((userProfile) => {
-            console.log(userProfile);
-            console.log('Access token expiry:', this.oauthService.getAccessTokenExpiration());
-            console.log(this.isAuthenticated())
-          });
-        }
-      });
+      this.oauthService.setupAutomaticSilentRefresh(); // Set up automatic token refresh
+      if (this.oauthService.hasValidAccessToken()) {
+        this.oauthService.loadUserProfile().then((userProfile) => {
+          console.log(userProfile);
+        });
+      } else {
+        this.oauthService.initLoginFlow();
+      }
     });
   }
 
   login() {
     this.oauthService.initCodeFlow();
   }
-  logout() {
-    this.oauthService.logOut();
-  }
+  logout()  {this.oauthService.logOut();}
 
   isAuthenticated(): boolean {
     return this.oauthService.hasValidAccessToken();
   }
-  getAccessToken(): string | null {
-    return this.oauthService.getAccessToken();
-  }
-
 
   get userName(): string | null {
     const claims = this.oauthService.getIdentityClaims();
     return claims ? claims['name'] : null;
+  }
+
+  getAccessToken(): string | null {
+    return this.oauthService.getAccessToken();
+  }
+
+  getIdToken(): string | null {
+    return this.oauthService.getIdToken();
   }
 }

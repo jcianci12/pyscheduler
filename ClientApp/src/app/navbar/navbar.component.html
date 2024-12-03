@@ -6,5 +6,6 @@
     <li><a href="/tasks">Tasks</a></li>
     <li><a href="/events">Events</a></li>
     <li><a href="/assignments">Assignments</a></li>
+    <li *ngIf="!authService.isAuthenticated()"><a (click)="authService. logout()">Logout</a></li>
   </ul>
 </nav>

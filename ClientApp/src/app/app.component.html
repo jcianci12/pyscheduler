@@ -13,12 +13,7 @@
 </style>
 <div class="app-container">
   <app-navbar></app-navbar>
-  <button (click)="login()">Login</button>
-  <div *ngIf="isAuthenticated()">
-    <h2>Welcome, {{ userName }} test</h2>
-    <button (click)="logout()">Logout</button>
-    <!-- <app-people></app-people> -->
-  </div>
+  
   <router-outlet></router-outlet>
 </div>
 

@@ -13,23 +13,12 @@ import { PeopleComponent } from './people/people.component';
   standalone: true,
   imports: [RouterOutlet, NavbarComponent, CommonModule,PeopleComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css', providers: [Client, OAuthModule, AuthService, OAuthService, UrlHelperService]
+  styleUrl: './app.component.css',
+   providers: [Client, OAuthModule, AuthService, OAuthService, UrlHelperService]
 })
 export class AppComponent {
   constructor(private authService: AuthService) { }
-  login() {
-    this.authService.login();
-  }
-  logout(){
-    this.authService.logout();
-  }
-  isAuthenticated(): boolean {
-    return this.authService.isAuthenticated();
-
-  }
-  get userName(): string | null {
-    return this.authService.userName;
-  }
+  
   title = 'pyscheduler';
 
 }
