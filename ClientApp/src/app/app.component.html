@@ -9,12 +9,14 @@
     flex: 0 0 auto;
   }
 
-  
+
 </style>
 
 <div class="app-container">
   <app-navbar></app-navbar>
   <button (click)="login()">Login</button> <div *ngIf="isAuthenticated()"> <h2>Welcome, {{ userName }}</h2> </div>
+  <button (click)="logout()">Logout</button>
+
   <router-outlet></router-outlet>
 </div>
 

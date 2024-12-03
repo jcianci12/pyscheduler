@@ -4,7 +4,7 @@ import { authConfig } from './auth.config';
 
 @Injectable({
   providedIn: 'root',
-  
+
 })
 export class AuthService {
   constructor(private oauthService: OAuthService) {
@@ -19,10 +19,14 @@ export class AuthService {
   login() {
     this.oauthService.initCodeFlow();
   }
+  logout() {
+    this.oauthService.logOut();
+  }
 
   isAuthenticated(): boolean {
     return this.oauthService.hasValidAccessToken();
   }
+
 
   get userName(): string | null {
     const claims = this.oauthService.getIdentityClaims();
