@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Assignment, Client, Event, Event2, Person, Task } from '../api/api';
+import { Assignment, Client, Event, Event2, Person, Task, Unavailability } from '../api/api';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -38,13 +38,14 @@ export class EventsComponent implements OnInit {
   });
   tasks: Task[] | undefined;
   people: Person[] | undefined;
+  unavailability:Unavailability[] |undefined;
 
   constructor(private client: Client, private cdr: ChangeDetectorRef) { }
   async ngOnInit() {
     this.tasks = await this.client.tasksAll().toPromise();
     this.events = await this.client.eventswithassignments().toPromise();
     this.people = await this.client.getpeople().toPromise();
-
+this.unavailability = await this.client.unavailabilityAll().toPromise();
   }
 
 
@@ -111,6 +112,7 @@ export class EventsComponent implements OnInit {
     await this.client.eventsDELETE(eventId).toPromise();
     this.events = (this.events ?? []).filter(p => p.id !== eventId);
   }
+
   async clearEvent(eventId: number) {
     this.events!.find(i => i.id == eventId)!.assignments = [];
     this.events = [...this.events!]
@@ -129,8 +131,10 @@ export class EventsComponent implements OnInit {
   }
 
 
-  autoassign(thisevent: Event, pastevents: Event[], index: number, suitablePeople: Person[], tasks: Task[]) {
+  autoassign(thisevent: Event,  index: number, suitablePeople: Person[], tasks: Task[]) {
     //start with the people that can do the task
+    let pastevents = this.events!
+    suitablePeople =this.removepeopleThatAreUnavailable(suitablePeople,thisevent)
     suitablePeople = this.removePeopleBookedLastEvent(pastevents, index, suitablePeople);
 
     // Order the assignments so that the assignment with the fewest people that can do it comes first.
@@ -178,7 +182,13 @@ export class EventsComponent implements OnInit {
       console.log(`Remaining people:`, people)
       return people
     }
+  }
+  removepeopleThatAreUnavailable(people: Person[],event: Event): Person[] {
+let unavailability = this.unavailability?.filter(i => i.end_date!>=event.event_date! && i.start_date!<=event.event_date!)
 
+people = people.filter(i => !unavailability?.some(u => u.person_id == i.id))
+
+return people
   }
   removePeopleBookedThisEvent(assignments: Assignment[], people: Person[]): Person[] {
     people = people.filter(i => assignments.some(a => {
