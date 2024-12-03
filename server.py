@@ -1,8 +1,7 @@
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from flask_jwt_extended import jwt_required, get_jwt_identity
-
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from flasgger import Swagger
 
 from db.db import SchedulerDB
@@ -14,12 +13,14 @@ from authlib.integrations.flask_client import OAuth
 
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Set a secret key for Flask session
 Swagger(app)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SECRET_KEY']='c0nfigur4tion'
 oauth = OAuth(app)
+app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key' # Change this to a random secret key
+jwt = JWTManager(app)
+
 
 authentik = oauth.register(
     'authentik',
@@ -43,8 +44,23 @@ def login():
 def authorize():
     token = authentik.authorize_access_token()
     user_info = authentik.get('https://authentik.tekonline.com.au/application/o/userinfo/', token=token)
-    # decoded_token = jwt.decode(user_info, options={"verify_signature": False})
-    return jsonify(user_info.text)
+
+    if user_info.status_code == 200:
+        user_data = user_info.json()
+        user_name = user_data.get('name', 'Anonymous')  # Adjust the key based on your OAuth provider's response
+
+        # Create a JWT token
+        access_token = create_access_token(identity=user_name)
+        return jsonify({
+            'access_token': access_token,
+            'user_name': user_name,
+            'user_info': user_data
+        })
+    else:
+        return jsonify({'error': 'Failed to fetch user information'}), 400
+
+
+
 
 @cross_origin()
 @app.route('/getpeople', methods=['GET'])
