@@ -13,7 +13,18 @@ export class AuthService {
 
   public configure() {
     this.oauthService.configure(authConfig);
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+    this.oauthService.loadDiscoveryDocumentAndTryLogin().then((_) => {
+      this.oauthService.tryLoginImplicitFlow().then((_) => { 
+        if(!this.oauthService.hasValidAccessToken()) {
+          this.oauthService.initLoginFlow();
+        }
+        else{
+          this.oauthService.loadUserProfile().then((userProfile) => {
+            console.log(userProfile);
+          });
+        }
+      });
+    });
   }
 
   login() {
@@ -25,6 +36,9 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return this.oauthService.hasValidAccessToken();
+  }
+  getAccessToken(): string | null {
+    return this.oauthService.getAccessToken();
   }
 
 

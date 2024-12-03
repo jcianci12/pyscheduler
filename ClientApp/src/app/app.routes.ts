@@ -4,8 +4,12 @@ import { TasksComponent } from './tasks/tasks.component';
 import { EventsComponent } from './events/events.component';
 import { AssignmentsComponent } from './assignment/assignments.component';
 import { UnavailabilityComponent } from './unavailability/unavailability.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent },
+
     { path: 'people', component: PeopleComponent },
     { path: 'tasks', component: TasksComponent },
     { path: 'events', component: EventsComponent },
