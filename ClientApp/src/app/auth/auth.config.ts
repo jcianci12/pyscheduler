@@ -6,5 +6,5 @@ export const authConfig: AuthConfig = {
   clientId: 'yJwnySrODx2x1uNDKzszWiTV3ivrLPBdvvDkz1sN',
   responseType: 'code',
   scope: 'openid profile email',
-  showDebugInformation: true
+  showDebugInformation: true,strictDiscoveryDocumentValidation: false
 };
