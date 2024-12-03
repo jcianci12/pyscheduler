@@ -10,15 +10,15 @@
     </tr>
   </thead>
   <tbody>
-    <tr  >
+    <tr>
       <td><input type="text" [(ngModel)]="personForm.value.id" disabled></td>
-      <td><input type="text" class="form-control" id="first_name" name="first_name" [(ngModel)]="personForm.value.first_name"></td>
-      <td><input type="text" class="form-control" id="last_name" name="last_name" [(ngModel)]="personForm.value.last_name"></td>
+      <td><input type="text" class="form-control" id="first_name" name="first_name" [(ngModel)]="personForm.value.first_name" (keydown.enter)="createPerson(personForm.value)"></td>
+      <td><input type="text" class="form-control" id="last_name" name="last_name" [(ngModel)]="personForm.value.last_name" (keydown.enter)="createPerson(personForm.value)"></td>
       <td *ngFor="let task of tasks">
-        <input type="checkbox" [checked]="false" (change)="onTaskChange($event, personForm.value, task)">
+        <input type="checkbox" [checked]="false" (change)="onTaskChange($event, personForm.value, task)" (keydown.enter)="createPerson(personForm.value)">
       </td>
       <td>
-        <button type="submit" class="btn btn-primary" (click)="createPerson(personForm.value)">Create</button>
+        <button type="submit" class="btn btn-primary" (click)="createPerson(personForm.value)" (keydown.enter)="createPerson(personForm.value)">Create</button>
       </td>
     </tr>
     <tr *ngFor="let person of people" >
