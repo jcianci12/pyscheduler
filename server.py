@@ -1,68 +1,50 @@
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from flasgger import Swagger
 
 from db.db import SchedulerDB
 from scheduler import allocate_tasks_for_event
 from flask import Flask, jsonify, url_for
-
-from authlib.integrations.flask_client import OAuth
-
+from flask_httpauth import HTTPTokenAuth
+import jwt
 
 
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = '7hY48mDD1MCqW6irlkdvY61Vq1DiOPIVKCcpPxkAKn3un2JXyY6N2Knm0SHGOA2uzdo7zJQpz1ax3R6kxH6NWQyHJz6rKXodBJ2lqk9sQk6Y6pjaPkH1xFpoKrC3SeMd'
+
+
 Swagger(app)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-app.config['SECRET_KEY']='c0nfigur4tion'
-oauth = OAuth(app)
-app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key' # Change this to a random secret key
-jwt = JWTManager(app)
 
 
-authentik = oauth.register(
-    'authentik',
-    client_id='yJwnySrODx2x1uNDKzszWiTV3ivrLPBdvvDkz1sN',
-    client_secret='7hY48mDD1MCqW6irlkdvY61Vq1DiOPIVKCcpPxkAKn3un2JXyY6N2Knm0SHGOA2uzdo7zJQpz1ax3R6kxH6NWQyHJz6rKXodBJ2lqk9sQk6Y6pjaPkH1xFpoKrC3SeMd',
-    access_token_url='https://authentik.tekonline.com.au/application/o/token/',
-    authorize_url='https://authentik.tekonline.com.au/application/o/authorize/',
-    api_base_url='https://authentik.tekonline.com.au/application',
-    jwks_uri='https://authentik.tekonline.com.au/application/o/pyscheduler/jwks/',
-    client_kwargs={'scope': 'openid read:users write:users email'},
-    authorize_params={'response_type': 'code'}
-)
+
+auth = HTTPTokenAuth(scheme='Bearer')
+
+@auth.verify_token
+def verify_token(token):
+    try:
+        data = jwt.decode(token, app.config['JWT_SECRET_KEY'],
+                          algorithms=['HS256'])
+    except:  # noqa: E722
+        return False
+    if 'username' in data:
+        return data['username']
 
 
-@app.route('/login')
-def login():
-    redirect_uri = url_for('authorize', _external=True)
-    return authentik.authorize_redirect(redirect_uri)
-
-@app.route('/authorize')
-def authorize():
-    token = authentik.authorize_access_token()
-    user_info = authentik.get('https://authentik.tekonline.com.au/application/o/userinfo/', token=token)
-
-    if user_info.status_code == 200:
-        user_data = user_info.json()
-        user_name = user_data.get('name', 'Anonymous')  # Adjust the key based on your OAuth provider's response
-
-        # Create a JWT token
-        access_token = create_access_token(identity=user_name)
-        return jsonify({
-            'access_token': access_token,
-            'user_name': user_name,
-            'user_info': user_data
-        })
+def get_logged_in_user_or_demo_db():
+    if auth.current_user():
+        return auth.current_user()
     else:
-        return jsonify({'error': 'Failed to fetch user information'}), 400
-
-
-
-
+        return 'demo.db'
+@app.route('/')
+@auth.verify_token
+def index():
+    print(request.headers)
+    return "Hello, %s!" % auth.current_user()
 @cross_origin()
+@auth.verify_token
 @app.route('/getpeople', methods=['GET'])
 def getpeople():
     """Get all people
@@ -94,7 +76,8 @@ def getpeople():
                 items:
                     $ref: '#/definitions/Person'
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         people = scheduler_db.get_people(conn)
     return jsonify(people)
@@ -834,4 +817,5 @@ def delete_assignment(assignment_id):
 
 if __name__ == '__main__':
     app.run(debug=False)
+
 
