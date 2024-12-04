@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import {  OAuthService } from 'angular-oauth2-oidc';
 import { authConfig } from './auth.config';
 
 @Injectable({
@@ -32,6 +32,8 @@ export class AuthService {
   isAuthenticated(): boolean {
     return this.oauthService.hasValidAccessToken();
   }
+  
+
 
   get userName(): string | null {
     const claims = this.oauthService.getIdentityClaims();

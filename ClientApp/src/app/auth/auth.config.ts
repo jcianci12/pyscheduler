@@ -8,10 +8,13 @@ export const authConfig: AuthConfig = {
   
   redirectUri: window.location.origin,
   clientId: 'yJwnySrODx2x1uNDKzszWiTV3ivrLPBdvvDkz1sN',
+  dummyClientSecret:'test',
   
   // responseType: 'code',
   scope: 'openid profile email',
   showDebugInformation: true,
   strictDiscoveryDocumentValidation: false,
-  silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html', timeoutFactor: 0.75, sessionChecksEnabled: true,
+  silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html', 
+  timeoutFactor: 0.75, 
+  sessionChecksEnabled: true,
 };
