@@ -13,19 +13,19 @@ export class AuthService {
   private configure() {
     this.oauthService.configure(authConfig);
     this.oauthService.loadDiscoveryDocumentAndTryLogin().then((_) => {
-      this.oauthService.setupAutomaticSilentRefresh(); // Set up automatic token refresh
+      // this.oauthService.setupAutomaticSilentRefresh(); // Set up automatic token refresh
       if (this.oauthService.hasValidAccessToken()) {
         this.oauthService.loadUserProfile().then((userProfile) => {
           console.log(userProfile);
         });
       } else {
-        this.oauthService.initLoginFlow();
+        this.oauthService.initCodeFlow();
       }
     });
   }
 
   login() {
-    this.oauthService.initCodeFlow();
+    
   }
   logout()  {this.oauthService.logOut();}
 

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Client } from '../api/api';
 
 @Component({
   selector: 'app-home',
@@ -8,5 +9,8 @@ import { Component } from '@angular/core';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-
+constructor(private client:Client){
+  this.client.xyz().subscribe(res => console.log(res));
+  
+}
 }

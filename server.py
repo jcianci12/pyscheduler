@@ -7,6 +7,7 @@ from db.db import SchedulerDB
 from scheduler import allocate_tasks_for_event
 from flask import Flask, jsonify, url_for
 from flask_httpauth import HTTPTokenAuth
+import requests
 import jwt
 
 
@@ -22,29 +23,60 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 auth = HTTPTokenAuth(scheme='Bearer')
 
+
+
+auth = HTTPTokenAuth(scheme='Bearer')
+
+def fetch_jwk():
+    api_endpoint = "https://authentik.tekonline.com.au/application/o/pyscheduler/jwks/"
+    response = requests.get(api_endpoint)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Failed to fetch JWK")
+        return None
+
 @auth.verify_token
 def verify_token(token):
     try:
-        data = jwt.decode(token, app.config['JWT_SECRET_KEY'],
-                          algorithms=['HS256'])
-    except:  # noqa: E722
+        print(request.headers)
+        jwk = fetch_jwk()
+        if jwk is None:
+            return False
+        # Extract the public key
+        public_key = jwt.algorithms.RSAAlgorithm.from_jwk(jwk['keys'][0])
+        
+        # Decode the JWT
+        data = jwt.decode(token, public_key, algorithms=['RS256'], audience="yJwnySrODx2x1uNDKzszWiTV3ivrLPBdvvDkz1sN")
+        print("Token decoded successfully:", data)
+        return data  # Return the username as a string
+    except Exception as e:
+        print("Error decoding token:", str(e))
         return False
-    if 'username' in data:
-        return data['username']
 
+
+
+
+@app.route('/xyz', methods=['GET'])
+@auth.login_required
+def xyz():
+    """Test the authentication
+    ---
+    responses:
+        200:
+            description: Hello message
+            schema:
+                type: string
+    """
+    return jsonify('Hello, %s!' % auth.current_user())
 
 def get_logged_in_user_or_demo_db():
     if auth.current_user():
         return auth.current_user()
     else:
         return 'demo.db'
-@app.route('/')
-@auth.verify_token
-def index():
-    print(request.headers)
-    return "Hello, %s!" % auth.current_user()
+
 @cross_origin()
-@auth.verify_token
 @app.route('/getpeople', methods=['GET'])
 def getpeople():
     """Get all people
@@ -81,6 +113,7 @@ def getpeople():
     with scheduler_db.connect() as conn:
         people = scheduler_db.get_people(conn)
     return jsonify(people)
+
 
 
 

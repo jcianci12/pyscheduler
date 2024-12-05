@@ -15,7 +15,6 @@ bootstrapApplication(AppComponent, {
      provideHttpClient(withFetch()
      , withInterceptors([authInterceptor])),
 
-    // provideHttpClient(withInterceptors([authInterceptor])),
 
     { provide: API_BASE_URL, useValue: environment.baseUrl }
   ]
