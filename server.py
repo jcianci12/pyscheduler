@@ -45,17 +45,18 @@ def verify_token(token):
             return False
         # Extract the public key
         public_key = jwt.algorithms.RSAAlgorithm.from_jwk(jwk['keys'][0])
-        
+    except Exception as e:
+        print("Error fetching or parsing JWK:", str(e))
+        return str(e)
+    
+    try:
         # Decode the JWT
         data = jwt.decode(token, public_key, algorithms=['RS256'], audience="yJwnySrODx2x1uNDKzszWiTV3ivrLPBdvvDkz1sN")
         print("Token decoded successfully:", data)
-        return data  # Return the username as a string
+        return data['username']  # Return the username as a string
     except Exception as e:
         print("Error decoding token:", str(e))
-        return False
-
-
-
+        return str(e)
 
 @app.route('/xyz', methods=['GET'])
 @auth.login_required
@@ -68,7 +69,7 @@ def xyz():
             schema:
                 type: string
     """
-    return jsonify('Hello, %s!' % auth.current_user())
+    return jsonify(auth)
 
 def get_logged_in_user_or_demo_db():
     if auth.current_user():
