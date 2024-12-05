@@ -74,7 +74,7 @@ def get_logged_in_user_or_demo_db():
     if auth.current_user():
         return auth.current_user()
     else:
-        return 'demo.db'
+        return 'scheduler.db'
 
 @cross_origin()
 @app.route('/getpeople', methods=['GET'])
