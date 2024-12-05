@@ -26,3 +26,4 @@ Werkzeug==3.0.6
 Flask-JWT-Extended
 authlib
 requests
+flask_httpauth
