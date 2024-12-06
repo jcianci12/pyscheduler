@@ -17,6 +17,11 @@ export class AuthService {
       if (this.oauthService.hasValidAccessToken()) {
         this.oauthService.loadUserProfile().then((userProfile) => {
           console.log(userProfile);
+          this.oauthService.events.subscribe((event) => {
+            if(event.type === 'token_expires') {
+              this.oauthService.silentRefresh();
+            }
+          })
         });
       } else {
         this.oauthService.initCodeFlow();
@@ -25,14 +30,14 @@ export class AuthService {
   }
 
   login() {
-    
+
   }
   logout()  {this.oauthService.logOut();}
 
   isAuthenticated(): boolean {
     return this.oauthService.hasValidAccessToken();
   }
-  
+
 
 
   get userName(): string | null {

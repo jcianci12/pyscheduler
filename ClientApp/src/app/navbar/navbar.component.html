@@ -1,11 +1,12 @@
-<nav> <a href="#">Pyscheduler</a>
+<nav> <a routerLink="/">Pyscheduler</a>
   <ul>
-    <li><a href="#">Home</a></li>
-    <li><a href="/people">People</a></li>
-    <li><a href="/unavailability">Unavailability</a></li>
-    <li><a href="/tasks">Tasks</a></li>
-    <li><a href="/events">Events</a></li>
-    <li><a href="/assignments">Assignments</a></li>
-    <li *ngIf="!authService.isAuthenticated()"><a (click)="authService. logout()">Logout</a></li>
+    <li><a routerLink="/">Home</a></li>
+    <li><a routerLink="/people">People</a></li>
+    <li><a routerLink="/unavailability">Unavailability</a></li>
+    <li><a routerLink="/tasks">Tasks</a></li>
+    <li><a routerLink="/events">Events</a></li>
+    <li><a routerLink="/assignments">Assignments</a></li>
+    <li *ngIf="!authService.isAuthenticated()"><a (click)="authService.logout()">Logout</a></li>
   </ul>
 </nav>
+
