@@ -67,15 +67,56 @@ def xyz():
         200:
             description: Hello message
             schema:
-                type: string
+                type: object
+                properties:
+                    acr:
+                        type: string
+                    amr:
+                        type: array
+                        items:
+                            type: string
+                    aud:
+                        type: string
+                    auth_time:
+                        type: integer
+                    azp:
+                        type: string
+                    email:
+                        type: string
+                    email_verified:
+                        type: boolean
+                    exp:
+                        type: integer
+                    given_name:
+                        type: string
+                    groups:
+                        type: array
+                        items:
+                            type: string
+                    iat:
+                        type: integer
+                    iss:
+                        type: string
+                    name:
+                        type: string
+                    nickname:
+                        type: string
+                    nonce:
+                        type: string
+                    preferred_username:
+                        type: string
+                    sub:
+                        type: string
+                    uid:
+                        type: string
     """
-    return jsonify(auth)
+    return auth.current_user()
 
 def get_logged_in_user_or_demo_db():
     if auth.current_user():
         return auth.current_user()
     else:
-        return 'demo.db'
+        return 'scheduler.db'
 
 @cross_origin()
 @app.route('/getpeople', methods=['GET'])

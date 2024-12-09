@@ -7,6 +7,7 @@ import { UnavailabilityComponent } from './unavailability/unavailability.compone
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth/auth.guard';
 import { LoginComponent } from './login/login.component';
+import { SilentRefreshComponent } from './silent-refresh/silent-refresh.component';
 
 export const routes: Routes = [
      { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -17,8 +18,9 @@ export const routes: Routes = [
     { path: 'tasks', component: TasksComponent,canActivate:[AuthGuard] },
     { path: 'events', component: EventsComponent ,canActivate:[AuthGuard]},
     { path: 'assignments', component: AssignmentsComponent,canActivate:[AuthGuard] },
-    
-    
+    { path: 'silent-refresh', component: SilentRefreshComponent },
+
+
     {
         path: 'assignments/:id',
         component: AssignmentsComponent,canActivate:[AuthGuard]

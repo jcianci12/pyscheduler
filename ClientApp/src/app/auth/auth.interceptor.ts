@@ -8,7 +8,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = oAuthService.getAccessToken();
   console.log("Inside authInterceptor");
   console.log("AccessToken:", token); // Log the token to ensure it's retrieved
-  
+
   if (token) {
     const cloned = req.clone({
       headers: req.headers.set('Authorization', `Bearer ${token}`)

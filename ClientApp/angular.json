@@ -62,7 +62,8 @@
               "buildTarget": "pyscheduler:build:production"
             },
             "development": {
-              "buildTarget": "pyscheduler:build:development"
+              "buildTarget": "pyscheduler:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
