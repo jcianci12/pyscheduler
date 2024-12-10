@@ -15,6 +15,7 @@ export const authConfig: AuthConfig = {
   showDebugInformation: true,
   strictDiscoveryDocumentValidation: false,
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh',
+  useSilentRefresh:true,
   timeoutFactor: 0.75,
   sessionChecksEnabled: true,
   requestAccessToken:true

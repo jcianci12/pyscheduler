@@ -13,6 +13,7 @@ export class AuthService {
   private configure() {
     this.oauthService.configure(authConfig);
     this.oauthService.loadDiscoveryDocumentAndTryLogin();
+    this.oauthService.setupAutomaticSilentRefresh();
   }
 
   login() {
@@ -21,11 +22,7 @@ export class AuthService {
       if (this.oauthService.hasValidAccessToken()) {
         this.oauthService.loadUserProfile().then((userProfile) => {
           console.log(userProfile);
-          this.oauthService.events.subscribe((event) => {
-            if (event.type === 'token_expires') {
-              this.oauthService.silentRefresh();
-            }
-          })
+         
         });
       } else {
         this.oauthService.initCodeFlow();

@@ -1,3 +1,29 @@
+<style>
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  nav ul li {
+    float: left;
+  }
+  nav ul li ul {
+    display: none;
+    position: absolute;
+  }
+  nav ul li:hover ul {
+    display: block;
+  }
+  nav ul li ul li {
+    clear: both;
+    float: none;
+    width: 100%;
+  }
+  nav ul li ul li a {
+    display: block;
+  }
+</style>
+
 <nav> <a routerLink="/">Pyscheduler</a>
   <ul>
     <li><a routerLink="/">Home</a></li>
@@ -14,4 +40,5 @@
     </li>
   </ul>
 </nav>
+
 

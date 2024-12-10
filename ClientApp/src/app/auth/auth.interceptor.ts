@@ -5,6 +5,12 @@ import { inject } from '@angular/core';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Use Angular's inject() function to get the OAuthService
   const oAuthService = inject(OAuthService);
+  // if()
+  // if (req.url.includes('authorize')) {
+  //   return next(req);
+  // }
+  
+  // oAuthService.silentRefresh();
   const token = oAuthService.getAccessToken();
   console.log("Inside authInterceptor");
   console.log("AccessToken:", token); // Log the token to ensure it's retrieved
