@@ -4,5 +4,13 @@
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {"^/api" : ""}
+  },
+  "/application/o/pyscheduler": {
+    "target": "https://authentik.tekonline.com.au",
+    "changeOrigin": true,
+    "pathRewrite": {"^/application/o/pyscheduler" : ""},
+    "headers": {
+      "Access-Control-Allow-Origin": "*"
+    }
   }
 }

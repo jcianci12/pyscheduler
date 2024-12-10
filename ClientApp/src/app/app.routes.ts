@@ -18,7 +18,7 @@ export const routes: Routes = [
     { path: 'tasks', component: TasksComponent,canActivate:[AuthGuard] },
     { path: 'events', component: EventsComponent ,canActivate:[AuthGuard]},
     { path: 'assignments', component: AssignmentsComponent,canActivate:[AuthGuard] },
-    { path: 'silent-refresh', component: SilentRefreshComponent },
+    { path: 'silent-refresh1', component: SilentRefreshComponent },
 
 
     {

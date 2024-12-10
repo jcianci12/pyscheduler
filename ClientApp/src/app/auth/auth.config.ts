@@ -14,7 +14,7 @@ export const authConfig: AuthConfig = {
   scope: 'openid profile email offline_access',
   showDebugInformation: true,
   strictDiscoveryDocumentValidation: false,
-  silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
+  silentRefreshRedirectUri: window.location.origin + '/silent-refresh',
   timeoutFactor: 0.75,
   sessionChecksEnabled: true,
   requestAccessToken:true

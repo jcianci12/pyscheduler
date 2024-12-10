@@ -24,7 +24,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+                  "src/silent-refresh.html"
             ],
             "styles": [
               "src/styles.css"
@@ -56,6 +57,11 @@
           "defaultConfiguration": "production"
         },
         "serve": {
+          "options": {
+    "headers": {
+      "X-Frame-Options": "ALLOW-FROM https://authentik.tekonline.com.au"
+    }
+  },
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
