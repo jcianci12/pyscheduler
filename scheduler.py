@@ -10,22 +10,17 @@ from db.db import SchedulerDB
 from typing import List, Dict
 
 
+
+def allocate_tasks_for_event(event,dbname):
+    
 #load the data we need
-scheduler_db = SchedulerDB('scheduler.db')
-with scheduler_db.connect() as conn:
+    scheduler_db = SchedulerDB(dbname)
+    with scheduler_db.connect() as conn:
         people = scheduler_db.get_people(conn)
         unavailable_dates=scheduler_db.get_all_unavailability(conn)
         days = scheduler_db.get_events_with_assignments(conn)
         events = scheduler_db.get_events_with_assignments(conn)
-
-
-def allocate_tasks_for_event(event):
-    
-#load the data we need
-    scheduler_db = SchedulerDB('scheduler.db')
-    with scheduler_db.connect() as conn:
         #gets a list of people and the tasks they can do
-        people = scheduler_db.get_people(conn)
         # gets the unavailable dates
         unavailable_dates=scheduler_db.get_all_unavailability(conn)
         

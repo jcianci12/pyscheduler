@@ -687,7 +687,7 @@ def allocate():
                 $ref: '#/definitions/Event'
     """
     event = request.get_json()
-    event = allocate_tasks_for_event(event)
+    event = allocate_tasks_for_event(event,get_logged_in_user_or_demo_db())
     return jsonify(event)
     
 
