@@ -14,6 +14,6 @@
 <div class="app-container">
   <app-navbar></app-navbar>
   <app-login *ngIf="!(authService.isAuthenticated() && authService.getAccessToken())"></app-login>
-  <router-outlet *ngIf="authService.isAuthenticated() && authService.getAccessToken()"></router-outlet>
+  <router-outlet></router-outlet>
 </div>
 

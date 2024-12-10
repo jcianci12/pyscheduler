@@ -14,18 +14,18 @@ export const routes: Routes = [
      { path: 'home', component: HomeComponent },
     { path: 'login', component: LoginComponent },
 
-    { path: 'people', component: PeopleComponent,canActivate:[AuthGuard] },
-    { path: 'tasks', component: TasksComponent,canActivate:[AuthGuard] },
-    { path: 'events', component: EventsComponent ,canActivate:[AuthGuard]},
-    { path: 'assignments', component: AssignmentsComponent,canActivate:[AuthGuard] },
+    { path: 'people', component: PeopleComponent },
+    { path: 'tasks', component: TasksComponent },
+    { path: 'events', component: EventsComponent },
+    { path: 'assignments', component: AssignmentsComponent },
     { path: 'silent-refresh1', component: SilentRefreshComponent },
 
 
     {
         path: 'assignments/:id',
-        component: AssignmentsComponent,canActivate:[AuthGuard]
+        component: AssignmentsComponent
     },
-    { path: 'unavailability', component: UnavailabilityComponent,canActivate:[AuthGuard] }
+    { path: 'unavailability', component: UnavailabilityComponent }
 
 
 ];
