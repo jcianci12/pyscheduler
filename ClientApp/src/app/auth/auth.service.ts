@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {  OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { authConfig } from './auth.config';
 
 @Injectable({
@@ -12,13 +12,17 @@ export class AuthService {
 
   private configure() {
     this.oauthService.configure(authConfig);
+    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+  }
+
+  login() {
     this.oauthService.loadDiscoveryDocumentAndTryLogin().then((_) => {
       // this.oauthService.setupAutomaticSilentRefresh(); // Set up automatic token refresh
       if (this.oauthService.hasValidAccessToken()) {
         this.oauthService.loadUserProfile().then((userProfile) => {
           console.log(userProfile);
           this.oauthService.events.subscribe((event) => {
-            if(event.type === 'token_expires') {
+            if (event.type === 'token_expires') {
               this.oauthService.silentRefresh();
             }
           })
@@ -26,13 +30,10 @@ export class AuthService {
       } else {
         this.oauthService.initCodeFlow();
       }
-    });
-  }
 
-  login() {
-
+    })
   }
-  logout()  {this.oauthService.logOut();}
+  logout() { this.oauthService.logOut(); }
 
   isAuthenticated(): boolean {
     return this.oauthService.hasValidAccessToken();

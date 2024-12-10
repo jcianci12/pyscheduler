@@ -6,7 +6,12 @@
     <li><a routerLink="/tasks">Tasks</a></li>
     <li><a routerLink="/events">Events</a></li>
     <li><a routerLink="/assignments">Assignments</a></li>
-    <li *ngIf="!authService.isAuthenticated()"><a (click)="authService.logout()">Logout</a></li>
+    <li *ngIf="authService.isAuthenticated()">
+      <a href="#">👤</a>
+      <ul>
+        <li><a (click)="authService.logout()">Logout</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 
