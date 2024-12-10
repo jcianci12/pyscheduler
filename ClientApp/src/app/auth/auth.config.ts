@@ -11,12 +11,12 @@ export const authConfig: AuthConfig = {
   dummyClientSecret:'test',
 
   // responseType: 'code',
-  scope: 'openid profile email offline_access',
+  scope: 'email offline_access openid profile ',
   showDebugInformation: true,
   strictDiscoveryDocumentValidation: false,
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh',
   useSilentRefresh:true,
   timeoutFactor: 0.75,
-  sessionChecksEnabled: true,
-  requestAccessToken:true
+  requestAccessToken:true,
+  requireHttps: false
 };
