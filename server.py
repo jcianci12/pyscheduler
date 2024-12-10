@@ -22,11 +22,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 auth = HTTPTokenAuth(scheme='Bearer')
-
-
-
-auth = HTTPTokenAuth(scheme='Bearer')
-
 def fetch_jwk():
     api_endpoint = "https://authentik.tekonline.com.au/application/o/pyscheduler/jwks/"
     response = requests.get(api_endpoint)
@@ -112,14 +107,23 @@ def xyz():
     """
     
     return  jsonify(auth.current_user())
-
+@auth.login_required
 def get_logged_in_user_or_demo_db():
-    if auth.current_user():
-        return auth.current_user()
+    dbname = 'demo.db'
+    user = auth.current_user()
+    print(user)
+    if user is not None and user !='Signature has expired' and 'email' in user:
+        # do something with the email
+        dbname = user['email']
     else:
-        return 'scheduler.db'
+        # handle the case where user is None
+        return dbname
+
+    return dbname
 
 @cross_origin()
+@auth.login_required
+
 @app.route('/getpeople', methods=['GET'])
 def getpeople():
     """Get all people
@@ -142,7 +146,8 @@ def getpeople():
                             id:
                                 type: integer
                             task_name:
-                                type: string
+                        type: array
+                    iat:
     responses:
         200:
             description: A list of all people
@@ -161,6 +166,7 @@ def getpeople():
 
 
 @app.route('/getperson/<int:person_id>', methods=['GET'])
+@auth.login_required
 def getperson(person_id):
     """Get a person by ID
     ---
@@ -176,7 +182,7 @@ def getperson(person_id):
             schema:
                 $ref: '#/definitions/Person'
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         person = scheduler_db.read_person(conn, person_id)
         if person:
@@ -185,6 +191,7 @@ def getperson(person_id):
             return jsonify({'error': 'Person not found'}), 404
 @cross_origin()
 @app.route('/createperson', methods=['POST'])
+@auth.login_required
 def createperson():
     """Create a new person
     ---
@@ -212,13 +219,14 @@ def createperson():
                 $ref: '#/definitions/Person'
     """
     data = request.get_json()
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         person_id = scheduler_db.create_person(conn, data)
         return jsonify({'first_name': data['first_name'], 'last_name': data['last_name'], 'id': person_id}), 201
 
 @cross_origin()
 @app.route('/updateperson/<int:person_id>', methods=['PUT'])
+@auth.login_required
 def updateperson(person_id):
     """Update a person
     ---
@@ -248,7 +256,7 @@ def updateperson(person_id):
                 $ref: '#/definitions/Person'
     """
     data = request.get_json()
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         scheduler_db.update_person(conn, person_id, data['first_name'], data['last_name'], data.get('tasks', []))
         return jsonify({'first_name': data['first_name'], 'last_name': data['last_name'], 'id': person_id})
@@ -256,6 +264,7 @@ def updateperson(person_id):
 
 @cross_origin()
 @app.route('/deleteperson/<int:person_id>', methods=['DELETE'])
+@auth.login_required
 def deleteperson(person_id):
     """Delete a person
     ---
@@ -269,13 +278,14 @@ def deleteperson(person_id):
         204:
             description: Person deleted
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         scheduler_db.delete_person(conn, person_id)
         return '', 204
     
 @cross_origin()
 @app.route('/unavailability', methods=['GET'])
+@auth.login_required
 def get_unavailability():
     """Get all unavailability
     ---
@@ -299,12 +309,13 @@ def get_unavailability():
                 items:
                     $ref: '#/definitions/Unavailability'
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         unavailability = scheduler_db.get_all_unavailability(conn)
         return jsonify([{'id': unavail[0], 'person_id': unavail[1], 'start_date': unavail[2], 'end_date': unavail[3]} for unavail in unavailability])
 @cross_origin()
 @app.route('/unavailability', methods=['POST'])
+@auth.login_required
 def create_unavailability():
     """Create new unavailability
     ---
@@ -338,7 +349,7 @@ def create_unavailability():
                         type: string
     """
     data = request.get_json()
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         unavailability_id = scheduler_db.create_unavailability(conn, data['person_id'], data['start_date'], data['end_date'])
         return jsonify({'id': unavailability_id, 'person_id': data['person_id'], 'start_date': data['start_date'], 'end_date': data['end_date']}), 201
@@ -386,7 +397,7 @@ def update_unavailability(unavailability_id):
                         format: date
     """
     data = request.get_json()
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         scheduler_db.update_unavailability(conn, unavailability_id, data['person_id'], data['start_date'], data['end_date'])
         return jsonify({'id': unavailability_id, 'person_id': data['person_id'], 'start_date': data['start_date'], 'end_date': data['end_date']}), 201
@@ -408,7 +419,7 @@ def delete_unavailability(unavailability_id):
         204:
             description: Unavailability deleted
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         scheduler_db.delete_unavailability(conn, unavailability_id)
         return '', 204
@@ -435,7 +446,7 @@ def get_tasks():
                 items:
                     $ref: '#/definitions/Task'
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         tasks = scheduler_db.get_tasks(conn)
     return jsonify([{'id': task[0], 'task_name': task[1]} for task in tasks])
@@ -458,7 +469,7 @@ def get_task(task_id):
             schema:
                 $ref: '#/definitions/Task'
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         task = scheduler_db.read_task(conn, task_id)
         if task:
@@ -492,7 +503,7 @@ def update_task(task_id):
                 $ref: '#/definitions/Task'
     """
     data = request.get_json()
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         scheduler_db.update_task(conn, task_id, data['task_name'])
         return jsonify({'task_name': data['task_name'], 'id': task_id})
@@ -513,7 +524,7 @@ def delete_task(task_id):
         204:
             description: Task deleted
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         scheduler_db.delete_task(conn, task_id)
         return '', 204
@@ -537,7 +548,7 @@ def create_task():
                 $ref: '#/definitions/Task'
     """
     data = request.get_json()
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         task_id = scheduler_db.create_task(conn, data['task_name'])
         return jsonify({'task_name': data['task_name'], 'id': task_id}), 201
@@ -565,7 +576,7 @@ def get_events():
                 items:
                     $ref: '#/definitions/Event'
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         events = scheduler_db.get_events_with_assignments(conn)
     return jsonify(events)
@@ -602,7 +613,7 @@ def update_event(event_id):
                 $ref: '#/definitions/Event'
     """
     data = request.get_json()
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         scheduler_db.update_event(conn, event_id, data['event_name'], data['event_date'], data['assignments'])
         return jsonify({'event_name': data['event_name'], 'event_date': data['event_date'], 'id': event_id})
@@ -621,7 +632,7 @@ def delete_event(event_id):
         204:
             description: Event deleted
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         scheduler_db.delete_event(conn, event_id)
         return '', 204
@@ -648,7 +659,7 @@ def create_event():
                 $ref: '#/definitions/Event'
     """
     data = request.get_json()
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         event_id = scheduler_db.create_event(conn, data['event_name'], data['event_date'])
         return jsonify({'event_name': data['event_name'], 'event_date': data['event_date'], 'id': event_id}), 201
@@ -705,7 +716,7 @@ def get_all_assignments():
                 items:
                     $ref: '#/definitions/Assignment'
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         assignments = scheduler_db.get_all_assignments(conn)
     return jsonify([{'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]} for assignment in assignments])
@@ -747,7 +758,7 @@ def get_events_with_assignments():
                 items:
                     $ref: '#/definitions/Event'
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         events = scheduler_db.get_events_with_assignments(conn)
     return jsonify(events)
@@ -780,7 +791,7 @@ def get_assignment(assignment_id):
             schema:
                 $ref: '#/definitions/Assignment'
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         assignment = scheduler_db.read_assignment(conn, assignment_id)
     return jsonify({'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]})
@@ -803,7 +814,7 @@ def test123(event_id):
                 items:
                     $ref: '#/definitions/Assignment'
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         assignments = scheduler_db.get_assignments_by_event_id(conn, event_id)
     return jsonify([{'id': assignment[0], 'event_id': assignment[1], 'task_id': assignment[2], 'person_id': assignment[3]} for assignment in assignments])
@@ -832,7 +843,7 @@ def create_assignment():
                 $ref: '#/definitions/Assignment'
     """
     data = request.get_json()
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         assignment_id = scheduler_db.create_assignment(conn, data['event_id'], data['task_id'], data['person_id'])
         return jsonify({'id': assignment_id, 'event_id': data['event_id'], 'task_id': data['task_id'], 'person_id': data['person_id']}), 201
@@ -863,7 +874,7 @@ def update_assignment(assignment_id):
             description: Assignment updated
     """
     data = request.get_json()
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         scheduler_db.update_assignment(conn, assignment_id, data['event_id'], data['task_id'], data['person_id'])
         return '', 204
@@ -883,7 +894,7 @@ def delete_assignment(assignment_id):
         204:
             description: Assignment deleted
     """
-    scheduler_db = SchedulerDB('scheduler.db')
+    scheduler_db = SchedulerDB(get_logged_in_user_or_demo_db())
     with scheduler_db.connect() as conn:
         scheduler_db.delete_assignment(conn, assignment_id)
         return '', 204
@@ -893,5 +904,6 @@ def delete_assignment(assignment_id):
 
 if __name__ == '__main__':
     app.run(debug=False)
+
 
 
