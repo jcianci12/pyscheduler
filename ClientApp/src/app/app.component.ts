@@ -18,7 +18,7 @@ import { LoginComponent } from './login/login.component';
    providers: [Client, OAuthModule, AuthService, OAuthService, UrlHelperService]
 })
 export class AppComponent {
-  constructor(private authService: AuthService) { }
+  constructor(public authService: AuthService) { }
   
   title = 'pyscheduler';
 

@@ -11,7 +11,7 @@ export const authConfig: AuthConfig = {
   dummyClientSecret:'test',
 
   // responseType: 'code',
-  scope: 'openid profile email',
+  scope: 'openid profile email offline_access',
   showDebugInformation: true,
   strictDiscoveryDocumentValidation: false,
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',

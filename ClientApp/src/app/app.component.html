@@ -13,7 +13,7 @@
 </style>
 <div class="app-container">
   <app-navbar></app-navbar>
-  <app-login></app-login>
-  <router-outlet></router-outlet>
+  <app-login *ngIf="!(authService.isAuthenticated() && authService.getAccessToken())"></app-login>
+  <router-outlet *ngIf="authService.isAuthenticated() && authService.getAccessToken()"></router-outlet>
 </div>
 

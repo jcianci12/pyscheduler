@@ -53,7 +53,7 @@ def verify_token(token):
         # Decode the JWT
         data = jwt.decode(token, public_key, algorithms=['RS256'], audience="yJwnySrODx2x1uNDKzszWiTV3ivrLPBdvvDkz1sN")
         print("Token decoded successfully:", data)
-        return data['username']  # Return the username as a string
+        return data  # Return the username as a string
     except Exception as e:
         print("Error decoding token:", str(e))
         return str(e)
@@ -110,7 +110,8 @@ def xyz():
                     uid:
                         type: string
     """
-    return auth.current_user()
+    
+    return  jsonify(auth.current_user())
 
 def get_logged_in_user_or_demo_db():
     if auth.current_user():
