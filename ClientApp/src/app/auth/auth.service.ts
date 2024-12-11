@@ -17,18 +17,10 @@ export class AuthService {
   }
 
   login() {
-    this.oauthService.loadDiscoveryDocumentAndTryLogin().then((_) => {
-      // this.oauthService.setupAutomaticSilentRefresh(); // Set up automatic token refresh
-      if (this.oauthService.hasValidAccessToken()) {
-        this.oauthService.loadUserProfile().then((userProfile) => {
-          console.log(userProfile);
-         
-        });
-      } else {
-        this.oauthService.initCodeFlow();
-      }
+    
+        this.oauthService.initLoginFlow();
+      
 
-    })
   }
   logout() { this.oauthService.logOut(); }
 
