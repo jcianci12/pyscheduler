@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Client } from './api/api';
 import { NavbarComponent } from "./navbar/navbar.component";
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import { LoginComponent } from './login/login.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, CommonModule, LoginComponent],
+  imports: [RouterOutlet, NavbarComponent, CommonModule, LoginComponent,RouterLink],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [Client, OAuthModule, OAuthService, OAuthService, UrlHelperService]

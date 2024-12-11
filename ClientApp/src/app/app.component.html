@@ -14,7 +14,9 @@
 <div class="app-container">
   <app-navbar></app-navbar>
   {{authService.events|async|json}}
-  <app-login *ngIf="!(authService.hasValidAccessToken() && authService.getAccessToken())"></app-login>
+  <div *ngIf="!(authService.hasValidAccessToken())" class="alert alert-info" role="alert">
+    Demo mode, <a routerLink="/login">login</a>/<a routerLink="/signup">sign up</a> to see your data here
+  </div>
   <router-outlet></router-outlet>
 </div>
 

@@ -46,7 +46,7 @@ def verify_token(token):
     
     try:
         # Decode the JWT
-        data = jwt.decode(token, public_key, algorithms=['RS256'], audience="yJwnySrODx2x1uNDKzszWiTV3ivrLPBdvvDkz1sN")
+        data = jwt.decode(token, public_key, algorithms=['RS256'], audience="pysched")
         print("Token decoded successfully:", data)
         return data  # Return the username as a string
     except Exception as e:
@@ -106,7 +106,7 @@ def xyz():
                         type: string
     """
     
-    return  jsonify(auth.current_user())
+    return  jsonify(auth.login_required())
 @auth.login_required
 def get_logged_in_user_or_demo_db():
     dbname = 'demo.db'
@@ -114,7 +114,7 @@ def get_logged_in_user_or_demo_db():
     print(user)
     if user is not None and user !='Signature has expired' and 'email' in user:
         # do something with the email
-        dbname = user['email']
+        dbname = user['email']+'.db'
     else:
         # handle the case where user is None
         return dbname
