@@ -5,12 +5,16 @@
     "changeOrigin": true,
     "pathRewrite": {"^/api" : ""}
   },
-  "/application/o/pyscheduler": {
+  "/application": {
     "target": "https://authentik.tekonline.com.au",
+    "secure": true,    
     "changeOrigin": true,
-    "pathRewrite": {"^/application/o/pyscheduler" : ""},
     "headers": {
-      "Access-Control-Allow-Origin": "*"
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Accept"
     }
   }
+  
+  
 }
