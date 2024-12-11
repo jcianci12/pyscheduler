@@ -6,9 +6,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Use Angular's inject() function to get the OAuthService
   const oAuthService = inject(OAuthService);
   // if()
-  // if (req.url.includes('authorize')) {
-  //   return next(req);
-  // }
+  if (req.url.includes('authentik')) {
+    return next(req);
+  }
   
   // oAuthService.silentRefresh();
   const token = oAuthService.getAccessToken();
