@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Client } from './api/api';
 import { NavbarComponent } from "./navbar/navbar.component";
-import { AuthService } from './auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { OAuthLogger, OAuthModule, OAuthService, UrlHelperService } from 'angular-oauth2-oidc';
 import { HomeComponent } from './home/home.component';
@@ -12,14 +11,16 @@ import { LoginComponent } from './login/login.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, CommonModule,LoginComponent],
+  imports: [RouterOutlet, NavbarComponent, CommonModule, LoginComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-   providers: [Client, OAuthModule, AuthService, OAuthService, UrlHelperService]
+  providers: [Client, OAuthModule, OAuthService, OAuthService, UrlHelperService]
 })
-export class AppComponent {
-  constructor(public authService: AuthService) { }
-  
-  title = 'pyscheduler';
+export class AppComponent implements OnInit {
+  constructor(public authService: OAuthService) { }
 
+  title = 'pyscheduler';
+  ngOnInit(): void {
+    this.authService.events.subscribe((event) => console.log(event));
+  }
 }
