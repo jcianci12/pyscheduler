@@ -10,7 +10,10 @@
 		"vscode": {
 			"extensions": [
 				"Codeium.codeium"
-			]
+			],
+			"settings": {
+        "remote.autoForwardPorts": false
+      }
 		}
 	}
 }
