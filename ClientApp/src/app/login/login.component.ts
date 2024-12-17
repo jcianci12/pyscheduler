@@ -3,6 +3,7 @@ import { OAuthModule, OAuthService, UrlHelperService } from 'angular-oauth2-oidc
 import { Client } from '../api/api';
 import { AuthService } from '../auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,8 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
-  providers: [Client, OAuthModule, AuthService, OAuthService, UrlHelperService]
+  providers: [Client, OAuthModule, AuthService,
+     OAuthService, UrlHelperService,MatButtonModule]
 
 })
 export class LoginComponent {

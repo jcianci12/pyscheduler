@@ -7,11 +7,15 @@ import { OAuthLogger, OAuthModule, OAuthService, UrlHelperService } from 'angula
 import { HomeComponent } from './home/home.component';
 import { PeopleComponent } from './people/people.component';
 import { LoginComponent } from './login/login.component';
-
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, CommonModule, LoginComponent,RouterLink],
+  imports: [RouterOutlet, NavbarComponent, CommonModule, 
+     MatButtonModule, MatMenuModule,
+    MatCardModule, LoginComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [Client, OAuthModule, OAuthService, OAuthService, UrlHelperService]

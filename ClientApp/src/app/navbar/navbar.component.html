@@ -1,44 +1,24 @@
-<style>
-  nav ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  nav ul li {
-    float: left;
-  }
-  nav ul li ul {
-    display: none;
-    position: absolute;
-  }
-  nav ul li:hover ul {
-    display: block;
-  }
-  nav ul li ul li {
-    clear: both;
-    float: none;
-    width: 100%;
-  }
-  nav ul li ul li a {
-    display: block;
-  }
-</style>
-
-<nav> <a routerLink="/">Pyscheduler</a>
-  <ul>
-    <li><a routerLink="/">Home</a></li>
-    <li><a routerLink="/people">People</a></li>
-    <li><a routerLink="/unavailability">Unavailability</a></li>
-    <li><a routerLink="/tasks">Tasks</a></li>
-    <li><a routerLink="/events">Events</a></li>
-    <li><a routerLink="/assignments">Assignments</a></li>
-    <li *ngIf="authService.isAuthenticated()">
-      <a href="#">👤</a>
-      <ul>
-        <li><a (click)="authService.logout()">Logout</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <a mat-button routerLink="/">
+      <mat-icon>home</mat-icon>
+      Pyscheduler
+    </a>
+    <a mat-button routerLink="/people">People</a>
+    <a mat-button routerLink="/unavailability">Unavailability</a>
+    <a mat-button routerLink="/tasks">Tasks</a>
+    <a mat-button routerLink="/events">Events</a>
+    <a mat-button routerLink="/assignments">Assignments</a>
+    <span style="flex: 1 1 auto;"></span>
+    <a *ngIf="authService.isAuthenticated()" mat-button [matMenuTriggerFor]="menu">
+      <mat-icon>person</mat-icon>
+    </a>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="authService.logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        Logout
+      </button>
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>
 

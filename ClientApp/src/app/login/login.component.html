@@ -1,5 +1,7 @@
-<button (click)="login()">Login</button>
-  <div *ngIf="isAuthenticated()">
-    <h2>Welcome, {{ userName }} test</h2>
-    <!-- <app-people></app-people> -->
-  </div>    <button (click)="logout()">Logout</button>
+<button mat-raised-button color="primary" (click)="login()">Login</button>
+<div *ngIf="isAuthenticated()">
+  <h2>Welcome, {{ userName }} test</h2>
+  <!-- <app-people></app-people> -->
+</div>
+<!-- <button mat-raised-button color="warn" (click)="logout()">Logout</button> -->
+

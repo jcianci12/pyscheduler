@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+    margin: 2em;
   }
 
   app-navbar {
@@ -15,11 +16,15 @@
   <app-navbar></app-navbar>
   <!-- {{authService.events|async|json}}
   {{authService.hasValidAccessToken()}} -->
-  <div *ngIf="!(authService.hasValidAccessToken())" class="alert alert-info" role="alert">
-    Demo mode, <a routerLink="/login">login</a>/<a routerLink="/signup">sign up</a> to see your data here
-  </div>
+  <mat-card *ngIf="!(authService.hasValidAccessToken())" 
+  class="mat-elevation-z2 mat-card-alert">
+    <mat-card-content>
+      <p>Demo mode, <app-login></app-login> to see your data here</p>
+    </mat-card-content>
+  </mat-card>
   
 
   <router-outlet></router-outlet>
 </div>
+
 
