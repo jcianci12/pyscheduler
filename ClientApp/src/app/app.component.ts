@@ -17,10 +17,18 @@ import { LoginComponent } from './login/login.component';
   providers: [Client, OAuthModule, OAuthService, OAuthService, UrlHelperService]
 })
 export class AppComponent implements OnInit {
-  constructor(public authService: OAuthService) { }
+  constructor(public authService: OAuthService, private router: Router) { }
 
   title = 'pyscheduler';
   ngOnInit(): void {
-    this.authService.events.subscribe((event) => console.log(event));
+    this.authService.events.subscribe((event) => 
+    {
+            console.log(event)
+if(event.type =='token_expires'){
+  this.authService.logOut();
+  this.router.navigate(['/login']);
+}
+    }
+  );
   }
 }

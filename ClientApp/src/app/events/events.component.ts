@@ -19,7 +19,7 @@ import { PersonbookedthiseventPipe } from '../pipes/personbookedthisevent.pipe';
   imports: [CommonModule, FormsModule, RouterModule, FilterassignmentsbytaskPipe,
     FilterpeoplebytasksPipe,
     CreateassignmentplaceholdersPipe,
-    PersonbookedpreviousweekPipe,PersonbookedthiseventPipe
+    PersonbookedpreviousweekPipe, PersonbookedthiseventPipe
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
@@ -38,14 +38,14 @@ export class EventsComponent implements OnInit {
   });
   tasks: Task[] | undefined;
   people: Person[] | undefined;
-  unavailability:Unavailability[] |undefined;
+  unavailability: Unavailability[] | undefined;
 
   constructor(private client: Client, private cdr: ChangeDetectorRef) { }
   async ngOnInit() {
     this.tasks = await this.client.tasksAll().toPromise();
     this.events = await this.client.eventswithassignments().toPromise();
     this.people = await this.client.getpeople().toPromise();
-this.unavailability = await this.client.unavailabilityAll().toPromise();
+    this.unavailability = await this.client.unavailabilityAll().toPromise();
   }
 
 
@@ -131,10 +131,10 @@ this.unavailability = await this.client.unavailabilityAll().toPromise();
   }
 
 
-  autoassign(thisevent: Event,  index: number, suitablePeople: Person[], tasks: Task[]) {
+  autoassignbyweek(thisevent: Event, index: number, suitablePeople: Person[], tasks: Task[]) {
     //start with the people that can do the task
     let pastevents = this.events!
-    suitablePeople =this.removepeopleThatAreUnavailable(suitablePeople,thisevent)
+    suitablePeople = this.removepeopleThatAreUnavailable(suitablePeople, thisevent)
     suitablePeople = this.removePeopleBookedLastEvent(pastevents, index, suitablePeople);
 
     // Order the assignments so that the assignment with the fewest people that can do it comes first.
@@ -146,7 +146,7 @@ this.unavailability = await this.client.unavailabilityAll().toPromise();
     //loop through the assignments
     for (const assignment of thisevent.assignments!) {
 
-//if no one is booked the person id will be null
+      //if no one is booked the person id will be null
       if (assignment.person_id == null) {
 
         // Remove people who are already assigned to a task in the current event
@@ -167,6 +167,62 @@ this.unavailability = await this.client.unavailabilityAll().toPromise();
       }
     }
   }
+  autoassigntaskforallevents(ev: Event[]) {
+    let events = [...ev]
+    //a list of unnassigned tasks. tasks with fewer people that can do it are at the top
+    let unassignedtasks = this.tasks?.sort((a, b) => {
+      let acount = this.people!.filter(i => i.tasks?.some(t => t.id == a.id)).length;
+      let bcount = this.people!.filter(i => i.tasks?.some(t => t.id == b.id)).length;
+      return acount - bcount;
+    });
+    //loop through all the events
+    //
+    unassignedtasks?.forEach(t => {
+      let peoplethatcandothetasks = this.people?.filter(p => p.tasks?.some(pt => pt.id == t.id))
+
+      events.forEach((e, i) => {
+
+        peoplethatcandothetasks = this.removepeopleThatAreUnavailable(peoplethatcandothetasks!, e)
+        // peoplethatcandothetasks = this.removePeopleBookedLastEvent(events, i, peoplethatcandothetasks);
+        // peoplethatcandothetasks = this.removepeoplethatarealreadybookedthisevent(e, peoplethatcandothetasks);
+        //create empty placeholders for the assignments
+        //check if there is an assignment for this task on the current event
+        let assignmentfoundindex = e.assignments!.findIndex(ft => ft.task_id == t.id)
+        let assignmentfound = e.assignments![assignmentfoundindex]
+
+        if (!assignmentfound) {
+          let newassignment = new Assignment({ task_id: t.id, event_id: e.id })
+          e.assignments?.push(newassignment)
+          assignmentfound = newassignment
+        }
+        let selectedpersonindex = 0
+
+        while (assignmentfound.person_id == undefined) {
+          let p = peoplethatcandothetasks![selectedpersonindex % peoplethatcandothetasks!.length]
+          //checks
+          //person booked last event
+          let personbookedlastevent = events[i - 1].assignments?.some(a => a.person_id == p.id)
+          //person booked this event
+          let personbookedthisevent = e.assignments?.some(a => a.person_id == p.id)
+          if (personbookedlastevent || personbookedthisevent) {
+            console.log("person already assigned", personbookedlastevent, personbookedthisevent)
+            selectedpersonindex++
+
+          }
+          else {
+            let selectedperson = peoplethatcandothetasks![selectedpersonindex % peoplethatcandothetasks!.length]
+            assignmentfound.person_id = selectedperson.id
+            console.log("Person assigned:", selectedperson.first_name, selectedperson.last_name, e.event_name, e.event_date, t.task_name, events[i - 1].assignments?.map(i => i.person_id))
+            selectedpersonindex++
+            break
+          }
+
+        }
+
+      })
+    })
+    this.events = [...events]
+  }
 
   removePeopleBookedLastEvent(events: Event[], index: number, people: Person[]): Person[] {
     console.log(`Received people:`, people)
@@ -183,20 +239,20 @@ this.unavailability = await this.client.unavailabilityAll().toPromise();
       return people
     }
   }
-  removepeopleThatAreUnavailable(people: Person[],event: Event): Person[] {
-let unavailability = this.unavailability?.filter(i => i.end_date!>=event.event_date! && i.start_date!<=event.event_date!)
+  removepeopleThatAreUnavailable(people: Person[], event: Event): Person[] {
+    let unavailability = this.unavailability?.filter(i => i.end_date! >= event.event_date! && i.start_date! <= event.event_date!)
 
-people = people.filter(i => !unavailability?.some(u => u.person_id == i.id))
+    people = people.filter(i => !unavailability?.some(u => u.person_id == i.id))
 
-return people
+    return people
   }
   removePeopleBookedThisEvent(assignments: Assignment[], people: Person[]): Person[] {
     people = people.filter(i => assignments.some(a => {
 
-      if(a!=null && a.person_id == i.id) {
+      if (a != null && a.person_id == i.id) {
         return false
       }
-      else{return true}
+      else { return true }
 
     }
 
@@ -208,6 +264,10 @@ return people
     people = people.filter(i => i.tasks?.some(t => t.id == taskid))
 
 
+    return people
+  }
+  removepeoplethatarealreadybookedthisevent(event: Event, people: Person[]): Person[] {
+    people = people.filter(i => !event.assignments!.some(a => a.person_id == i.id))
     return people
   }
 

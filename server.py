@@ -9,6 +9,8 @@ from flask import Flask, jsonify, url_for
 from flask_httpauth import HTTPTokenAuth
 import requests
 import jwt
+import time
+
 
 
 app = Flask(__name__)
@@ -22,14 +24,15 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 auth = HTTPTokenAuth(scheme='Bearer')
+jwk_cache = None
+jwk_cache_timestamp = 0
+
 def fetch_jwk():
-    api_endpoint = "https://authentik.tekonline.com.au/application/o/pyscheduler/jwks/"
-    response = requests.get(api_endpoint)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print("Failed to fetch JWK")
-        return None
+    global jwk_cache, jwk_cache_timestamp
+    if jwk_cache is None or time.time() - jwk_cache_timestamp > 3600:  # 1 hour cache expiration
+        jwk_cache = requests.get("https://authentik.tekonline.com.au/application/o/pyscheduler/jwks/").json()
+        jwk_cache_timestamp = time.time()
+    return jwk_cache
 
 @auth.verify_token
 def verify_token(token):
@@ -106,7 +109,7 @@ def xyz():
                         type: string
     """
     
-    return  jsonify(auth.login_required())
+    return  jsonify(auth.current_user())
 @auth.login_required
 def get_logged_in_user_or_demo_db():
     dbname = 'demo.db'

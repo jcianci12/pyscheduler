@@ -3,17 +3,19 @@ import { Client,   Person,   Person2,   Person3,   Task } from '../api/api';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { DuplicatepersonPipe } from '../pipes/duplicateperson.pipe';
+import { FilterpeoplebynamePipe } from '../pipes/filterpeoplebyname.pipe';
 
 @Component({
   selector: 'app-people',
   standalone: true,
-  imports: [CommonModule, FormsModule,DuplicatepersonPipe],
+  imports: [CommonModule, FormsModule,DuplicatepersonPipe,FilterpeoplebynamePipe],
   templateUrl: './people.component.html',
   styleUrl: './people.component.css'
 })
 export class PeopleComponent implements OnInit {
   people: Person[] | undefined;
   tasks: Task[] | undefined;
+  searchTerm = '';
   personForm: FormGroup = new FormGroup({
     first_name: new FormControl(''),
     last_name: new FormControl('')
