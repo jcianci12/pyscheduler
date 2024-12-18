@@ -13,6 +13,7 @@ import { FiltereventsbydatePipe } from '../../filtereventsbydate.pipe';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
+import { PeopleutilisationComponent } from "../peopleutilisation/peopleutilisation.component";
 @Component({
   selector: 'app-events',
   standalone: true,
@@ -20,9 +21,8 @@ import { MatMenuModule } from '@angular/material/menu';
     FilterpeoplebytasksPipe,
     CreateassignmentplaceholdersPipe,
     PersonbookedpreviousweekPipe, PersonbookedthiseventPipe,
-    MatCardModule,FiltereventsbydatePipe,MatFormFieldModule,MatSelectModule,
-    MatMenuModule
-  ],
+    MatCardModule, FiltereventsbydatePipe, MatFormFieldModule, MatSelectModule,
+    MatMenuModule, PeopleutilisationComponent,PeopleutilisationComponent],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })
