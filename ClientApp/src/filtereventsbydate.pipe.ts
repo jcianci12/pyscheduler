@@ -6,10 +6,18 @@ import { Event } from './app/api/api';
 })
 export class FiltereventsbydatePipe implements PipeTransform {
 
-  transform(value: Event[], startDate:Date,endDate:Date): Event[] {
-    value =  value
-    .filter(i =>new Date(i.event_date!) >= startDate && 
-     new Date(i.event_date!) <= endDate);
+  transform(value: Event[], startDate: Date, endDate: Date): Event[] {
+    startDate = new Date(startDate)
+    endDate =  new Date(endDate)
+    value = value
+      .filter(i => {
+
+        return (startDate&& new Date(i.event_date!) >= startDate ) &&
+
+          ( new Date(i.event_date!) <= new Date(endDate))
+      }
+
+      );
     return value
   }
 

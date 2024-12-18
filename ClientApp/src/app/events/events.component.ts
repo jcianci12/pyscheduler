@@ -10,7 +10,9 @@ import { PersonbookedpreviousweekPipe } from '../pipes/personbookedpreviousweek.
 import { PersonbookedthiseventPipe } from '../pipes/personbookedthisevent.pipe';
 import { MatCardModule } from '@angular/material/card';
 import { FiltereventsbydatePipe } from '../../filtereventsbydate.pipe';
-
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 @Component({
   selector: 'app-events',
   standalone: true,
@@ -18,7 +20,8 @@ import { FiltereventsbydatePipe } from '../../filtereventsbydate.pipe';
     FilterpeoplebytasksPipe,
     CreateassignmentplaceholdersPipe,
     PersonbookedpreviousweekPipe, PersonbookedthiseventPipe,
-    MatCardModule,FiltereventsbydatePipe
+    MatCardModule,FiltereventsbydatePipe,MatFormFieldModule,MatSelectModule,
+    MatMenuModule
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
@@ -39,7 +42,7 @@ export class EventsComponent implements OnInit {
 
   dateFilter: FormGroup = new FormGroup({
     startDate: new FormControl(new Date().toISOString().slice(0, 10)),
-    endDate: new FormControl(new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().slice(0, 10))
+    endDate: new FormControl(new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().slice(0, 10))
   });
   tasks: Task[] | undefined;
   people: Person[] | undefined;

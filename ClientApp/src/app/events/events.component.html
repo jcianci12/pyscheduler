@@ -1,9 +1,6 @@
 <p>
-  Start Date: <input type="date" [ngModel]="dateFilter.value.startDate" (ngModelChange)="dateFilter.value.startdate = $event" [value]="dateFilter.value.startDate|date:'yyyy-MM-dd'">
+  Start Date: <input type="date" [ngModel]="dateFilter.value.startDate" (ngModelChange)="dateFilter.value.startDate = $event" [value]="dateFilter.value.startDate|date:'yyyy-MM-dd'">
   End Date: <input type="date" [ngModel]="dateFilter.value.endDate" (ngModelChange)="dateFilter.value.endDate = $event" [value]="dateFilter.value.endDate|date:'yyyy-MM-dd'">
-  {{dateFilter.value.startDate}} {{dateFilter.value.endDate}}
-
-
 </p>
 
 <table class="table table-striped">
@@ -68,6 +65,10 @@
   </tbody>
 </table>
 <!-- {{events|json}} -->
+
+
+
+
 
 <p>To creat a new event, complete the details and click create.</p>
 <p>To create bulk events, first create one or more events, then select the events you wish to repeat, fill in
