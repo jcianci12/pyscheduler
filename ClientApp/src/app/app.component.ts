@@ -29,8 +29,9 @@ export class AppComponent implements OnInit {
     {
             console.log(event)
 if(event.type =='token_expires'){
+  
   this.authService.logOut();
-  this.router.navigate(['/login']);
+  this.router.navigate(['/home']);
 }
     }
   );

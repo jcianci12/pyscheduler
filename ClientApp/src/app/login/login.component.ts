@@ -8,17 +8,18 @@ import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,MatButtonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
-  providers: [Client, OAuthModule, AuthService,
-     OAuthService, UrlHelperService,MatButtonModule]
+  providers: [Client,  AuthService,
+     OAuthService, UrlHelperService]
 
 })
 export class LoginComponent {
-  constructor(private authService: AuthService) { }
-
+  constructor(private authService: AuthService,private oath:OAuthService) { }
+currenturl: string = window.location.href;
   login() {
+    this.oath.redirectUri = this.currenturl;
     this.authService.login();
   }
   logout(){

@@ -1,15 +1,16 @@
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-silent-refresh',
   standalone: true,
-  imports: [],
+  imports: [AsyncPipe,JsonPipe],
   templateUrl: './silent-refresh.component.html',
   styleUrl: './silent-refresh.component.css'
 })
 export class SilentRefreshComponent {
-  constructor(private oauthService: OAuthService) { }
+  constructor(public oauthService: OAuthService) { }
 silentrefresh(){
   this
     .oauthService

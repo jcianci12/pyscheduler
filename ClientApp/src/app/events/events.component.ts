@@ -3,15 +3,13 @@ import { Assignment, Client, Event, Event2, Person, Task, Unavailability } from 
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { AssignmentrowComponent } from "../assignmentrow/assignmentrow.component";
 import { FilterassignmentsbytaskPipe } from '../pipes/filterassignmentsbytask.pipe';
 import { CreateassignmentplaceholdersPipe } from '../pipes/createassignmentplaceholders.pipe';
-import { GeneratescheduleComponent } from "../generateschedule/generateschedule.component";
 import { FilterpeoplebytasksPipe } from '../pipes/filterpeoplebytasks.pipe';
 import { PersonbookedpreviousweekPipe } from '../pipes/personbookedpreviousweek.pipe';
-import { PeopleComponent } from '../people/people.component';
-import { last } from 'rxjs';
 import { PersonbookedthiseventPipe } from '../pipes/personbookedthisevent.pipe';
+import { MatCardModule } from '@angular/material/card';
+import { FiltereventsbydatePipe } from '../../filtereventsbydate.pipe';
 
 @Component({
   selector: 'app-events',
@@ -19,12 +17,14 @@ import { PersonbookedthiseventPipe } from '../pipes/personbookedthisevent.pipe';
   imports: [CommonModule, FormsModule, RouterModule, FilterassignmentsbytaskPipe,
     FilterpeoplebytasksPipe,
     CreateassignmentplaceholdersPipe,
-    PersonbookedpreviousweekPipe, PersonbookedthiseventPipe
+    PersonbookedpreviousweekPipe, PersonbookedthiseventPipe,
+    MatCardModule,FiltereventsbydatePipe
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })
 export class EventsComponent implements OnInit {
+
   events: Event[] | undefined;
   selectedEvents: Event[] = [];
   draftEvents: Event[] = [];
@@ -35,6 +35,11 @@ export class EventsComponent implements OnInit {
     id: new FormControl(''),
     event_date: new FormControl('', Validators.required),
     event_name: new FormControl('', Validators.required)
+  });
+
+  dateFilter: FormGroup = new FormGroup({
+    startDate: new FormControl(new Date().toISOString().slice(0, 10)),
+    endDate: new FormControl(new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().slice(0, 10))
   });
   tasks: Task[] | undefined;
   people: Person[] | undefined;
@@ -52,8 +57,8 @@ export class EventsComponent implements OnInit {
   forceUpdate(event: Event) {
 
     this.events![event.id!] = event;
+    // this.events = [...this.events!];
 
-    this.cdr.detectChanges();
   }
   selectAll: boolean = false;
 
@@ -133,9 +138,10 @@ export class EventsComponent implements OnInit {
 
   autoassignbyweek(thisevent: Event, index: number, suitablePeople: Person[], tasks: Task[]) {
     //start with the people that can do the task
-    let pastevents = this.events!
+    let allevents = this.events!
     suitablePeople = this.removepeopleThatAreUnavailable(suitablePeople, thisevent)
-    suitablePeople = this.removePeopleBookedLastEvent(pastevents, index, suitablePeople);
+    suitablePeople = this.removePeopleBookedLastEvent(allevents, index, suitablePeople);
+    suitablePeople = this.removePeopleBookedThisEvent(thisevent.assignments!, suitablePeople);
 
     // Order the assignments so that the assignment with the fewest people that can do it comes first.
     thisevent.assignments = thisevent.assignments?.sort((a, b) => {
@@ -147,7 +153,7 @@ export class EventsComponent implements OnInit {
     for (const assignment of thisevent.assignments!) {
 
       //if no one is booked the person id will be null
-      if (assignment.person_id == null) {
+      if (assignment.person_id == null||assignment.person_id==undefined||assignment.person_id as any  as string =='') {
 
         // Remove people who are already assigned to a task in the current event
         // suitablePeople = suitablePeople.filter(i => !event.assignments!.some(a => a.person_id == i.id));
@@ -166,62 +172,74 @@ export class EventsComponent implements OnInit {
         }
       }
     }
+    
+
   }
   autoassigntaskforallevents(ev: Event[]) {
     let events = [...ev]
+  
     //a list of unnassigned tasks. tasks with fewer people that can do it are at the top
     let unassignedtasks = this.tasks?.sort((a, b) => {
       let acount = this.people!.filter(i => i.tasks?.some(t => t.id == a.id)).length;
       let bcount = this.people!.filter(i => i.tasks?.some(t => t.id == b.id)).length;
       return acount - bcount;
     });
-    //loop through all the events
-    //
-    unassignedtasks?.forEach(t => {
-      let peoplethatcandothetasks = this.people?.filter(p => p.tasks?.some(pt => pt.id == t.id))
-
-      events.forEach((e, i) => {
-
+  
+    for (let i = 0; i < unassignedtasks!.length; i++) {
+      let t = unassignedtasks![i];
+      let peoplethatcandothetasks = this.removePeopleThatCantDoTheTask(this.people!, t.id!)
+  
+      for (let j = 0; j < events.length; j++) {
+        let e = events[j];
+  
         peoplethatcandothetasks = this.removepeopleThatAreUnavailable(peoplethatcandothetasks!, e)
-        // peoplethatcandothetasks = this.removePeopleBookedLastEvent(events, i, peoplethatcandothetasks);
+        // peoplethatcandothetasks = this.removePeopleBookedLastEvent(events, j, peoplethatcandothetasks);
         // peoplethatcandothetasks = this.removepeoplethatarealreadybookedthisevent(e, peoplethatcandothetasks);
         //create empty placeholders for the assignments
         //check if there is an assignment for this task on the current event
         let assignmentfoundindex = e.assignments!.findIndex(ft => ft.task_id == t.id)
         let assignmentfound = e.assignments![assignmentfoundindex]
-
+  
         if (!assignmentfound) {
           let newassignment = new Assignment({ task_id: t.id, event_id: e.id })
           e.assignments?.push(newassignment)
           assignmentfound = newassignment
         }
         let selectedpersonindex = 0
-
-        while (assignmentfound.person_id == undefined) {
-          let p = peoplethatcandothetasks![selectedpersonindex % peoplethatcandothetasks!.length]
+  
+        let maxTries = 10;
+        while (assignmentfound.person_id == undefined && maxTries > 0) {
+          //define a random offset
+          let p = this.moduloselectperson(peoplethatcandothetasks!, selectedpersonindex)
           //checks
+          let evass = events.map(i=>i.assignments)
           //person booked last event
-          let personbookedlastevent = events[i - 1].assignments?.some(a => a.person_id == p.id)
+          let personbookedlastevent = j > 0 ? events[j - 1]?.assignments?.some(a => a.person_id == p.id) : false
           //person booked this event
           let personbookedthisevent = e.assignments?.some(a => a.person_id == p.id)
+  
           if (personbookedlastevent || personbookedthisevent) {
-            console.log("person already assigned", personbookedlastevent, personbookedthisevent)
             selectedpersonindex++
-
-          }
-          else {
-            let selectedperson = peoplethatcandothetasks![selectedpersonindex % peoplethatcandothetasks!.length]
+            maxTries--;
+          } else {
+            let selectedperson = this.moduloselectperson(peoplethatcandothetasks!, selectedpersonindex)
             assignmentfound.person_id = selectedperson.id
-            console.log("Person assigned:", selectedperson.first_name, selectedperson.last_name, e.event_name, e.event_date, t.task_name, events[i - 1].assignments?.map(i => i.person_id))
+            console.log("Person assigned:", selectedperson.first_name, selectedperson.last_name, e.event_name, e.event_date, t.task_name, j > 0 ? events[j - 1]?.assignments?.map(i => i.person_id) : [])
             selectedpersonindex++
             break
           }
-
         }
-
-      })
-    })
+  
+      }
+    }
     this.events = [...events]
+  }
+  randomselectperson(people: Person[]):number {
+    const randomIndex = Math.floor(Math.random() * people.length);
+    return randomIndex;
+  }
+  moduloselectperson(people:Person[],number:number):Person{
+    return people[number % people.length]
   }
 
   removePeopleBookedLastEvent(events: Event[], index: number, people: Person[]): Person[] {
@@ -248,28 +266,19 @@ export class EventsComponent implements OnInit {
   }
   removePeopleBookedThisEvent(assignments: Assignment[], people: Person[]): Person[] {
     people = people.filter(i => assignments.some(a => {
-
       if (a != null && a.person_id == i.id) {
         return false
       }
       else { return true }
-
     }
-
-
     ))
     return people
   }
   removePeopleThatCantDoTheTask(people: Person[], taskid: number): Person[] {
     people = people.filter(i => i.tasks?.some(t => t.id == taskid))
-
-
     return people
   }
-  removepeoplethatarealreadybookedthisevent(event: Event, people: Person[]): Person[] {
-    people = people.filter(i => !event.assignments!.some(a => a.person_id == i.id))
-    return people
-  }
+  
 
 }
 

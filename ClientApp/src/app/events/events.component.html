@@ -1,7 +1,11 @@
-<p>To creat a new event, complete the details and click create.</p>
-<p>To create bulk events, first create one or more events, then select the events you wish to repeat, fill in
-  the interval (days, weeks, etc) the number of times to repeat, and click Create Draft Events.
+<p>
+  Start Date: <input type="date" [ngModel]="dateFilter.value.startDate" (ngModelChange)="dateFilter.value.startdate = $event" [value]="dateFilter.value.startDate|date:'yyyy-MM-dd'">
+  End Date: <input type="date" [ngModel]="dateFilter.value.endDate" (ngModelChange)="dateFilter.value.endDate = $event" [value]="dateFilter.value.endDate|date:'yyyy-MM-dd'">
+  {{dateFilter.value.startDate}} {{dateFilter.value.endDate}}
+
+
 </p>
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -33,7 +37,7 @@
       </td>
     </tr>
 
-    <tr  *ngFor="let event of (events!|createassignmentplaceholders:tasks!);let i = index">
+    <tr  *ngFor="let event of (events!|createassignmentplaceholders:tasks!)|filtereventsbydate:dateFilter.value.startDate:dateFilter.value.endDate;let i = index">
       <td style="column-width: 20px;"><input type="checkbox" [checked]="isSelected(event)" (click)="selectEvent(event)"></td>
       <td><input  type="text" disabled="" [(ngModel)]="event.id"></td>
       <td><input type="text" [(ngModel)]="event.event_name"></td>
@@ -49,20 +53,26 @@
           <div *ngTemplateOutlet="myRepeatedTemplate; context: { data: { event: event, people: people, task: task, assignment: assignment} }"></div>
 
         </span>
+        <!-- {{event|json}} -->
+
       </td>
 
-      <td>
+      <td style="white-space: nowrap;">
         <button class="btn btn-primary" (click)="updateEvent(event)" title="Save Event">💾</button>
-<button class="btn btn-danger" (click)="deleteEvent(event.id ?? 0)" title="Delete Event">🗑️</button>
-<button class="btn btn-danger" (click)="clearEvent(event.id ?? 0)" title="Clear Assignments">🧹</button>
-<button class="btn btn-link" [routerLink]="['/assignments', event.id]" role="button" title="View Assignments">📄</button>
-<button class="btn btn-link" (click)="autoassignbyweek(event,  i, people!, tasks!)" role="button" title="Auto Assign Tasks">🤖</button>
-<!-- {{event|json}} -->
+        <button class="btn btn-danger" (click)="deleteEvent(event.id ?? 0)" title="Delete Event">🗑️</button>
+        <button class="btn btn-danger" (click)="clearEvent(event.id ?? 0)" title="Clear Assignments">🧹</button>
+        <button class="btn btn-link" [routerLink]="['/assignments', event.id]" role="button" title="View Assignments">📄</button>
+        <button class="btn btn-link" (click)="autoassignbyweek(event,  i, people!, tasks!)" role="button" title="Auto Assign Tasks">🤖</button>
       </td>
     </tr>
   </tbody>
 </table>
 <!-- {{events|json}} -->
+
+<p>To creat a new event, complete the details and click create.</p>
+<p>To create bulk events, first create one or more events, then select the events you wish to repeat, fill in
+  the interval (days, weeks, etc) the number of times to repeat, and click Create Draft Events.
+</p>
 
 Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selectedEvents.length">
 <select [(ngModel)]="repeatUnit" [disabled]="!selectedEvents.length">
@@ -116,16 +126,17 @@ Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selected
 </table>
 <button (click)="createEvents()" [disabled]="!draftEvents.length">Create ({{draftEvents.length }})events</button>
 
+
+<button (click)="autoassigntaskforallevents(events!)">AutoAssignAlltasks</button>
+
 <!-- my-main-component.component.html -->
 <ng-template #myRepeatedTemplate let-data="data">
   <!-- your HTML code here -->
  <select [(ngModel)]="data.assignment.person_id" (ngModelChange)="forceUpdate(data.event)" name="personid">
-  <option value=""></option>
+  <option [value]=''></option>
 
 
   <option *ngFor="let person of data.people!|filterpeoplebytasks:data.task" [value]="person.id">{{ person.first_name }} {{ person.last_name }}
   </option>
 </select>
 </ng-template>
-<button (click)="autoassigntaskforallevents(events!)">AutoAssignAlltasks</button>
-
