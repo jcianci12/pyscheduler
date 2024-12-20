@@ -22,7 +22,7 @@ if (!people){
     let min = Math.min(...data.map(d => d.assignmentCount))
     let max = Math.max(...data.map(d => d.assignmentCount))
     data = data.map(d => ({...d, colour: `rgb(255,${Math.floor((d.assignmentCount-min) / (max-min) * 255)},0)`}))
-    data = data.sort((a, b) => b.assignmentCount - a.assignmentCount);
+    data = data.sort((a, b) => a.assignmentCount - b.assignmentCount);
 
     return data
 
