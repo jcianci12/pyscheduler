@@ -5,7 +5,7 @@ import { AssignmentcountforpersonPipe } from '../assignmentcountforperson.pipe';
 
 @Component({
   selector: 'app-peopleutilisation',
-  imports: [JsonPipe, CommonModule, AssignmentcountforpersonPipe],
+  imports: [ CommonModule],
   templateUrl: './peopleutilisation.component.html',
   styleUrl: './peopleutilisation.component.css'
 })

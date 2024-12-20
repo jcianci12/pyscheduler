@@ -14,6 +14,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { PeopleutilisationComponent } from "../peopleutilisation/peopleutilisation.component";
+import { AssignmentcountforpersonPipe } from '../assignmentcountforperson.pipe';
+import { FindpersonwithidPipe } from '../findpersonwithid.pipe';
 @Component({
   selector: 'app-events',
   standalone: true,
@@ -22,7 +24,7 @@ import { PeopleutilisationComponent } from "../peopleutilisation/peopleutilisati
     CreateassignmentplaceholdersPipe,
     PersonbookedpreviousweekPipe, PersonbookedthiseventPipe,
     MatCardModule, FiltereventsbydatePipe, MatFormFieldModule, MatSelectModule,
-    MatMenuModule, PeopleutilisationComponent,PeopleutilisationComponent],
+    MatMenuModule,AssignmentcountforpersonPipe,FindpersonwithidPipe],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })
@@ -54,6 +56,7 @@ export class EventsComponent implements OnInit {
     this.events = await this.client.eventswithassignments().toPromise();
     this.people = await this.client.getpeople().toPromise();
     this.unavailability = await this.client.unavailabilityAll().toPromise();
+    
   }
 
 

@@ -35,7 +35,8 @@
       </td>
     </tr>
 
-    <tr  *ngFor="let event of (events!|createassignmentplaceholders:tasks!)|filtereventsbydate:dateFilter.value.startDate:dateFilter.value.endDate;let i = index">
+    <tr  *ngFor="let event of (events!|createassignmentplaceholders:tasks!)|
+    filtereventsbydate:dateFilter.value.startDate:dateFilter.value.endDate;let i = index">
       <td style="column-width: 20px;"><input type="checkbox" [checked]="isSelected(event)" (click)="selectEvent(event)"></td>
       <td><input  type="text" disabled="" [(ngModel)]="event.id"></td>
       <td><input type="text" [(ngModel)]="event.event_name"></td>
@@ -48,7 +49,7 @@
 
 
         <span *ngFor="let assignment of event.assignments!|filterassignmentsbytask:task.id!" [ngClass]="{'error': (assignment|personbookedpreviousweek:events![i-1]) || (assignment|personbookedthisevent:events![i])}">
-          <div *ngTemplateOutlet="myRepeatedTemplate; context: { data: { event: event, people: people, task: task, assignment: assignment} }"></div>
+          <div *ngTemplateOutlet="selectpersontemplate; context: { data: {  event: event, people: people, task: task, assignment: assignment,events: events} }"></div>
 
         </span>
         <!-- {{event|json}} -->
@@ -68,7 +69,7 @@
 <!-- {{events|json}} -->
 
 
-<app-peopleutilisation></app-peopleutilisation>
+<!-- <app-peopleutilisation></app-peopleutilisation> -->
 
 
 
@@ -111,7 +112,7 @@ Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selected
 
 
         <span *ngFor="let assignment of event.assignments!|filterassignmentsbytask:task.id!">
-          <div *ngTemplateOutlet="myRepeatedTemplate; context: { data: { event: event, people: people, task: task, assignment: assignment} }"></div>
+          <div *ngTemplateOutlet="selectpersontemplate; context: { data: { event: event, people: people, task: task, assignment: assignment} }"></div>
 
 
         </span>
@@ -133,13 +134,18 @@ Repeat every<input type="number" [(ngModel)]="repeatValue" [disabled]="!selected
 <button (click)="autoassigntaskforallevents(events!)">AutoAssignAlltasks</button>
 
 <!-- my-main-component.component.html -->
-<ng-template #myRepeatedTemplate let-data="data">
+<ng-template #selectpersontemplate let-data="data">
   <!-- your HTML code here -->
- <select [(ngModel)]="data.assignment.person_id" (ngModelChange)="forceUpdate(data.event)" name="personid">
+ <select  [(ngModel)]="data.assignment.person_id" 
+ [style]="{'background-color': (data.people|assignmentcountforperson:data.events|findpersonwithid:data.assignment.person_id)?.colour}" (ngModelChange)="forceUpdate(data.event)" name="personid">
   <option [value]=''></option>
 
 
-  <option *ngFor="let person of data.people!|filterpeoplebytasks:data.task" [value]="person.id">{{ person.first_name }} {{ person.last_name }}
+  <option [style]="{'background-color': person.colour}" *ngFor="let person of (data.people!|filterpeoplebytasks:data.task)|assignmentcountforperson:data.events" 
+  [value]="person.id">
+
+  {{ person.first_name }} {{ person.last_name }} {{person.assignmentCount}}
+
   </option>
 </select>
 </ng-template>
