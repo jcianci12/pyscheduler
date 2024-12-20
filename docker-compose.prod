@@ -1,0 +1,50 @@
+services:
+  db:
+    build: ./Db
+
+    volumes:
+      - ./Db/data:/var/opt/mssql/data
+    user: "0:0"
+    restart: unless-stopped
+
+  app:
+
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+
+    volumes:
+      - ./Aspnetcoreapp/resources:/app/build/resources
+      - ./Aspnetcoreapp/wwwroot:/app/build/wwwroot
+      - ./Aspnetcoreapp/Helpers/Templates:/app/build/Helpers/Templates
+
+      # - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      # - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https/ 
+        
+    environment:
+      ASPNETCORE_URLS: "http://*:5000"
+      # ASPNETCORE_HTTPS_PORT: "5001"
+      ASPNETCORE_ENVIRONMENT: Production
+      Application_URL: "https://www.wehireit.com.au"
+      # ASPNETCORE_HTTP_PORTS: "5000"
+    restart: unless-stopped
+    depends_on:
+      - db
+
+
+  angularapp:
+    build: 
+      context: ./ClientApp
+      dockerfile: Dockerfile.prod
+
+  pysheduler-nginx:
+    image: nginx:latest
+    ports:
+      - "5004:5000"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/
+    depends_on:
+      - app
+      - angularapp
+
+
